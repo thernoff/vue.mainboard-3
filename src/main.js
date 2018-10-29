@@ -1,8 +1,45 @@
-import Vue from 'vue'
-import App from './App.vue'
+// The Vue build version to load with the `import` command
+// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
+//import 'material-design-icons-iconfont/dist/material-design-icons.css' // Ensure you are using css-loader
+//import '@mdi/font/css/materialdesignicons.css' // Ensure you are using css-loader
+//import '@fortawesome/fontawesome-free/css/all.css' // Ensure you are using css-loader
 
-Vue.config.productionTip = false
+import Vue from "vue";
+import App from "@/App.vue";
+import router from "@/router";
+import store from "@/store";
+import Vuetify from "vuetify";
+import "vuetify/dist/vuetify.min.css";
+import "@/main.css";
+// Helpers
+import colors from "vuetify/es5/util/colors";
+import lang from "@/languages";
+console.log("lang", lang);
+Vue.use(Vuetify, {
+  theme: {
+    // primary: colors.indigo.darken1, // #E53935
+    primary: "#3b5375",
+    titleWindow: "#4a6588",
+    // minimizeWindowTaskbar: colors.indigo.darken3,
+    minimizeWindowTaskbar: "#293c56",
+    btnTaskbar: "#293c56",
+    btnReload: colors.blue.lighten1,
+    btnLogout: colors.red.darken1,
+    secondary: colors.red.lighten4, // #FFCDD2
+    accent: colors.indigo.base // #3F51B5
+  }
+});
 
-new Vue({
-  render: h => h(App)
-}).$mount('#app')
+Vue.config.productionTip = false;
+
+/* eslint-disable no-new */
+
+jQuery(document).ready(function() {
+  new Vue({
+    el: "#app",
+    router,
+    store,
+    components: { App },
+    template: "<App/>"
+  });
+});
