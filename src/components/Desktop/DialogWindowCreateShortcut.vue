@@ -1,54 +1,54 @@
 <template>
   <div class="mainboard-dialog-window-create-shortcut">
-    <v-dialog 
-      v-model="visible" 
-      width="400px" 
-      hide-overlay 
+    <v-dialog
+      v-model="visible"
+      width="400px"
+      hide-overlay
       persistent>
       <v-card light>
         <v-layout row>
           <v-flex xs12>
             <v-card-title class="primary mainboard-userform__title">
-              <div class="headline">Создание ярлыка</div>
+              <div class="headline">{{ $t('shortcut.create') }}</div>
             </v-card-title>
           </v-flex>
         </v-layout>
         <v-container>
           <v-layout row>
             <v-flex xs12>
-              <v-form 
-                ref="form" 
-                v-model="valid" 
+              <v-form
+                ref="form"
+                v-model="valid"
                 lazy-validation>
                 <v-text-field
                   v-model="name"
-                  :rules="nameRules"
+                  v-bind:rules="nameRules"
                   name="name"
-                  label="Имя ярлыка"
+                  v-bind:label=" $t('shortcut.name') "
                   required
                 />
                 <v-text-field
-                  :value="url"
-                  :rules="urlRules"
+                  v-bind:value="url"
+                  v-bind:rules="urlRules"
                   name="url"
-                  label="Url ресурса"
+                  label=" $t('shortcut.url') "
                   required
-                  @input="url = $event"
+                  v-on:input="url = $event"
                 />
                 <v-layout align-center>
                   <v-flex text-xs-center>
                     <v-btn
                       :disabled="!valid"
                       color="info"
-                      @click="create"
+                      v-on:click="create"
                     >
-                      Сохранить
+                      {{ $t('save') }}
                     </v-btn>
                     <v-btn
                       color="error"
-                      @click="cancel"
+                      v-on:click="cancel"
                     >
-                      Отмена
+                      {{ $t('cancel') }}
                     </v-btn>
                   </v-flex>
                 </v-layout>
@@ -77,14 +77,14 @@ export default {
       name: "",
       url: "",
       nameRules: [
-        v => !!v || "Имя ярлыка обязательно для создания ярлыка"
+        v => !!v || this.$t("shortcut.rules.name_required")
         //v => (v && v.length <= 10) || "Name must be less than 10 characters"
       ],
       urlRules: [
-        v => !!v || "Url ресурса обязательно для создания ярлыка",
+        v => !!v || this.$t("shortcut.rules.url_required"),
         v =>
           /^(ftp|http|https):\/\/[^ "]+$/.test(v) ||
-          "Не корректный адрес ресурса"
+          this.$t("shortcut.rules.url_valid")
       ]
     };
   },

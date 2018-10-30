@@ -3,38 +3,38 @@
     ref="shortcut"
     :class = "{'mainboard-shortcut--active': shortcut.active, 'mainboard-shortcut--noimage': !shortcut.image}"
     class="mainboard-shortcut"
-    @dblclick="createNewWindow"
-    @tap="createNewWindow"
-    @touchstart="createNewWindow"
-    @mousedown="setActive"
-    @contextmenu.prevent.stop="showContextMenu"
+    v-on:dblclick="createNewWindow"
+    v-on:tap="createNewWindow"
+    v-on:touchstart="createNewWindow"
+    v-on:mousedown="setActive"
+    v-on:contextmenu.prevent.stop="showContextMenu"
   >
     <v-menu
       v-model="contextMenu.visible"
-      :position-x="contextMenu.x"
-      :position-y="contextMenu.y"
+      v-bind:position-x="contextMenu.x"
+      v-bind:position-y="contextMenu.y"
       class="mainboard-shortcut__context-menu context-menu"
       absolute
       offset-y
     >
       <v-list dense>
         <v-list-tile
-          @click="''"
+          v-on:click="''"
         >
           <v-list-tile-title
-            @click="renameShortcut"
+            v-on:click="renameShortcut"
           >
-            {{ 'Переименовать' }}
+            {{ $t('rename') }}
           </v-list-tile-title>
         </v-list-tile>
 
         <v-list-tile
-          @click="''"
+          v-on:click="''"
         >
           <v-list-tile-title
-            @click="deleteShortcut"
+            v-on:click="deleteShortcut"
           >
-            {{ 'Удалить' }}
+            {{ $t('delete') }}
           </v-list-tile-title>
         </v-list-tile>
 
@@ -46,8 +46,8 @@
       class="mainboard-shortcut__img"
     >
       <img
-        :src="shortcut.image"
-        :alt="shortcut.label"
+        v-bind:src="shortcut.image"
+        v-bind:alt="shortcut.label"
       >
     </div>
     <div
@@ -62,10 +62,10 @@
       <input
         v-show="rename"
         ref="renameinput"
-        :value="shortLabel"
+        v-bind:value="shortLabel"
         class="mainboard-shortcut__input"
-        @blur="updateShortcut"
-        @keyup.enter="updateShortcut"
+        v-on:blur="updateShortcut"
+        v-on:keyup.enter="updateShortcut"
       >
     </div>
   </div>

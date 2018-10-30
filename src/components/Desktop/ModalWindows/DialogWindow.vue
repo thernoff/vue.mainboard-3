@@ -1,8 +1,8 @@
 <template>
   <div class="mainboard-dialog-window">
     <slot/>
-    <v-dialog 
-      v-model="visible" 
+    <v-dialog
+      v-model="visible"
       width="400px">
       <v-card light>
         <v-container>
@@ -24,12 +24,12 @@
             <v-flex xs12>
               <v-card-actions>
                 <v-spacer/>
-                <v-btn 
-                  class="danger" 
-                  @click="onCancel">{{ dictonary.CANCEL }}</v-btn>
-                <v-btn 
-                  class="info" 
-                  @click="onAccept">{{ dictonary.AGREE }}</v-btn>
+                <v-btn
+                  class="danger"
+                  @click="onCancel">{{ $t('cancel') }}</v-btn>
+                <v-btn
+                  class="info"
+                  @click="onAccept">{{ $t('agree') }}</v-btn>
               </v-card-actions>
             </v-flex>
           </v-layout>
@@ -40,8 +40,6 @@
 </template>
 
 <script>
-import dictonary from "@/languages/ru.js";
-
 export default {
   props: {
     options: {
@@ -55,7 +53,6 @@ export default {
   },
   data() {
     return {
-      dictonary,
       modal: false
     };
   },

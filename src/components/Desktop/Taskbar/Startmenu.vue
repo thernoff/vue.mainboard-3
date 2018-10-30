@@ -1,14 +1,14 @@
 <template>
   <div class="mainboard-startmenu">
     <mainboard-startmenu-settings
-      :categories="categories"
-      :visible="visibleStartmenuSettings"
-      @hideDialogWindow="visibleStartmenuSettings = false"
+      v-bind:categories="categories"
+      v-bind:visible="visibleStartmenuSettings"
+      v-on:hideDialogWindow="visibleStartmenuSettings = false"
     />
     <v-menu
       v-model="contextMenuItem.visible"
-      :position-x="contextMenuItem.x"
-      :position-y="contextMenuItem.y"
+      v-bind:position-x="contextMenuItem.x"
+      v-bind:position-y="contextMenuItem.y"
       class="mainboard-startmenu__contextmenu-item"
       absolute
       offset-y
@@ -19,16 +19,16 @@
         <v-list-tile
           @click="''"
         >
-          <v-list-tile-title @click="addShortcutToDesktop">
-            {{ 'Добавить ярлык на рабочий стол' }}
+          <v-list-tile-title v-on:click="addShortcutToDesktop">
+            {{ $t('shortcut.add_to_desktop') }}
           </v-list-tile-title>
         </v-list-tile>
       </v-list>
     </v-menu>
     <v-menu
       v-model="contextMenuStartbutton.visible"
-      :position-x="contextMenuStartbutton.x"
-      :position-y="contextMenuStartbutton.y"
+      v-bind:position-x="contextMenuStartbutton.x"
+      v-bind:position-y="contextMenuStartbutton.y"
       class="mainboard-startmenu__contextmenu-startbutton"
       absolute
       offset-y
@@ -37,17 +37,17 @@
     >
       <v-list dense>
         <v-list-tile
-          @click="''"
+          v-on:click="''"
         >
-          <v-list-tile-title @click="showStartmenuSettings">
-            {{ 'Свойства' }}
+          <v-list-tile-title v-on:click="showStartmenuSettings">
+            {{ $t('startmenu.settings') }}
           </v-list-tile-title>
         </v-list-tile>
       </v-list>
     </v-menu>
     <v-menu
-      :close-on-content-click="false"
-      :close-delay="50"
+      v-bind:close-on-content-click="false"
+      v-bind:close-delay="50"
       v-model="startMenu"
       top
       offset-y
@@ -59,15 +59,15 @@
         slot="activator"
         color="btnTaskbar"
         dark
-        @click="onClickBtnStart"
-        @contextmenu.prevent.stop="showContextMenuStartbutton($event)"
+        v-on:click="onClickBtnStart"
+        v-on:contextmenu.prevent.stop="showContextMenuStartbutton($event)"
       >
         <v-icon>home</v-icon>
       </v-btn>
       <v-card class="mainboard-startmenu">
-        <v-toolbar 
-          color="primary" 
-          dark 
+        <v-toolbar
+          color="primary"
+          dark
           depressed>
           <!-- <v-toolbar-side-icon></v-toolbar-side-icon> -->
 
@@ -79,25 +79,25 @@
           <!-- <v-btn icon>
             <v-icon>settings</v-icon>
           </v-btn> -->
-          <mainboard-user-form 
-            :user="user" 
-            @click.native="onClickBtnSettingsUser"/>
+          <mainboard-user-form
+            v-bind:user="user"
+            v-on:click.native="onClickBtnSettingsUser"
+          />
             <!-- <mainboard-window-settings
             v-bind:user="user"
             v-on:click.native="onClickBtnSettingsUser"
             v-bind:categories="categories"
           ></mainboard-window-settings> -->
-
         </v-toolbar>
         <v-list
           v-if="!countSearchElements"
-          :style="{height: heightWorkspace * 0.45 + 'px'}"
+          v-bind:style="{height: heightWorkspace * 0.45 + 'px'}"
           class="mainboard-startmenu__categories"
         >
           <v-list-group
             v-for="category in categories"
             v-if="parseInt(category.visible)"
-            :key="category.id"
+            v-bind:key="category.id"
             class="mainboard-startmenu__category"
           >
             <v-list-tile slot="activator">
@@ -112,13 +112,13 @@
             <v-list-tile
               v-for="element in category.elements"
               v-if="parseInt(element.visible)"
-              :key="element.id"
-              @click="createNewWindow(element)"
-              @contextmenu.prevent="showContextMenuItem(element, $event)"
+              v-bind:key="element.id"
+              v-on:click="createNewWindow(element)"
+              v-on:contextmenu.prevent="showContextMenuItem(element, $event)"
             >
               <img
-                :src="element.image"
-                :style="{width: '25px', marginRight: '5px'}"
+                v-bind:src="element.image"
+                v-bind:style="{width: '25px', marginRight: '5px'}"
               >
               <v-list-tile-title>
                 {{ element.label }}
@@ -131,15 +131,14 @@
           class="mainboard-startmenu__categories"
         >
           <v-list-tile
-
             v-for="element in searchElements"
-            :key="element.id"
-            @click="createNewWindow(element)"
-            @contextmenu.prevent="showContextMenuItem(element, $event)"
+            v-bind:key="element.id"
+            v-on:click="createNewWindow(element)"
+            v-on:contextmenu.prevent="showContextMenuItem(element, $event)"
           >
             <img
-              :src="element.image"
-              :style="{width: '25px', marginRight: '5px'}"
+              v-bind:src="element.image"
+              v-bind:style="{width: '25px', marginRight: '5px'}"
             >
             <v-list-tile-title>
               {{ element.label }}
@@ -155,7 +154,7 @@
               <v-text-field
                 v-model="inputSearch"
                 class="mainboard-startmenu__input-search"
-                label="Поиск"
+                v-bind:label=" $t('search') "
                 append-icon="search"
               />
             </v-list-tile-content>
@@ -163,18 +162,18 @@
         </v-list>
         <div class="text-md-center">
           <v-btn
-            title="Обновить страницу"
+            v-bind:title=" $t('page_refresh') "
             color="btnReload"
             dark
-            @click="reloadApp"
+            v-on:click="reloadApp"
           >
             <i class="material-icons">cached</i>
           </v-btn>
           <v-btn
-            title="Выход из системы"
+            v-bind:title=" $t('signout') "
             color="btnLogout"
             dark
-            @click="logoutApp"
+            v-on:click="signoutApp"
           >
             <i class="material-icons">power_settings_new</i>
           </v-btn>
@@ -188,13 +187,11 @@
 import axios from "axios";
 
 import UserForm from "@/components/Desktop/Taskbar/UserForm.vue";
-import WindowSettings from "@/components/Desktop/WindowSettings/WindowSettings.vue";
 import StartmenuSettings from "@/components/Desktop/Taskbar/StartmenuSettings.vue";
 
 export default {
   components: {
     mainboardUserForm: UserForm,
-    mainboardWindowSettings: WindowSettings,
     mainboardStartmenuSettings: StartmenuSettings
   },
   props: {
@@ -236,7 +233,6 @@ export default {
       if (this.inputSearch) {
         let regexp = new RegExp(this.inputSearch, "i");
         for (let i = 0; i < this.categories.length; i++) {
-          console.log("i", i);
           this.categories[i].elements.forEach(function(element) {
             if (regexp.test(element.label)) {
               arrElements.push(element);
@@ -311,7 +307,7 @@ export default {
       window.location.href = "/";
     },
 
-    logoutApp() {
+    signoutApp() {
       axios({
         method: "post",
         headers: { "Content-Type": "application/form-data" },

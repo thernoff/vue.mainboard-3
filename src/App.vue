@@ -2,34 +2,34 @@
 
   <v-app class="mainboard">
     <mainboard-dialog-window-create-shortcut
-      :visible="visibleDialogWindowCreateShortcut"
-      @hideDialogWindow="createCustomShortcut"
+      v-bind:visible="visibleDialogWindowCreateShortcut"
+      v-on:hideDialogWindow="createCustomShortcut"
     />
     <v-menu
       v-model="contextMenu.visible"
-      :position-x="contextMenu.x"
-      :position-y="contextMenu.y"
+      v-bind:position-x="contextMenu.x"
+      v-bind:position-y="contextMenu.y"
       absolute
       offset-y
     >
       <v-list>
         <v-list-tile
-          @click="showDialogWindowCreateShortcut"
+          v-on:click="showDialogWindowCreateShortcut"
         >
           <v-list-tile-title
-            @click="''"
+            v-on:click="''"
           >
-            {{ dictonary.CREATE_SHORTCUT }}
+            {{ $t('shortcut.create') }}
           </v-list-tile-title>
         </v-list-tile>
 
         <v-list-tile
-          @click="''"
+          v-on:click="''"
         >
           <v-list-tile-title
-            @click="''"
+            v-on:click="''"
           >
-            {{ dictonary.ORDER_SHORTCUT }}
+            {{ $t('shortcuts.order') }}
           </v-list-tile-title>
         </v-list-tile>
 
@@ -41,7 +41,7 @@
     <div
       ref="workspace"
       class="mainboard-workspace"
-      @contextmenu.stop.prevent="showContextMenu"
+      v-on:contextmenu.stop.prevent="showContextMenu"
     >
       <!-- <mainboard-cover
         v-if="visibleStartmenu"
@@ -54,9 +54,9 @@
       <mainboard-window
         v-for="(window, index) in windows"
         v-show="!window.minimize"
-        :key="window.id"
-        :index="index"
-        :options="window"
+        v-bind:key="window.id"
+        v-bind:index="index"
+        v-bind:options="window"
       />
       <mainboard-grid
         ref="grid"
@@ -69,19 +69,19 @@
     <mainboard-taskbar class="mainboard-taskbar"/>
     <template v-if="error">
       <v-snackbar
-        :multi-line="true"
-        :timeout="3000"
-        :value="true"
+        v-bind:multi-line="true"
+        v-bind:timeout="3000"
+        v-bind:value="true"
         color="error"
-        @input="closeError"
+        v-on:input="closeError"
       >
         {{ error }}
         <v-btn
           dark
           flat
-          @click="closeError"
+          v-on:click="closeError"
         >
-          {{ dictonary.CLOSE }}
+          {{ $t('close') }}
         </v-btn>
       </v-snackbar>
     </template>
@@ -90,7 +90,6 @@
 </template>
 
 <script>
-import dictonary from "@/languages/ru.js";
 import Taskbar from "@/components/Desktop/Taskbar/Taskbar.vue";
 import Toolbar from "@/components/Desktop/Toolbar/Toolbar.vue";
 import Startmenu from "@/components/Desktop/Taskbar/Startmenu.vue";
@@ -119,7 +118,6 @@ export default {
   },
   data() {
     return {
-      dictonary,
       visibleDialogWindowCreateShortcut: false,
       contextMenu: {
         visible: false,
@@ -227,13 +225,13 @@ export default {
 
     showContextMenu(event) {
       event.preventDefault();
-      /*
+
       this.contextMenu.visible = false;
       this.contextMenu.x = event.clientX;
       this.contextMenu.y = event.clientY;
       this.$nextTick(() => {
         this.contextMenu.visible = true;
-      }); */
+      });
     },
 
     showDialogWindowCreateShortcut() {
@@ -242,8 +240,10 @@ export default {
 
     createCustomShortcut(customShortcut) {
       this.visibleDialogWindowCreateShortcut = false;
-      this.$store.dispatch("actionCreateNewShortcut", customShortcut);
-      this.$store.dispatch("actionSaveSettingsDesktop");
+      if (customShortcut) {
+        this.$store.dispatch("actionCreateNewShortcut", customShortcut);
+        this.$store.dispatch("actionSaveSettingsDesktop");
+      }
     }
   }
 };

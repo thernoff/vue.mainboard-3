@@ -10,7 +10,6 @@ export default {
     },
 
     setStartmenuItems(state, categories) {
-      console.log("commit setStartmenuItems");
       state.categories = categories;
     }
   },

@@ -1,8 +1,8 @@
 <template>
   <div class="mainboard-input-dialog-window">
     <slot/>
-    <v-dialog 
-      v-model="modal" 
+    <v-dialog
+      v-model="modal"
       width="400px">
       <v-card light>
         <v-container>
@@ -25,18 +25,18 @@
               </v-card-text>
             </v-flex>
           </v-layout>
-          <v-layout 
-            row 
+          <v-layout
+            row
             align-center>
-            <v-flex 
-              xs12 
+            <v-flex
+              xs12
               text-xs-center>
-              <v-btn 
-                class="error" 
-                @click="onCancel">{{ dictonary.CANCEL }}</v-btn>
-              <v-btn 
-                class="info" 
-                @click="onSave">{{ dictonary.SAVE }}</v-btn>
+              <v-btn
+                class="error"
+                @click="onCancel">{{ $t('cancel') }}</v-btn>
+              <v-btn
+                class="info"
+                @click="onSave">{{ $t('save') }}</v-btn>
             </v-flex>
           </v-layout>
         </v-container>
@@ -46,8 +46,6 @@
 </template>
 
 <script>
-import dictonary from "@/languages/ru.js";
-
 export default {
   props: {
     options: {
@@ -61,7 +59,6 @@ export default {
   },
   data() {
     return {
-      dictonary,
       modal: false,
       inputValue: this.value || ""
     };

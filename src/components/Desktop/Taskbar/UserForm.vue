@@ -1,16 +1,18 @@
 <template>
   <div class="mainboard-userform">
-    <v-layout 
-      row 
+    <v-layout
+      row
       justify-center>
-      <v-btn 
-        icon 
-        @click="modal=true">
+      <v-btn
+        icon
+        v-on:click="modal=true">
         <v-icon>settings</v-icon>
       </v-btn>
-      <v-dialog 
-        v-model="modal" 
-        width="400px">
+      <v-dialog
+        v-model="modal"
+        width="400px"
+        persistent
+      >
         <!-- <v-btn icon slot="activator">
         <v-icon>settings</v-icon>
       </v-btn> -->
@@ -18,74 +20,83 @@
           <v-layout row>
             <v-flex xs12>
               <v-card-title class="primary mainboard-userform__title">
-                <div class="headline">Настройки пользователя</div>
+                <div class="headline">{{ $t('user.settings') }}</div>
               </v-card-title>
             </v-flex>
           </v-layout>
           <v-container>
             <v-layout row>
               <v-flex xs12>
-                <v-form 
-                  ref="form" 
-                  v-model="valid" 
+                <v-form
+                  ref="form"
+                  v-model="valid"
                   lazy-validation>
                   <v-text-field
-                    :value="user.firstname"
+                    v-bind:value="user.firstname"
+                    v-bind:rules="nameRules"
                     name="firstname"
-                    label="Имя"
+                    v-bind:label=" $t('user.firstname') "
                     required
                     readonly
                   />
                   <v-text-field
-                    :value="user.lastname"
-                    :rules="nameRules"
+                    v-bind:value="user.lastname"
+                    v-bind:rules="nameRules"
                     name="lastname"
-                    label="Фамилия"
+                    v-bind:label=" $t('user.lastname') "
                     required
                     readonly
                   />
                   <v-text-field
-                    :value="user.email"
-                    :rules="emailRules"
+                    v-bind:value="user.email"
+                    v-bind:rules="emailRules"
                     name="email"
-                    label="E-mail"
+                    v-bind:label=" $t('user.email') "
                     required
-                    @input="email = $event"
+                    v-on:input="email = $event"
                   />
                   <v-text-field
                     v-model="password"
-                    :rules="passwordRules"
-                    :type="'password'"
+                    v-bind:rules="passwordRules"
+                    v-bind:type="'password'"
                     name="password"
-                    label="Пароль"/>
+                    v-bind:label=" $t('user.password') "
+                  />
                   <v-text-field
                     v-model="repassword"
-                    :rules="repasswordRules"
-                    :type="'password'"
+                    v-bind:rules="repasswordRules"
+                    v-bind:type="'password'"
                     name="repassword"
-                    label="Введите пароль еще раз"/>
+                    v-bind:label=" $t('user.repassword') "
+                  />
                   <v-select
-                    :value="user.idActiveInterface"
-                    :items="interfaces"
+                    v-bind:value="user.idActiveInterface"
+                    v-bind:items="interfaces"
                     item-text="name"
                     item-value="id"
-                    label="Тип интерфейса"
-                    @input="idActiveInterface = $event"
+                    v-bind:label=" $t('user.interface') "
+                    v-on:input="idActiveInterface = $event"
+                  />
+                  <v-select
+                    v-bind:value="currentLanguage"
+                    v-bind:items="languages"
+                    v-bind:label=" $t('user.language') "
+                    v-on:input="changeLang($event)"
                   />
                   <v-layout align-center>
                     <v-flex text-xs-center>
                       <v-btn
-                        :disabled="!valid"
+                        v-bind:disabled="!valid"
                         color="info"
-                        @click="saveUser"
+                        v-on:click="saveUser"
                       >
-                        Сохранить
+                        {{ $t('save') }}
                       </v-btn>
                       <v-btn
                         color="error"
-                        @click="cancel"
+                        v-on:click="cancel"
                       >
-                        Отмена
+                        {{ $t('cancel') }}
                       </v-btn>
                     </v-flex>
                   </v-layout>
@@ -115,27 +126,28 @@ export default {
       password: "",
       repassword: "",
       idActiveInterface: null,
+      languages: ["ru", "en"],
       //firstname: this.user.firstname,
       nameRules: [
-        v => !!v || "Name is required"
+        v => !!v || this.$t("user.rules.name_required")
         //v => (v && v.length <= 10) || "Name must be less than 10 characters"
       ],
       emailRules: [
-        v => !!v || "E-mail is required",
-        v => /.+@.+/.test(v) || "E-mail must be valid"
+        v => !!v || this.$t("user.rules.email_required"),
+        v => /.+@.+/.test(v) || this.$t("user.rules.email_valid")
       ],
       passwordRules: [
         v =>
           v.length === 0 ||
           v.length >= 6 ||
-          "Пароль должен состоять минимум из 6 символов"
+          this.$t("user.rules.password_length")
       ],
       repasswordRules: [
         v =>
           v.length === 0 ||
           v.length >= 6 ||
-          "Пароль должен состоять минимум из 6 символов",
-        v => v == this.password || "Пароли должны совпадать"
+          this.$t("user.rules.password_length"),
+        v => v == this.password || this.$t("user.rules.passwords_equals")
       ]
     };
   },
@@ -145,6 +157,9 @@ export default {
     }, */
     interfaces() {
       return this.$store.getters.interfaces;
+    },
+    currentLanguage() {
+      return this.$i18n.locale;
     }
   },
   mounted() {},
@@ -168,7 +183,10 @@ export default {
           this.$store.dispatch("actionSaveUser", user);
         }
         this.password = this.repassword = "";
-        location.reload();
+
+        if (process.env.NODE_ENV !== "development") {
+          location.reload();
+        }
       }
     },
 
@@ -176,6 +194,10 @@ export default {
       //this.$refs.form.reset();
       this.modal = false;
       this.idActiveInterface = null;
+    },
+
+    changeLang($lang) {
+      this.$i18n.locale = $lang;
     }
   }
 };

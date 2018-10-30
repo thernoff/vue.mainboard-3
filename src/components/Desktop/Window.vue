@@ -1,15 +1,15 @@
 <template>
   <div
     ref="window"
-    :data-index="index"
-    :style="{
+    v-bind:data-index="index"
+    v-bind:style="{
       top: options.top * heightWorkspace / 100 + 'px',
       left: options.left * widthWorkspace / 100 + 'px',
       width: options.width + '%',
       height: options.height + '%',
       zIndex: options.zIndex,
     }"
-    :class="[{'fullscreen': options.fullscreen}, options.classesCss.join(' ')]"
+    v-bind:class="[{'fullscreen': options.fullscreen}, options.classesCss.join(' ')]"
     class="mainboard-window"
   >
     <v-card
@@ -17,12 +17,12 @@
       class="mainboard-window__card"
     >
       <v-card-title
-        :class = "{'titleWindow': options.active, 'indigo lighten-4': !options.active}"
-        :title="options.title"
+        v-bind:class = "{'titleWindow': options.active, 'indigo lighten-4': !options.active}"
+        v-bind:title="options.title"
         class="mainboard-window__header"
         primary-title
-        @mousedown="setActiveWindow"
-        @dblclick="toggleFullscreenWindow"
+        v-on:mousedown="setActiveWindow"
+        v-on:dblclick="toggleFullscreenWindow"
       >
         <div class="mainboard-window__title">{{ options.title }}</div>
         <v-spacer/>
@@ -33,7 +33,7 @@
             small
             class="mainboard-window__btn"
             title="Назад"
-            @click="back">
+            v-on:click="back">
             <v-icon color="white">fas fa-arrow-left</v-icon>
           </v-btn>
           <!-- <v-btn icon small class="mainboard-window__btn" @click="toggleClassWindow('mainboard-window--fullheight')" title="Развернуть по высоте">
@@ -46,24 +46,24 @@
             icon
             small
             class="mainboard-window__btn"
-            title="Перезагрузить окно"
-            @click.stop="reloadWindow">
+            v-bind:title=" $t('window.refresh') "
+            v-on:click.stop="reloadWindow">
             <v-icon color="white">refresh</v-icon>
           </v-btn>
           <v-btn
             icon
             small
             class="mainboard-window__btn"
-            title="Свернуть"
-            @click.stop="minimizeWindow">
+            v-bind:title=" $t('minimize') "
+            v-on:click.stop="minimizeWindow">
             <v-icon color="white">minimize</v-icon>
           </v-btn>
           <v-btn
             icon
             small
             class="mainboard-window__btn"
-            title="Развернуть на весь экран"
-            @click.stop="toggleFullscreenWindow">
+            v-bind:title=" $t('window.fullscreen') "
+            v-on:click.stop="toggleFullscreenWindow">
             <v-icon
               v-if="!options.fullscreen"
               color="white">fullscreen</v-icon>
@@ -75,8 +75,8 @@
             icon
             small
             class="mainboard-window__btn"
-            title="Закрыть окно"
-            @click.stop="closeWindow">
+            v-bind:title=" $t('window.close') "
+            v-on:click.stop="closeWindow">
             <v-icon color="white">close</v-icon>
           </v-btn>
         </div>
@@ -86,15 +86,14 @@
         <div
           v-if="!options.active"
           class="mainboard-window__cover-window"
-          @click="setActiveWindow"
+          v-on:click="setActiveWindow"
         />
         <base-mainboard-frame
           ref="baseMainboardFrame"
-          :back-link="backLink"
-          :api-link="options.apiLink"
-          @loadFrame="updateWindow($event)"/>
+          v-bind:back-link="backLink"
+          v-bind:api-link="options.apiLink"
+          v-on:loadFrame="updateWindow($event)"/>
       </v-card-text>
-
       <v-divider/>
     </v-card>
   </div>

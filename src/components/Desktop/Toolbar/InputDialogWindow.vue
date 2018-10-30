@@ -1,9 +1,9 @@
 <template>
   <div class="mainboard-input-dialog-window">
     <slot/>
-    <v-dialog 
-      v-model="modal" 
-      width="400px" 
+    <v-dialog
+      v-model="modal"
+      width="400px"
       persistent>
       <v-card light>
         <v-container>
@@ -18,7 +18,7 @@
             <v-flex xs12>
               <v-card-text>
                 <v-text-field
-                  :label="options.label"
+                  v-bind:label="options.label"
                   v-model="inputValue"
                   name="title"
                   type="text"
@@ -26,18 +26,18 @@
               </v-card-text>
             </v-flex>
           </v-layout>
-          <v-layout 
-            row 
+          <v-layout
+            row
             align-center>
-            <v-flex 
-              xs12 
+            <v-flex
+              xs12
               text-xs-center>
-              <v-btn 
-                class="error" 
-                @click="onCancel">Отмена</v-btn>
-              <v-btn 
-                class="info" 
-                @click="onSave">Сохранить</v-btn>
+              <v-btn
+                class="error"
+                v-on:click="onCancel">{{ $t('cancel') }}</v-btn>
+              <v-btn
+                class="info"
+                v-on:click="onSave">{{ $t('save') }}</v-btn>
             </v-flex>
           </v-layout>
         </v-container>

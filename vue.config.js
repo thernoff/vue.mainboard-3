@@ -1,5 +1,5 @@
 module.exports = {
-  runtimeCompiler: true
+  runtimeCompiler: true,
 
   /* chainWebpack: config => {
     config.plugin("provide").use(require("webpack").ProvidePlugin, [
@@ -10,5 +10,12 @@ module.exports = {
         "window.jQuery": "jquery"
       }
     ]);
-  } */
+  } */ pluginOptions: {
+    i18n: {
+      locale: "ru",
+      fallbackLocale: "ru",
+      localeDir: "locales",
+      enableInSFC: true
+    }
+  }
 };

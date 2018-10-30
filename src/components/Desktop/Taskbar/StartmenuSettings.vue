@@ -2,8 +2,8 @@
   <div class="mainboard-startmenu-settings">
     <v-menu
       v-model="contextMenu.visible"
-      :position-x="contextMenu.x"
-      :position-y="contextMenu.y"
+      v-bind:position-x="contextMenu.x"
+      v-bind:position-y="contextMenu.y"
       absolute
       offset-y
       light
@@ -11,61 +11,60 @@
     >
       <v-list>
         <v-list-tile
-          @click="''"
+          v-on:click="''"
         >
           <v-list-tile-title
-            @click="''"
+            v-on:click="''"
           >
-            {{ 'Переименовать' }}
+            {{ $t('rename') }}
           </v-list-tile-title>
         </v-list-tile>
 
         <v-list-tile
-          @click="''"
+          v-on:click="''"
         >
           <v-list-tile-title
-            @click="''"
+            v-on:click="''"
           >
-            {{ 'Скрыть' }}
+            {{ $t('hide') }}
           </v-list-tile-title>
         </v-list-tile>
-
       </v-list>
     </v-menu>
-    <v-dialog 
-      v-model="visible" 
-      width="800px" 
+    <v-dialog
+      v-model="visible"
+      width="800px"
       persistent>
       <v-card light>
         <v-layout row>
           <v-flex xs12>
             <v-card-title class="primary mainboard-userform__title">
-              <div class="headline">Настройка меню "Пуск"</div>
+              <div class="headline">{{ $t('startmenu.customize') }}</div>
             </v-card-title>
           </v-flex>
         </v-layout>
         <v-container>
           <v-layout row>
             <v-flex xs12>
-              <div 
-                ref="categories" 
+              <div
+                ref="categories"
                 class="container-categories">
                 <mainboard-panel-elements
                   v-for="(category, index) in localCategories"
-                  :key="category.id"
-                  :title="category.label"
-                  :elements="category.elements"
-                  :visible-category="parseInt(category.visible)"
-                  @startSortable="startSortable"
-                  @receiveSortable="receiveSortable"
-                  @stopSortable="stopSortable"
-                  @createNewCategory="createNewCategory(index)"
-                  @updateTitleCategory="updateTitleCategory(index, $event)"
-                  @toggleVisibityCategory="toggleVisibityCategory(index)"
-                  @removeCategory="removeCategory(index)"
-                  @showContextMenuElement="showContextMenuElement(index, $event)"
-                  @updateTitleElement="updateTitleElement(index, $event)"
-                  @toggleVisibityElement="toggleVisibityElement(index, $event)"
+                  v-bind:key="category.id"
+                  v-bind:title="category.label"
+                  v-bind:elements="category.elements"
+                  v-bind:visible-category="parseInt(category.visible)"
+                  v-on:startSortable="startSortable"
+                  v-on:receiveSortable="receiveSortable"
+                  v-on:stopSortable="stopSortable"
+                  v-on:createNewCategory="createNewCategory(index)"
+                  v-on:updateTitleCategory="updateTitleCategory(index, $event)"
+                  v-on:toggleVisibityCategory="toggleVisibityCategory(index)"
+                  v-on:removeCategory="removeCategory(index)"
+                  v-on:showContextMenuElement="showContextMenuElement(index, $event)"
+                  v-on:updateTitleElement="updateTitleElement(index, $event)"
+                  v-on:toggleVisibityElement="toggleVisibityElement(index, $event)"
                 />
               </div>
             </v-flex>
@@ -74,15 +73,15 @@
             <v-flex text-xs-center>
               <v-btn
                 color="info"
-                @click="saveCategories"
+                v-on:click="saveCategories"
               >
-                Сохранить
+                {{ $t('save') }}
               </v-btn>
               <v-btn
                 color="error"
-                @click="cancel"
+                v-on:click="cancel"
               >
-                Отмена
+                {{ $t('cancel') }}
               </v-btn>
             </v-flex>
           </v-layout>
@@ -128,16 +127,11 @@ export default {
       handler() {
         //this.localCategories = Object.assign([], this.categories);
         this.localCategories = JSON.parse(JSON.stringify(this.categories));
-        console.log(
-          "watch categories this.localCategories",
-          this.localCategories
-        );
       },
       deep: true
     }
   },
   created() {
-    console.log("this.categories", this.categories);
     this.localCategories = Object.assign([], this.categories);
   },
   mounted() {
@@ -181,7 +175,7 @@ export default {
       let newCategory = {
         id: 0,
         server_id: 0,
-        label: "Новая категория",
+        label: this.$t("category.new"),
         opened: false,
         visible: 1,
         elements: []
@@ -190,20 +184,17 @@ export default {
     },
 
     startSortable({ startIndexElement, startIndexCategory }) {
-      console.log("startSortable", startIndexElement, startIndexCategory);
       this.startIndexElement = startIndexElement;
       this.startIndexCategory = startIndexCategory;
     },
 
     receiveSortable({ stopIndexElement, stopIndexCategory }) {
-      console.log("receiveSortable", stopIndexElement, stopIndexCategory);
       this.stopIndexElement = stopIndexElement;
       this.stopIndexCategory = stopIndexCategory;
       this.updateOrderElementsToLocalCategories();
     },
 
     stopSortable({ stopIndexElement, stopIndexCategory }) {
-      console.log("stopSortable", stopIndexElement, stopIndexCategory);
       this.stopIndexElement = stopIndexElement;
       this.stopIndexCategory = stopIndexCategory;
       this.updateOrderElementsToLocalCategories();
@@ -231,11 +222,6 @@ export default {
       this.startIndexCategory = null;
       this.stopIndexElement = null;
       this.stopIndexCategory = null;
-
-      console.log(
-        "updateOrderElementsToLocalCategories this.localCategories",
-        this.localCategories
-      );
     },
 
     updateOrderCategoriesToLocalCategories() {
@@ -255,29 +241,18 @@ export default {
     },
 
     updateTitleElement(indexCategory, { indexElement, newTitleElement }) {
-      //console.log(indexCategory, indexElement, newTitleElement);
       this.localCategories[indexCategory].elements[
         indexElement
       ].label = newTitleElement;
     },
 
     toggleVisibityElement(indexCategory, indexElement) {
-      console.log(
-        "toggleVisibityElement",
-        this.localCategories[indexCategory].elements[indexElement].visible
-      );
       const value = parseInt(
         this.localCategories[indexCategory].elements[indexElement].visible
       );
-      console.log("value", value);
       this.localCategories[indexCategory].elements[indexElement].visible = value
         ? 0
         : 1;
-
-      console.log(
-        "toggleVisibityElement",
-        this.localCategories[indexCategory].elements[indexElement].visible
-      );
     },
 
     toggleVisibityCategory(index) {

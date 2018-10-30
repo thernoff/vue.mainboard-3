@@ -13,8 +13,7 @@ import "vuetify/dist/vuetify.min.css";
 import "@/main.css";
 // Helpers
 import colors from "vuetify/es5/util/colors";
-import lang from "@/languages";
-console.log("lang", lang);
+import i18n from "./i18n";
 Vue.use(Vuetify, {
   theme: {
     // primary: colors.indigo.darken1, // #E53935
@@ -34,12 +33,13 @@ Vue.config.productionTip = false;
 
 /* eslint-disable no-new */
 
-jQuery(document).ready(function() {
+jQuery(document).ready(function () {
   new Vue({
     el: "#app",
     router,
     store,
     components: { App },
+    i18n,
     template: "<App/>"
   });
 });

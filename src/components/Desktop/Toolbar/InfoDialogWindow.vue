@@ -1,9 +1,9 @@
 <template>
   <div class="mainboard-info-dialog-window">
     <slot/>
-    <v-dialog 
-      v-model="modal" 
-      width="400px" 
+    <v-dialog
+      v-model="modal"
+      width="400px"
       persistent>
       <v-card light>
         <v-container>
@@ -25,9 +25,9 @@
             <v-flex xs12>
               <v-card-actions>
                 <v-spacer/>
-                <v-btn 
-                  class="info" 
-                  @click="onAccept">Принять</v-btn>
+                <v-btn
+                  class="info"
+                  v-on:click="onAccept">{{ $t('accept') }}</v-btn>
               </v-card-actions>
             </v-flex>
           </v-layout>

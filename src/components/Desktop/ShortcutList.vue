@@ -1,18 +1,18 @@
 <template>
   <div
     ref="shortcutList"
-    :style="{width: shortcutWidth + 'px'}"
+    v-bind:style="{width: shortcutWidth + 'px'}"
     class="mainboard-shortcut-list"
   >
     <div class="mainboard-shortcut-list__container">
       <div
         v-for="(shortcut, index) in shortcuts"
-        :key="shortcut.id"
-        class="sortable-element"
+        v-bind:key="shortcut.id"
+        class="sortable-shortcut"
       >
         <mainboard-shortcut
-          :index="index"
-          :shortcut="shortcut"
+          v-bind:index="index"
+          v-bind:shortcut="shortcut"
         />
       </div>
 
@@ -49,20 +49,17 @@ export default {
     var startIndex, stopIndex;
     $(".mainboard-shortcut-list__container").sortable({
       distance: 5,
-      items: ".sortable-element",
+      items: ".sortable-shortcut",
       connectWith: ".mainboard-shortcut-list__container",
       start: function(event, ui) {
         startIndex = $(this)
-          .find(".sortable-element")
+          .find(".sortable-shortcut")
           .index(ui.item);
-        console.log("startIndex", startIndex);
       },
       stop: function(event, ui) {
         stopIndex = $(this)
-          .find(".sortable-element")
+          .find(".sortable-shortcut")
           .index(ui.item);
-        console.log("stopIndex", stopIndex);
-
         self.$store.dispatch("actionUpdateOrderShortcuts", {
           startIndex,
           stopIndex
@@ -76,7 +73,7 @@ export default {
 </script>
 
 <style scoped>
-.sortable-element {
+.sortable-shortcut {
   list-style-type: none;
   display: inline-block;
 }

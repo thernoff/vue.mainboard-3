@@ -15,7 +15,7 @@
         light
       >
         <v-card-title
-          :class="{
+          v-bind:class="{
             'hidden': !visibleCategory
           }"
           class="mainboard-panel__title title-panel"
@@ -24,157 +24,166 @@
           <input
             v-show="renameTitleCategory && visibleCategory"
             ref="inputRenameTitleCategory"
-            :value="title"
+            v-bind:value="title"
             class="panel-title__input"
-            @blur="updateTitleCategory"
-            @keyup.enter="updateTitleCategory"
+            v-on:blur="updateTitleCategory"
+            v-on:keyup.enter="updateTitleCategory"
           >
           <v-spacer/>
           <v-btn
-            v-show="!renameTitleCategory && visibleCategory" 
+            v-show="!renameTitleCategory && visibleCategory"
             icon
             small
             class="mainboard-panel__btn"
-            title="Редактировать"
-            @click="showInputRenameTitleCategory"
+            v-bind:title=" $t('category.rename') "
+            v-on:click="showInputRenameTitleCategory"
           >
             <!-- <v-icon color="white">fas fa-arrow-left</v-icon> -->
             <v-icon color="white">create</v-icon>
           </v-btn>
-          <v-btn 
-            v-show="renameTitleCategory && visibleCategory" 
-            icon 
-            small 
-            class="mainboard-panel__btn" 
-            title="Сохранить" 
-            @click="updateTitleCategory">
+          <v-btn
+            v-show="renameTitleCategory && visibleCategory"
+            icon
+            small
+            class="mainboard-panel__btn"
+            v-bind:title=" $t('save') "
+            v-on:click="updateTitleCategory">
             <v-icon color="white">save</v-icon>
           </v-btn>
-          <v-btn 
-            v-show="visibleCategory" 
-            icon 
-            small 
-            class="mainboard-panel__btn" 
-            title="Создать новую категорию" 
-            @click="createNewCategory">
+          <v-btn
+            v-show="visibleCategory"
+            icon
+            small
+            class="mainboard-panel__btn"
+            v-bind:title=" $t('category.create')"
+            v-on:click="createNewCategory">
             <v-icon color="white">add</v-icon>
           </v-btn>
-          <v-btn 
-            v-show="visibleCategory" 
-            icon 
-            small 
-            class="mainboard-panel__btn" 
-            title="Отображать" 
-            @click="toggleVisibityCategory">
+          <v-btn
+            v-show="visibleCategory"
+            icon
+            small
+            class="mainboard-panel__btn"
+            v-bind:title=" $t('category.hide') "
+            v-on:click="toggleVisibityCategory">
             <v-icon color="white">visibility_off</v-icon>
           </v-btn>
-          <v-btn 
-            v-show="!visibleCategory" 
-            icon 
-            small 
-            class="mainboard-panel__btn" 
-            title="Скрыть" 
-            @click="toggleVisibityCategory">
+          <v-btn
+            v-show="!visibleCategory"
+            icon
+            small
+            class="mainboard-panel__btn"
+            v-bind:title=" $t('category.display') "
+            v-on:click="toggleVisibityCategory">
             <v-icon color="white">visibility</v-icon>
           </v-btn>
-          <v-btn 
-            v-show="!countElements && visibleCategory" 
-            icon 
-            small 
-            class="mainboard-panel__btn" 
-            title="Удалить" 
-            @click="removeCategory">
+          <v-btn
+            v-show="!countElements && visibleCategory"
+            icon
+            small
+            class="mainboard-panel__btn"
+            v-bind:title=" $t('category.delete') "
+            v-on:click="removeCategory">
             <v-icon color="white">delete</v-icon>
           </v-btn>
         </v-card-title>
 
-        <v-card-text 
-          ref="body" 
+        <v-card-text
+          ref="body"
           class="mainboard-panel__body">
-          <div 
+          <div
             v-for="(element, index) in elements"
-            :key="element.id"
-            :class="{
+            v-bind:key="element.id"
+            v-bind:class="{
               'hidden': !visibleCategory
             }"
             class="mainboard-panel__element sortable-element"
-            @contextmenu.prevent="showContextMenuElement(index, $event)"
+            v-on:contextmenu.prevent="showContextMenuElement(index, $event)"
           >
-            <img 
-              :src="element.image" 
-              :class="{'hidden-image': !parseInt(element.visible)}" 
+            <img
+              v-bind:src="element.image"
+              v-bind:class="{'hidden-image': !parseInt(element.visible)}"
               alt="">
             <div class="sortable-element__caption">
               <span v-if="indexRenameElement !== index">{{ element.label }}</span>
               <input
                 v-show="parseInt(element.visible) && indexRenameElement === index"
                 ref="inputRenameTitleElement"
-                :value="element.label"
+                v-bind:value="element.label"
                 class="element-label__input"
-                @blur="updateTitleElement(index)"
-                @keyup.enter="updateTitleElement(index)"
+                v-on:blur="updateTitleElement(index)"
+                v-on:keyup.enter="updateTitleElement(index)"
               >
             </div>
             <div class="element-buttons">
-              <ul 
-                v-show="visibleCategory" 
+              <ul
+                v-show="visibleCategory"
                 class="element-buttons__list">
                 <li>
                   <v-btn
-                    v-show="parseInt(element.visible) && indexRenameElement !== index" 
-                    fab 
+                    v-show="parseInt(element.visible) && indexRenameElement !== index"
+                    fab
                     dark
-                    small 
+                    small
                     color="primary"
                     class="element-buttons__button"
-                    title="Переименовать"
-                    @click="showInputRenameTitleElement(index)">
-                    <v-icon 
-                      dark 
-                      class="element-buttons__icon">create</v-icon>
+                    v-bind:title=" $t('rename') "
+                    v-on:click="showInputRenameTitleElement(index)">
+                    <v-icon
+                      dark
+                      class="element-buttons__icon"
+                    >
+                      create
+                    </v-icon>
                   </v-btn>
                 </li>
                 <li>
                   <v-btn
-                    v-show="parseInt(element.visible) && indexRenameElement === index" 
-                    fab 
+                    v-show="parseInt(element.visible) && indexRenameElement === index"
+                    fab
                     dark
-                    small 
+                    small
                     color="primary"
                     class="element-buttons__button"
-                    title="Сохранить"
-                    @click="updateTitleElement(index)">
-                    <v-icon 
-                      dark 
+                    v-bind:title=" $t('save') "
+                    v-on:click="updateTitleElement(index)">
+                    <v-icon
+                      dark
                       class="element-buttons__icon">save</v-icon>
                   </v-btn>
                 </li>
                 <li v-show="!parseInt(element.visible)">
-                  <v-btn 
-                    fab 
-                    dark 
-                    small 
-                    color="primary" 
-                    class="element-buttons__button" 
-                    title="Скрыть" 
-                    @click="toggleVisibityElement(index)">
-                    <v-icon 
-                      dark 
-                      class="element-buttons__icon">visibility</v-icon>
+                  <v-btn
+                    fab
+                    dark
+                    small
+                    color="primary"
+                    class="element-buttons__button"
+                    v-bind:title=" $t('display') "
+                    v-on:click="toggleVisibityElement(index)">
+                    <v-icon
+                      dark
+                      class="element-buttons__icon"
+                    >
+                      visibility
+                    </v-icon>
                   </v-btn>
                 </li>
                 <li v-show="parseInt(element.visible)">
-                  <v-btn 
-                    fab 
-                    dark 
-                    small 
-                    color="primary" 
-                    class="element-buttons__button" 
-                    title="Отображать" 
-                    @click="toggleVisibityElement(index)">
-                    <v-icon 
-                      dark 
-                      class="element-buttons__icon">visibility_off</v-icon>
+                  <v-btn
+                    fab
+                    dark
+                    small
+                    color="primary"
+                    class="element-buttons__button"
+                    v-bind:title=" $t('hide') "
+                    v-on:click="toggleVisibityElement(index)">
+                    <v-icon
+                      dark
+                      class="element-buttons__icon"
+                    >
+                      visibility_off
+                    </v-icon>
                   </v-btn>
                 </li>
               </ul>
@@ -226,7 +235,6 @@ export default {
         const startIndexElement = $(this)
           .find(".sortable-element")
           .index(ui.item);
-        //console.log("startIndexElement", startIndexElement);
 
         const $panel = $body.closest(".mainboard-panel");
         const startIndexCategory = $(".mainboard-panel").index($panel);
@@ -234,21 +242,15 @@ export default {
           startIndexElement,
           startIndexCategory
         });
-
-        //console.log("startIndexCategory", startIndexCategory);
       },
       receive: function(event, ui) {
-        //console.log("element receive ui", ui);
         const $body = $(this);
         const stopIndexElement = $(this)
           .find(".sortable-element")
           .index(ui.item);
-        //console.log("stopIndexElement", stopIndexElement);
 
         const $panel = $body.closest(".mainboard-panel");
-
         const stopIndexCategory = $(".mainboard-panel").index($panel);
-        //console.log("stopIndexCategory", stopIndexCategory);
 
         self.$emit("receiveSortable", {
           stopIndexElement,
@@ -256,16 +258,13 @@ export default {
         });
       },
       stop: function(event, ui) {
-        //console.log("element stop ui", ui);
         const $body = $(this);
         const stopIndexElement = $(this)
           .find(".sortable-element")
           .index(ui.item);
         if (stopIndexElement >= 0) {
-          //console.log("stopIndexElement", stopIndexElement);
           const $panel = $body.closest(".mainboard-panel");
           const stopIndexCategory = $(".mainboard-panel").index($panel);
-          //console.log("stopIndexCategory", stopIndexCategory);
 
           self.$emit("stopSortable", {
             stopIndexElement,
@@ -281,16 +280,10 @@ export default {
     },
 
     createNewCategory() {
-      console.log("createNewCategory");
       this.$emit("createNewCategory");
     },
 
     showInputRenameTitleElement(indexElement) {
-      /* console.log("showInputRenameTitleElement this.$refs", this.$refs);
-      console.log(
-        "showInputRenameTitleElement this.$refs.inputRenameTitleElement[indexElement]",
-        this.$refs.inputRenameTitleElement[indexElement]
-      ); */
       this.indexRenameElement = indexElement;
       this.renameTitleElement = true;
       this.$nextTick(() => {
@@ -306,7 +299,6 @@ export default {
     updateTitleElement(indexElement) {
       const newTitleElement = this.$refs.inputRenameTitleElement[indexElement]
         .value;
-      console.log("newTitleElement", newTitleElement);
       //if (this.title !== newTitleCategory) {
       this.$emit("updateTitleElement", { indexElement, newTitleElement });
       //}

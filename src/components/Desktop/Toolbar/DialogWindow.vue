@@ -1,9 +1,9 @@
 <template>
   <div class="mainboard-dialog-window">
     <slot/>
-    <v-dialog 
-      v-model="visible" 
-      width="400px" 
+    <v-dialog
+      v-model="visible"
+      width="400px"
       persistent>
       <v-card light>
         <v-container>
@@ -25,12 +25,12 @@
             <v-flex xs12>
               <v-card-actions>
                 <v-spacer/>
-                <v-btn 
-                  class="danger" 
-                  @click="onCancel">Отмена</v-btn>
-                <v-btn 
-                  class="info" 
-                  @click="onAccept">Согласен</v-btn>
+                <v-btn
+                  class="danger"
+                  v-on:click="onCancel">{{ $t('cancel') }}</v-btn>
+                <v-btn
+                  class="info"
+                  v-on:click="onAccept">{{ $t('accept') }}</v-btn>
               </v-card-actions>
             </v-flex>
           </v-layout>

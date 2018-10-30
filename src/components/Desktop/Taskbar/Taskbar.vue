@@ -7,8 +7,8 @@
   >
     <v-menu
       v-model="contextMenuMinimizeButton.visible"
-      :position-x="contextMenuMinimizeButton.x"
-      :position-y="contextMenuMinimizeButton.y"
+      v-bind:position-x="contextMenuMinimizeButton.x"
+      v-bind:position-y="contextMenuMinimizeButton.y"
       class="mainboard-taskbar__context-menu-minimize-button context-menu"
       absolute
       offset-y
@@ -17,12 +17,12 @@
       <v-list dense>
         <v-list-tile
           class="context-menu__tile"
-          @click="closeWindow"
+          v-on:click="closeWindow"
         >
           <v-list-tile-title
-            @click="''"
+            v-on:click="''"
           >
-            {{ 'Закрыть окно' }}
+            {{ $t('window.close') }}
           </v-list-tile-title>
         </v-list-tile>
       </v-list>
@@ -38,21 +38,21 @@
     <v-btn
       v-for="(window, index) in windows"
       v-if="!window.closed"
-      :key="index"
-      :color="(!window.minimize) ? 'primary' : 'minimizeWindowTaskbar'"
-      :style="{minWidth: widthBtnMinimizeWindows + '%', width: widthBtnMinimizeWindows + '%'}"
+      v-bind:key="index"
+      v-bind:color="(!window.minimize) ? 'primary' : 'minimizeWindowTaskbar'"
+      v-bind:style="{minWidth: widthBtnMinimizeWindows + '%', width: widthBtnMinimizeWindows + '%'}"
       class="mainboard-taskbar__btn-minimize-window"
-      @click="toggleMinimizedWindow(index, window.minimize)"
-      @contextmenu.prevent.stop="showContextMenuMinimizeButton(index, $event)"
+      v-on:click="toggleMinimizedWindow(index, window.minimize)"
+      v-on:contextmenu.prevent.stop="showContextMenuMinimizeButton(index, $event)"
     >
-      <i 
-        v-if="window.minimize" 
-        class="material-icons" 
+      <i
+        v-if="window.minimize"
+        class="material-icons"
         small>
         expand_less
       </i>
-      <span 
-        :title="window.title" 
+      <span
+        v-bind:title="window.title"
         class="mainboard-taskbar__minimize-window">
         {{ titleMinimizeWindow(window.title) }}
       </span>
@@ -63,8 +63,8 @@
       v-if="!showBtnRestoreMinimizeWindow"
       class="btn-minimize-windows"
       color="primary"
-      title="Свернуть все окна"
-      @click="minimizeWindows"
+      v-bind:title=" $t('windows.minimize') "
+      v-on:click="minimizeWindows"
     >
       <v-icon>expand_more</v-icon>
     </v-btn>
@@ -72,8 +72,8 @@
       v-if="showBtnRestoreMinimizeWindow"
       class="btn-restore-windows"
       color="primary"
-      title="Восстановить свернутые окна"
-      @click="restoreMinimizeWindows"
+      v-bind:title=" $t('windows.restore') "
+      v-on:click="restoreMinimizeWindows"
     >
       <v-icon>expand_less</v-icon>
     </v-btn>
