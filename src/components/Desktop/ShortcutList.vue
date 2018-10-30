@@ -29,7 +29,7 @@ export default {
   props: {
     shortcuts: {
       type: Array,
-      default: []
+      default: () => []
     }
   },
   data() {

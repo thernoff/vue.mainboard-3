@@ -171,20 +171,15 @@ export default {
     this.$store.commit("setHeightWorkspace", this.$refs.workspace.clientHeight);
 
     window.addEventListener("resize", function() {
-      const oldWidthGrid = self.$store.getters.getWidthGrid;
-      const oldHeightGrid = self.$store.getters.getHeightGrid;
-      const newWidthGrid = self.$refs.grid.$el.clientWidth;
-      const newHeightGrid = self.$refs.grid.$el.clientHeight;
-
-      const oldWidthWorkspace = self.$store.state.desktop.widthWorkspace;
+      /* const oldWidthWorkspace = self.$store.state.desktop.widthWorkspace;
       const oldHeightWorkspace = self.$store.state.desktop.heightWorkspace;
       const newWidthWorkspace = self.$refs.workspace.clientWidth;
-      const newHeightWorkspace = self.$refs.workspace.clientHeight;
+      const newHeightWorkspace = self.$refs.workspace.clientHeight; */
 
-      const options = {
+      /* const options = {
         coefLeft: newWidthWorkspace / oldWidthWorkspace,
         coefTop: newHeightWorkspace / oldHeightWorkspace
-      };
+      }; */
 
       //self.$store.dispatch("actionRecalcWindowsCoords", options);
       //self.$store.commit("setWidthGrid", self.$refs.grid.$el.clientWidth);
@@ -231,7 +226,8 @@ export default {
     },
 
     showContextMenu(event) {
-      /* event.preventDefault();
+      event.preventDefault();
+      /*
       this.contextMenu.visible = false;
       this.contextMenu.x = event.clientX;
       this.contextMenu.y = event.clientY;

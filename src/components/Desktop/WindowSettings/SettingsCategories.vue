@@ -33,8 +33,7 @@ export default {
     };
   },
   watch: {
-    categories(newVal, oldVal) {
-      console.log("watch categories");
+    categories() {
       this.localCategories = Object.assign([], this.categories);
     }
   },

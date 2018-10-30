@@ -184,7 +184,7 @@ export default {
       }
     },
 
-    actionCreateNewWorkspace({ state, commit, dispatch }, nameWorkspace) {
+    actionCreateNewWorkspace({ state, commit }, nameWorkspace) {
       commit("createNewWorkspace", nameWorkspace);
       commit("setWindows", state.activeWorkspace.windows);
       commit("setActiveWindow");
@@ -918,7 +918,7 @@ export default {
         });
     },
 
-    actionSaveSettingsDesktop({ commit, state, getters }) {
+    actionSaveSettingsDesktop({ state }) {
       const workspaces = state.workspaces;
 
       axios({
@@ -938,7 +938,7 @@ export default {
         });
     },
 
-    actionDeleteCurrentWorkspace({ commit, state, getters }) {
+    actionDeleteCurrentWorkspace({ commit, state }) {
       if (state.workspaces.length > 1) {
         commit("deleteCurrentWorkspace");
         commit("setActiveWorkspace", 0);
@@ -1033,10 +1033,6 @@ export default {
 
     getTitleActiveWorkspace(state) {
       return state.activeWorkspace ? state.activeWorkspace.title : "";
-    },
-
-    workspaces(state) {
-      return state.workspaces;
     },
 
     shortcuts(state) {

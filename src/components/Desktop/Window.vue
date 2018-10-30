@@ -27,12 +27,12 @@
         <div class="mainboard-window__title">{{ options.title }}</div>
         <v-spacer/>
         <div class="mainboard-window__group-buttons">
-          <v-btn 
-            v-if="showBtnBack" 
-            icon 
-            small 
-            class="mainboard-window__btn" 
-            title="Назад" 
+          <v-btn
+            v-if="showBtnBack"
+            icon
+            small
+            class="mainboard-window__btn"
+            title="Назад"
             @click="back">
             <v-icon color="white">fas fa-arrow-left</v-icon>
           </v-btn>
@@ -42,40 +42,40 @@
           <v-btn icon small class="mainboard-window__btn" @click="toggleClassWindow('mainboard-window--fullwidth')" title="Развернуть по ширине">
               <v-icon color="white">fas fa-arrows-alt-h</v-icon>
           </v-btn> -->
-          <v-btn 
-            icon 
-            small 
-            class="mainboard-window__btn" 
-            title="Перезагрузить окно" 
+          <v-btn
+            icon
+            small
+            class="mainboard-window__btn"
+            title="Перезагрузить окно"
             @click.stop="reloadWindow">
             <v-icon color="white">refresh</v-icon>
           </v-btn>
-          <v-btn 
-            icon 
-            small 
-            class="mainboard-window__btn" 
-            title="Свернуть" 
+          <v-btn
+            icon
+            small
+            class="mainboard-window__btn"
+            title="Свернуть"
             @click.stop="minimizeWindow">
             <v-icon color="white">minimize</v-icon>
           </v-btn>
-          <v-btn 
-            icon 
-            small 
-            class="mainboard-window__btn" 
-            title="Развернуть на весь экран" 
+          <v-btn
+            icon
+            small
+            class="mainboard-window__btn"
+            title="Развернуть на весь экран"
             @click.stop="toggleFullscreenWindow">
-            <v-icon 
-              v-if="!options.fullscreen" 
+            <v-icon
+              v-if="!options.fullscreen"
               color="white">fullscreen</v-icon>
-            <v-icon 
-              v-if="options.fullscreen" 
+            <v-icon
+              v-if="options.fullscreen"
               color="white">fullscreen_exit</v-icon>
           </v-btn>
-          <v-btn 
-            icon 
-            small 
-            class="mainboard-window__btn" 
-            title="Закрыть окно" 
+          <v-btn
+            icon
+            small
+            class="mainboard-window__btn"
+            title="Закрыть окно"
             @click.stop="closeWindow">
             <v-icon color="white">close</v-icon>
           </v-btn>
@@ -83,15 +83,15 @@
       </v-card-title>
 
       <v-card-text class="mainboard-window__body">
-        <div 
+        <div
           v-if="!options.active"
           class="mainboard-window__cover-window"
           @click="setActiveWindow"
         />
-        <base-mainboard-frame 
-          ref="baseMainboardFrame" 
-          :back-link="backLink" 
-          :api-link="options.apiLink" 
+        <base-mainboard-frame
+          ref="baseMainboardFrame"
+          :back-link="backLink"
+          :api-link="options.apiLink"
           @loadFrame="updateWindow($event)"/>
       </v-card-text>
 
@@ -150,21 +150,20 @@ export default {
 
   mounted() {
     var self = this;
-    var countRows = self.$store.getters.getCountRows;
-    var countColumns = self.$store.getters.getCountColumns;
+    //var countRows = self.$store.getters.getCountRows;
+    //var countColumns = self.$store.getters.getCountColumns;
     $(this.$refs.window)
       .draggable({
         handle: ".mainboard-window__header",
         containment: ".mainboard-workspace",
         snap: !self.isModeGrid ? false : ".mainboard-window",
-        start: function(event, ui) {
+        start: function(event) {
           var $window = $(this);
           $window.find(".mainboard-frame__cover").show();
           if (self.options.height == 100) {
             //$window.addClass("half-height");
             //$window.css("height", "90%");
           }
-          //console.log("drag", self.options.height);
 
           if ($window.hasClass("fullscreen")) {
             return false;
@@ -201,7 +200,7 @@ export default {
         minHeight: 150,
         minWidth: 300,
         //helper: "ui-resizable-helper",
-        start: function(event, ui) {
+        start: function(event) {
           var $window = $(this);
           //$window.find('.mainboard-frame__cover').css({display: 'block'});
           $window.find(".mainboard-frame__cover").show();
@@ -282,16 +281,6 @@ export default {
 
     updateWindowTitle(title) {
       this.$store.commit("updateWindowTitle", { index: this.index, title });
-      this.$store.dispatch("actionSaveSettingsDesktop");
-    },
-
-    updateWindowApiLink(apiLink) {
-      this.$store.commit("updateWindowApiLink", { index: this.index, apiLink });
-      this.$store.dispatch("actionSaveSettingsDesktop");
-    },
-
-    updateWindowCurrentLink(currentLink) {
-      this.$store.commit("updateWindowApiLink", { index: this.index, apiLink });
       this.$store.dispatch("actionSaveSettingsDesktop");
     },
 

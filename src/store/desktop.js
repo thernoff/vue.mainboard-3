@@ -32,10 +32,6 @@ export default {
   },
 
   getters: {
-    getGrid() {
-      return state.grid;
-    },
-
     getCountColumns(state) {
       return state.countColumns;
     },

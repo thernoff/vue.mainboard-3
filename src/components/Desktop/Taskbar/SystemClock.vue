@@ -26,8 +26,8 @@ export default {
       var hours = now.getHours() < 10 ? "0" + now.getHours() : now.getHours();
       var minutes =
         now.getMinutes() < 10 ? "0" + now.getMinutes() : now.getMinutes();
-      var seconds =
-        now.getSeconds() < 10 ? "0" + now.getSeconds() : now.getSeconds();
+      /*var seconds =
+        now.getSeconds() < 10 ? "0" + now.getSeconds() : now.getSeconds();*/
 
       return hours + ":" + minutes;
     },

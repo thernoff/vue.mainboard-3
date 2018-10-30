@@ -1,26 +1,31 @@
 <template>
   <div class="mainboard-frame">
     <div class="mainboard-frame__cover"/>
-    <iframe 
-      ref="baseFrame" 
-      :src="src" 
-      class="mainboard-frame__frame" 
-      frameborder="0" 
+    <iframe
+      ref="baseFrame"
+      :src="src"
+      class="mainboard-frame__frame"
+      frameborder="0"
       @load="load"/>
   </div>
 </template>
 
 <script>
 export default {
-  props: ["apiLink", "backLink"],
-  data() {
-    return {
-      cover: false
-    };
+  props: {
+    apiLink: {
+      type: String,
+      default: () => ""
+    },
+    backLink: {
+      type: String,
+      default: () => ""
+    }
   },
 
   data() {
     return {
+      cover: false,
       src: this.apiLink,
       firstLoad: true
     };

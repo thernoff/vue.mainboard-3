@@ -1,5 +1,3 @@
-import Vue from "vue";
-
 function getRandomId() {
   var id = "";
   var possible =
@@ -222,10 +220,9 @@ export default {
       commit("createNewWindow", { element, widthWorkspace, heightWorkspace });
     },
 
-    actionCloseWindow({ state, commit, dispatch }, index) {
+    actionCloseWindow({ commit }, index) {
       commit("closeWindow", index);
       commit("setActiveWindow", 0);
-      //dispatch("actionSaveSettingsDesktop");
     },
 
     actionSetActiveWindow({ commit }) {
