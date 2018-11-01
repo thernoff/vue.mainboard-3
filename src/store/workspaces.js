@@ -91,7 +91,7 @@ export default {
     }, */
 
     minimizeWindows(state) {
-      state.activeWorkspace.windows.forEach(function(window) {
+      state.activeWorkspace.windows.forEach(function (window) {
         window.minimize = true;
       });
     },
@@ -200,7 +200,7 @@ export default {
       axios
         .get(window.location.href + "extusers/fpage/desktop/")
         .then(response => {
-          console.log("response", response.data);
+          //console.log("response", response.data);
           // Массив данных для отображения стартового меню
           const dashboard = response.data.dashboard;
           if (dashboard && dashboard.length > 0) {
@@ -215,6 +215,11 @@ export default {
           const interfaces = response.data.interfaces;
           if (interfaces && interfaces.length > 0) {
             commit("setInterfaces", interfaces);
+          }
+
+          const languages = response.data.languages;
+          if (languages && languages.length > 0) {
+            commit("setLanguages", languages);
           }
 
           const workspaces = response.data.workspaces;
@@ -1048,7 +1053,7 @@ export default {
     },
 
     isActiveShortcut(state) {
-      const activeShortcuts = state.activeWorkspace.shortcuts.filter(function(
+      const activeShortcuts = state.activeWorkspace.shortcuts.filter(function (
         shorcut
       ) {
         return shorcut.active;

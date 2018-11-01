@@ -101,6 +101,8 @@ import ShortcutList from "@/components/Desktop/ShortcutList.vue";
 import ResizableBlock from "@/components/Desktop/ResizableBlock.vue";
 import DialogWindowCreateShortcut from "@/components/Desktop/DialogWindowCreateShortcut.vue";
 
+import axios from "axios";
+
 export default {
   name: "App",
 
@@ -151,11 +153,38 @@ export default {
 
   watch: {
     shortcuts() {
-      console.log("watch shortcuts", this.shortcuts);
+      //console.log("watch shortcuts", this.shortcuts);
     }
   },
 
+  beforeCreate() {
+    const dictonary = {};
+    axios
+      .get(window.location.href + "extusers/fpage/dictonary/")
+      .then(response => {
+        const lang = response.data.lang;
+        dictonary[lang] = response.data.dictonary;
+        this.$i18n.setLocaleMessage(lang, dictonary[lang]);
+        this.$i18n.locale = lang;
+      });
+
+    /* const promise = this.getDictonary();
+    console.log("created promise", promise);
+    promise.then(response => {
+      console.log("response", response);
+      this.$i18n.setLocaleMessage("ru", response["ru"]);
+      this.$i18n.locale = "ru";
+    }); */
+  },
+
   created() {
+    /* const promise = this.getDictonary();
+    console.log("created promise", promise);
+    promise.then(response => {
+      console.log("response", response);
+      this.$i18n.setLocaleMessage("ru", response["ru"]);
+      this.$i18n.locale = "ru";
+    }); */
     this.$store.dispatch("actionGetDashboard");
   },
 
@@ -244,6 +273,22 @@ export default {
         this.$store.dispatch("actionCreateNewShortcut", customShortcut);
         this.$store.dispatch("actionSaveSettingsDesktop");
       }
+    },
+
+    async getDictonary() {
+      const dictonary = {};
+      try {
+        const response = await axios.get(
+          window.location.href + "extusers/fpage/dictonary/"
+        );
+        console.log("getDictonary response", response);
+        dictonary[response.data.lang] = response.data.dictonary;
+      } catch (error) {
+        console.log("error", error);
+      }
+      //console.log("dictonary", dictonary);
+      //.then(response => { return response.data.dictonary; });
+      return dictonary;
     }
   }
 };

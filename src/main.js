@@ -11,9 +11,9 @@ import store from "@/store";
 import Vuetify from "vuetify";
 import "vuetify/dist/vuetify.min.css";
 import "@/main.css";
-// Helpers
 import colors from "vuetify/es5/util/colors";
 import i18n from "./i18n";
+//console.log('main.js i18n', i18n);
 Vue.use(Vuetify, {
   theme: {
     // primary: colors.indigo.darken1, // #E53935
@@ -32,8 +32,13 @@ Vue.use(Vuetify, {
 Vue.config.productionTip = false;
 
 /* eslint-disable no-new */
-
+//var dictonary = dictonaryfdfdf || [];
+//console.log('main.js dictonary 1', dictonary);
+//console.log('main.js dictonaryfdfdf 1', dictonaryfdfdf);
 jQuery(document).ready(function () {
+
+  //console.log('main.js dictonary 2', dictonary);
+  //console.log('main.js dictonaryfdfdf 2', dictonaryfdfdf);
   new Vue({
     el: "#app",
     router,

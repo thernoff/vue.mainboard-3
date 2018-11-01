@@ -1,10 +1,15 @@
 export default {
   state: {
+    languages: [],
     loading: false,
     error: null,
     openMenu: false
   },
   mutations: {
+    setLanguages(state, data) {
+      state.languages = data;
+    },
+
     setLoading(state, data) {
       state.loading = data;
     },

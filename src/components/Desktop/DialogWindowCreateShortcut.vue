@@ -31,7 +31,7 @@
                   v-bind:value="url"
                   v-bind:rules="urlRules"
                   name="url"
-                  label=" $t('shortcut.url') "
+                  v-bind:label=" $t('shortcut.url') "
                   required
                   v-on:input="url = $event"
                 />

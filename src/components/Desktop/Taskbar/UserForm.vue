@@ -126,8 +126,7 @@ export default {
       password: "",
       repassword: "",
       idActiveInterface: null,
-      languages: ["ru", "en"],
-      //firstname: this.user.firstname,
+      langInterface: "",
       nameRules: [
         v => !!v || this.$t("user.rules.name_required")
         //v => (v && v.length <= 10) || "Name must be less than 10 characters"
@@ -152,14 +151,14 @@ export default {
     };
   },
   computed: {
-    /* user() {
-      return this.$store.getters.user;
-    }, */
     interfaces() {
       return this.$store.getters.interfaces;
     },
     currentLanguage() {
       return this.$i18n.locale;
+    },
+    languages() {
+      return this.$store.state.shared.languages;
     }
   },
   mounted() {},
@@ -179,10 +178,20 @@ export default {
         if (this.idActiveInterface) {
           user.idActiveInterface = this.idActiveInterface;
         }
-        if (this.password || this.email || this.idActiveInterface) {
-          this.$store.dispatch("actionSaveUser", user);
+        if (this.langInterface) {
+          user.langInterface = this.langInterface;
         }
-        this.password = this.repassword = "";
+        if (
+          this.password ||
+          this.email ||
+          this.idActiveInterface ||
+          this.langInterface
+        ) {
+          this.$store.dispatch("actionSaveUser", user);
+          this.password = this.repassword = "";
+          this.idActiveInterface = null;
+          this.langInterface = "";
+        }
 
         if (process.env.NODE_ENV !== "development") {
           location.reload();
@@ -196,8 +205,11 @@ export default {
       this.idActiveInterface = null;
     },
 
-    changeLang($lang) {
-      this.$i18n.locale = $lang;
+    changeLang(lang) {
+      //this.$i18n.locale = $lang;
+      if (this.langInterface !== lang) {
+        this.langInterface = lang;
+      }
     }
   }
 };
