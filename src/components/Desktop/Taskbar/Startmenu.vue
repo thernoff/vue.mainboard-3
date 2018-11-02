@@ -299,7 +299,10 @@ export default {
 
     addShortcutToDesktop() {
       const element = this.contextMenuItem.element;
-      this.$store.dispatch("actionCreateNewShortcut", element);
+      this.$store.dispatch("actionCreateNewShortcut", {
+        element,
+        error: this.$t("errors.shortcut_exist")
+      });
       this.$store.dispatch("actionSaveSettingsDesktop");
     },
 

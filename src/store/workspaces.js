@@ -971,15 +971,18 @@ export default {
     },
 
     actionCreateNewShortcut({ commit, state }, options) {
+
       const shortcuts = state.activeWorkspace.shortcuts;
+      const element = options.element;
+      const error = options.error;
       const existShortcut = shortcuts.some(shortcut => {
-        return options.id == shortcut.id;
+        return element.id == shortcut.id;
       });
 
       if (!existShortcut) {
-        commit("createNewShortcut", options);
+        commit("createNewShortcut", element);
       } else {
-        commit("setError", "Ярлык уже создан");
+        commit("setError", error);
       }
     },
 

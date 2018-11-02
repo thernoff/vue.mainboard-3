@@ -20,6 +20,9 @@
     "new": "New category",
     "rename": "Rename category"
   },
+  "errors": {
+    "shortcut_exist": "Shortcut already created."
+  },
   "page_refresh": "Refresh page",
   "signout": "Sign out",
   "startmenu": {

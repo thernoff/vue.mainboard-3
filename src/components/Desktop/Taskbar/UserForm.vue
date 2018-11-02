@@ -188,9 +188,7 @@ export default {
           this.langInterface
         ) {
           this.$store.dispatch("actionSaveUser", user);
-          this.password = this.repassword = "";
-          this.idActiveInterface = null;
-          this.langInterface = "";
+          this.clearData();
         }
 
         if (process.env.NODE_ENV !== "development") {
@@ -202,7 +200,13 @@ export default {
     cancel() {
       //this.$refs.form.reset();
       this.modal = false;
+      this.clearData();
+    },
+
+    clearData() {
+      this.password = this.repassword = "";
       this.idActiveInterface = null;
+      this.langInterface = "";
     },
 
     changeLang(lang) {

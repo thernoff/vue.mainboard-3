@@ -15,7 +15,6 @@
           v-bind:shortcut="shortcut"
         />
       </div>
-
     </div>
   </div>
 </template>
@@ -33,7 +32,10 @@ export default {
     }
   },
   data() {
-    return {};
+    return {
+      widthShortcut: 100,
+      heighShortcut: 100
+    };
   },
   computed: {
     shortcutWidth() {

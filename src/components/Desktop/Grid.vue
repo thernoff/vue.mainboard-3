@@ -2,12 +2,12 @@
   <div
     :style="{ backgroundImage: 'url('+ require('@/assets/wallpaper.jpg') +')' }"
     class="mainboard-workspace__grid"
-    @click="setNotActive"
+    v-on:click="setNotActive"
   >
-    <div 
-      v-if="isModeGrid" 
+    <div
+      v-if="isModeGrid"
       class="mainboard-workspace__grid-container">
-      <div 
+      <div
         :style="{backgroundSize: widthGridCell + '%' + ' ' + heightGridRow +'%'}"
         class="mainboard-workspace__grid-gradient"
 
