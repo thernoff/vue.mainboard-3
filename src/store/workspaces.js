@@ -26,6 +26,7 @@ export default {
         shortcuts: []
       }
     ],
+    folders: [],
     dashboard: null
   },
 
@@ -102,7 +103,7 @@ export default {
       );
     },
 
-    createNewShortcut(state, options) {
+    createNewShortcut(state, { element, type }) {
       const shortcuts = state.activeWorkspace.shortcuts;
 
       let top = 0;
@@ -110,18 +111,30 @@ export default {
         top = shortcuts[shortcuts.length - 1].top + 100;
       }
       const newShortcut = {
-        image: options.image || "",
-        label: options.label,
-        apiLink: options.apiLink || options.url,
-        id: options.id || getRandomId(),
+        id: "id" in element ? element.id : "",
+        uniqueId: getRandomId(),
+        image: "image" in element ? element.image : "",
         top: top,
         left: 0,
         zIndex: 5,
         active: false,
-        type: options.type || "api"
+        type: type || ""
       };
 
+      switch (type) {
+        case "frame":
+          newShortcut.apiLink = element.apiLink || element.url;
+          newShortcut.label = element.label;
+          break;
+        case "folder":
+          newShortcut.label = element.title;
+          break;
+      }
       state.activeWorkspace.shortcuts.push(newShortcut);
+      console.log(
+        "createNewShortcut state.activeWorkspace.shortcuts",
+        state.activeWorkspace.shortcuts
+      );
     },
 
     setActiveShortcut(state, index) {
@@ -166,6 +179,18 @@ export default {
 
     deleteShortcut(state, indexShortcut) {
       state.activeWorkspace.shortcuts.splice(indexShortcut, 1);
+    },
+
+    createNewFolder(state, folder) {
+      const folders = state.folders;
+      let idLastFolder = 0;
+      if (folders.length > 0) {
+        idLastFolder = parseInt(folders[folders.length - 1].id);
+      }
+
+      folder.id = idLastFolder + 1;
+      state.folders.push(folder);
+      console.log("createNewFolder state.folders", state.folders);
     }
   },
 
@@ -222,7 +247,7 @@ export default {
             commit("setLanguages", languages);
           }
 
-          const workspaces = response.data.workspaces;
+          const workspaces = response.data.settingsDesktop.workspaces;
           if (workspaces && workspaces.length > 0) {
             commit("setWorkspaces", workspaces);
             commit("setActiveWorkspace");
@@ -266,6 +291,7 @@ export default {
                         "http://system.elxis.test/inner.php/speedcams/vandalboxes/",
                       visible: "1",
                       ordering: "1",
+                      type: "frame",
                       apiLink:
                         "http://system.elxis.test/inner.php/apiusers/api/login?uname=test2&pword=d58371c110100d4f9ff6d32aebdf6dc3d94c76c7&redirurl=aHR0cDovL3N5c3RlbS5lbHhpcy50ZXN0L2lubmVyLnBocC9zcGVlZGNhbXMvdmFuZGFsYm94ZXMv"
                     },
@@ -283,6 +309,7 @@ export default {
                         "http://system.elxis.test/inner.php/speedcams/joblog/",
                       visible: "1",
                       ordering: "2",
+                      type: "frame",
                       apiLink:
                         "http://system.elxis.test/inner.php/apiusers/api/login?uname=test2&pword=d58371c110100d4f9ff6d32aebdf6dc3d94c76c7&redirurl=aHR0cDovL3N5c3RlbS5lbHhpcy50ZXN0L2lubmVyLnBocC9zcGVlZGNhbXMvam9ibG9nLw,,"
                     }
@@ -315,6 +342,7 @@ export default {
                         "http://system.elxis.test/inner.php/speedcams/incidents/",
                       visible: "1",
                       ordering: "1",
+                      type: "frame",
                       apiLink:
                         "http://system.elxis.test/inner.php/apiusers/api/login?uname=test2&pword=d58371c110100d4f9ff6d32aebdf6dc3d94c76c7&redirurl=aHR0cDovL3N5c3RlbS5lbHhpcy50ZXN0L2lubmVyLnBocC9zcGVlZGNhbXMvaW5jaWRlbnRzLw,,"
                     },
@@ -332,6 +360,7 @@ export default {
                         "http://system.elxis.test/inner.php/speedcams/stationary/",
                       visible: "1",
                       ordering: "2",
+                      type: "frame",
                       apiLink:
                         "http://system.elxis.test/inner.php/apiusers/api/login?uname=test2&pword=d58371c110100d4f9ff6d32aebdf6dc3d94c76c7&redirurl=aHR0cDovL3N5c3RlbS5lbHhpcy50ZXN0L2lubmVyLnBocC9zcGVlZGNhbXMvc3RhdGlvbmFyeS8,"
                     }
@@ -361,6 +390,7 @@ export default {
                       link: "http://system.elxis.test/inner.php/speedcams/dtp/",
                       visible: "1",
                       ordering: "1",
+                      type: "frame",
                       apiLink:
                         "http://system.elxis.test/inner.php/apiusers/api/login?uname=test2&pword=d58371c110100d4f9ff6d32aebdf6dc3d94c76c7&redirurl=aHR0cDovL3N5c3RlbS5lbHhpcy50ZXN0L2lubmVyLnBocC9zcGVlZGNhbXMvZHRwLw,,"
                     },
@@ -378,6 +408,7 @@ export default {
                         "http://system.elxis.test/inner.php/speedcams/carinfo/",
                       visible: "1",
                       ordering: "2",
+                      type: "frame",
                       apiLink:
                         "http://system.elxis.test/inner.php/apiusers/api/login?uname=test2&pword=d58371c110100d4f9ff6d32aebdf6dc3d94c76c7&redirurl=aHR0cDovL3N5c3RlbS5lbHhpcy50ZXN0L2lubmVyLnBocC9zcGVlZGNhbXMvY2FyaW5mby8,"
                     },
@@ -395,6 +426,7 @@ export default {
                         "http://system.elxis.test/inner.php/speedcams/monitoring/",
                       visible: "1",
                       ordering: "3",
+                      type: "frame",
                       apiLink:
                         "http://system.elxis.test/inner.php/apiusers/api/login?uname=test2&pword=d58371c110100d4f9ff6d32aebdf6dc3d94c76c7&redirurl=aHR0cDovL3N5c3RlbS5lbHhpcy50ZXN0L2lubmVyLnBocC9zcGVlZGNhbXMvbW9uaXRvcmluZy8,"
                     },
@@ -412,6 +444,7 @@ export default {
                         "http://system.elxis.test/inner.php/speedcams/guards.html",
                       visible: "1",
                       ordering: "4",
+                      type: "frame",
                       apiLink:
                         "http://system.elxis.test/inner.php/apiusers/api/login?uname=test2&pword=d58371c110100d4f9ff6d32aebdf6dc3d94c76c7&redirurl=aHR0cDovL3N5c3RlbS5lbHhpcy50ZXN0L2lubmVyLnBocC9zcGVlZGNhbXMvZ3VhcmRzLmh0bWw,"
                     },
@@ -429,6 +462,7 @@ export default {
                         "http://system.elxis.test/inner.php/speedcams/parkrights/",
                       visible: "1",
                       ordering: "5",
+                      type: "frame",
                       apiLink:
                         "http://system.elxis.test/inner.php/apiusers/api/login?uname=test2&pword=d58371c110100d4f9ff6d32aebdf6dc3d94c76c7&redirurl=aHR0cDovL3N5c3RlbS5lbHhpcy50ZXN0L2lubmVyLnBocC9zcGVlZGNhbXMvcGFya3JpZ2h0cy8,"
                     },
@@ -446,6 +480,7 @@ export default {
                         "http://system.elxis.test/inner.php/speedcams/timesheets/cameras/",
                       visible: "1",
                       ordering: "6",
+                      type: "frame",
                       apiLink:
                         "http://system.elxis.test/inner.php/apiusers/api/login?uname=test2&pword=d58371c110100d4f9ff6d32aebdf6dc3d94c76c7&redirurl=aHR0cDovL3N5c3RlbS5lbHhpcy50ZXN0L2lubmVyLnBocC9zcGVlZGNhbXMvdGltZXNoZWV0cy9jYW1lcmFzLw,,"
                     },
@@ -463,6 +498,7 @@ export default {
                         "http://system.elxis.test/inner.php/speedcams/statistics.html",
                       visible: "1",
                       ordering: "7",
+                      type: "frame",
                       apiLink:
                         "http://system.elxis.test/inner.php/apiusers/api/login?uname=test2&pword=d58371c110100d4f9ff6d32aebdf6dc3d94c76c7&redirurl=aHR0cDovL3N5c3RlbS5lbHhpcy50ZXN0L2lubmVyLnBocC9zcGVlZGNhbXMvc3RhdGlzdGljcy5odG1s"
                     },
@@ -480,6 +516,7 @@ export default {
                         "http://system.elxis.test/inner.php/speedcams/employees.html",
                       visible: "1",
                       ordering: "8",
+                      type: "frame",
                       apiLink:
                         "http://system.elxis.test/inner.php/apiusers/api/login?uname=test2&pword=d58371c110100d4f9ff6d32aebdf6dc3d94c76c7&redirurl=aHR0cDovL3N5c3RlbS5lbHhpcy50ZXN0L2lubmVyLnBocC9zcGVlZGNhbXMvZW1wbG95ZWVzLmh0bWw,"
                     },
@@ -497,6 +534,7 @@ export default {
                         "http://system.elxis.test/inner.php/speedcams/cameras/",
                       visible: "1",
                       ordering: "9",
+                      type: "frame",
                       apiLink:
                         "http://system.elxis.test/inner.php/apiusers/api/login?uname=test2&pword=d58371c110100d4f9ff6d32aebdf6dc3d94c76c7&redirurl=aHR0cDovL3N5c3RlbS5lbHhpcy50ZXN0L2lubmVyLnBocC9zcGVlZGNhbXMvY2FtZXJhcy8,"
                     },
@@ -513,6 +551,7 @@ export default {
                         "http://system.elxis.test/inner.php/speedcams/reports/",
                       visible: "1",
                       ordering: "10",
+                      type: "frame",
                       apiLink:
                         "http://system.elxis.test/inner.php/apiusers/api/login?uname=test2&pword=d58371c110100d4f9ff6d32aebdf6dc3d94c76c7&redirurl=aHR0cDovL3N5c3RlbS5lbHhpcy50ZXN0L2lubmVyLnBocC9zcGVlZGNhbXMvcmVwb3J0cy8,"
                     },
@@ -530,6 +569,7 @@ export default {
                         "http://system.elxis.test/inner.php/speedcams/moncomplex/",
                       visible: "1",
                       ordering: "11",
+                      type: "frame",
                       apiLink:
                         "http://system.elxis.test/inner.php/apiusers/api/login?uname=test2&pword=d58371c110100d4f9ff6d32aebdf6dc3d94c76c7&redirurl=aHR0cDovL3N5c3RlbS5lbHhpcy50ZXN0L2lubmVyLnBocC9zcGVlZGNhbXMvbW9uY29tcGxleC8,"
                     },
@@ -547,6 +587,7 @@ export default {
                         "http://system.elxis.test/inner.php/speedcams/violations/statuses.html",
                       visible: "1",
                       ordering: "12",
+                      type: "frame",
                       apiLink:
                         "http://system.elxis.test/inner.php/apiusers/api/login?uname=test2&pword=d58371c110100d4f9ff6d32aebdf6dc3d94c76c7&redirurl=aHR0cDovL3N5c3RlbS5lbHhpcy50ZXN0L2lubmVyLnBocC9zcGVlZGNhbXMvdmlvbGF0aW9ucy9zdGF0dXNlcy5odG1s"
                     },
@@ -564,6 +605,7 @@ export default {
                         "http://system.elxis.test/inner.php/speedcams/violpayments/analitics.html",
                       visible: "1",
                       ordering: "14",
+                      type: "frame",
                       apiLink:
                         "http://system.elxis.test/inner.php/apiusers/api/login?uname=test2&pword=d58371c110100d4f9ff6d32aebdf6dc3d94c76c7&redirurl=aHR0cDovL3N5c3RlbS5lbHhpcy50ZXN0L2lubmVyLnBocC9zcGVlZGNhbXMvdmlvbHBheW1lbnRzL2FuYWxpdGljcy5odG1s"
                     }
@@ -632,123 +674,6 @@ export default {
                     ],
                     savedWorkspace: []
                   },
-                  {
-                    title: "Test user",
-                    description: "",
-                    active: true,
-                    rows: [
-                      {
-                        title: "\u0421\u0442\u0440\u043e\u043a\u0430 1",
-                        height: 50,
-                        minimize: false,
-                        cells: [
-                          {
-                            title:
-                              "\u041e\u0431\u043e\u0440\u0443\u0434\u043e\u0432\u0430\u043d\u0438\u0435",
-                            content: "",
-                            width: 50,
-                            minimize: false,
-                            apiLink:
-                              "http://system.elxis.test/inner.php/apiusers/api/login?uname=test2&pword=d58371c110100d4f9ff6d32aebdf6dc3d94c76c7&redirurl=aHR0cDovL3N5c3RlbS5lbHhpcy50ZXN0L2lubmVyLnBocC9zcGVlZGNhbXMvcmVwb3J0cy9lcXVpcG1lbnRzLmh0bWw,",
-                            itemId: 25
-                          },
-                          {
-                            title:
-                              "\u0421\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u043a\u0430",
-                            content: "",
-                            width: 50,
-                            minimize: false,
-                            apiLink:
-                              "http://system.elxis.test/inner.php/apiusers/api/login?uname=test2&pword=d58371c110100d4f9ff6d32aebdf6dc3d94c76c7&redirurl=aHR0cDovL3N5c3RlbS5lbHhpcy50ZXN0L2lubmVyLnBocC9zcGVlZGNhbXMvc3RhdGlzdGljcy5odG1s",
-                            itemId: 35
-                          }
-                        ]
-                      },
-                      {
-                        title: "\u0421\u0442\u0440\u043e\u043a\u0430 2",
-                        height: 50,
-                        minimize: false,
-                        cells: [
-                          {
-                            title:
-                              "\u0410\u043d\u0442\u0438\u0432\u0430\u043d\u0434\u0430\u043b\u044c\u043d\u044b\u0435 \u044f\u0449\u0438\u043a\u0438",
-                            content: "",
-                            width: 50,
-                            minimize: false,
-                            apiLink:
-                              "http://system.elxis.test/inner.php/apiusers/api/login?uname=test2&pword=d58371c110100d4f9ff6d32aebdf6dc3d94c76c7&redirurl=aHR0cDovL3N5c3RlbS5lbHhpcy50ZXN0L2lubmVyLnBocC9zcGVlZGNhbXMvdmFuZGFsYm94ZXMv",
-                            itemId: 28
-                          },
-                          {
-                            title:
-                              "\u0416\u0443\u0440\u043d\u0430\u043b \u0440\u0430\u0431\u043e\u0442",
-                            content: "",
-                            width: 50,
-                            minimize: false,
-                            apiLink:
-                              "http://system.elxis.test/inner.php/apiusers/api/login?uname=test2&pword=d58371c110100d4f9ff6d32aebdf6dc3d94c76c7&redirurl=aHR0cDovL3N5c3RlbS5lbHhpcy50ZXN0L2lubmVyLnBocC9zcGVlZGNhbXMvam9ibG9nLw,,",
-                            itemId: 27
-                          }
-                        ]
-                      }
-                    ],
-                    savedWorkspace: [
-                      {
-                        title: "\u0421\u0442\u0440\u043e\u043a\u0430 1",
-                        height: 50,
-                        minimize: false,
-                        cells: [
-                          {
-                            title:
-                              "\u041e\u0431\u043e\u0440\u0443\u0434\u043e\u0432\u0430\u043d\u0438\u0435",
-                            content: "",
-                            width: 50,
-                            minimize: false,
-                            apiLink:
-                              "http://system.elxis.test/inner.php/apiusers/api/login?uname=test2&pword=d58371c110100d4f9ff6d32aebdf6dc3d94c76c7&redirurl=aHR0cDovL3N5c3RlbS5lbHhpcy50ZXN0L2lubmVyLnBocC9zcGVlZGNhbXMvcmVwb3J0cy9lcXVpcG1lbnRzLmh0bWw,",
-                            itemId: 25
-                          },
-                          {
-                            title:
-                              "\u0421\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u043a\u0430",
-                            content: "",
-                            width: 50,
-                            minimize: false,
-                            apiLink:
-                              "http://system.elxis.test/inner.php/apiusers/api/login?uname=test2&pword=d58371c110100d4f9ff6d32aebdf6dc3d94c76c7&redirurl=aHR0cDovL3N5c3RlbS5lbHhpcy50ZXN0L2lubmVyLnBocC9zcGVlZGNhbXMvc3RhdGlzdGljcy5odG1s",
-                            itemId: 35
-                          }
-                        ]
-                      },
-                      {
-                        title: "\u0421\u0442\u0440\u043e\u043a\u0430 2",
-                        height: 50,
-                        minimize: false,
-                        cells: [
-                          {
-                            title:
-                              "\u0410\u043d\u0442\u0438\u0432\u0430\u043d\u0434\u0430\u043b\u044c\u043d\u044b\u0435 \u044f\u0449\u0438\u043a\u0438",
-                            content: "",
-                            width: 50,
-                            minimize: false,
-                            apiLink:
-                              "http://system.elxis.test/inner.php/apiusers/api/login?uname=test2&pword=d58371c110100d4f9ff6d32aebdf6dc3d94c76c7&redirurl=aHR0cDovL3N5c3RlbS5lbHhpcy50ZXN0L2lubmVyLnBocC9zcGVlZGNhbXMvdmFuZGFsYm94ZXMv",
-                            itemId: 28
-                          },
-                          {
-                            title:
-                              "\u0416\u0443\u0440\u043d\u0430\u043b \u0440\u0430\u0431\u043e\u0442",
-                            content: "",
-                            width: 50,
-                            minimize: false,
-                            apiLink:
-                              "http://system.elxis.test/inner.php/apiusers/api/login?uname=test2&pword=d58371c110100d4f9ff6d32aebdf6dc3d94c76c7&redirurl=aHR0cDovL3N5c3RlbS5lbHhpcy50ZXN0L2lubmVyLnBocC9zcGVlZGNhbXMvam9ibG9nLw,,",
-                            itemId: 27
-                          }
-                        ]
-                      }
-                    ]
-                  }
                 ],
                 sidebar: { visible: true }
               },
@@ -760,89 +685,6 @@ export default {
                 phone: "555-33-44",
                 gid: 5
               },
-              lists: {
-                groups: [
-                  { gid: "1", level: "100", groupname: "Administrator" },
-                  { gid: "2", level: "70", groupname: "Manager" },
-                  { gid: "3", level: "50", groupname: "Publisher" },
-                  { gid: "4", level: "30", groupname: "Author" },
-                  { gid: "5", level: "2", groupname: "User" },
-                  { gid: "6", level: "1", groupname: "External user" },
-                  { gid: "7", level: "0", groupname: "Guest" }
-                ]
-              },
-              presets: [
-                {
-                  title: "Test user",
-                  description: "",
-                  active: true,
-                  rows: [
-                    {
-                      title: "\u0421\u0442\u0440\u043e\u043a\u0430 1",
-                      height: 50,
-                      minimize: false,
-                      cells: [
-                        {
-                          title:
-                            "\u041e\u0431\u043e\u0440\u0443\u0434\u043e\u0432\u0430\u043d\u0438\u0435",
-                          content: "",
-                          width: 50,
-                          minimize: false,
-                          apiLink:
-                            "http://system.elxis.test/inner.php/apiusers/api/login?uname=test2&pword=d58371c110100d4f9ff6d32aebdf6dc3d94c76c7&redirurl=aHR0cDovL3N5c3RlbS5lbHhpcy50ZXN0L2lubmVyLnBocC9zcGVlZGNhbXMvcmVwb3J0cy9lcXVpcG1lbnRzLmh0bWw,",
-                          itemId: 25,
-                          currentLink:
-                            "http://system.elxis.test/inner.php/speedcams/reports/equipments.html"
-                        },
-                        {
-                          title:
-                            "\u0421\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u043a\u0430",
-                          content: "",
-                          width: 50,
-                          minimize: false,
-                          apiLink:
-                            "http://system.elxis.test/inner.php/apiusers/api/login?uname=test2&pword=d58371c110100d4f9ff6d32aebdf6dc3d94c76c7&redirurl=aHR0cDovL3N5c3RlbS5lbHhpcy50ZXN0L2lubmVyLnBocC9zcGVlZGNhbXMvc3RhdGlzdGljcy5odG1s",
-                          itemId: 35,
-                          currentLink:
-                            "http://system.elxis.test/inner.php/speedcams/statistics.html"
-                        }
-                      ]
-                    },
-                    {
-                      title: "\u0421\u0442\u0440\u043e\u043a\u0430 2",
-                      height: 50,
-                      minimize: false,
-                      cells: [
-                        {
-                          title:
-                            "\u0410\u043d\u0442\u0438\u0432\u0430\u043d\u0434\u0430\u043b\u044c\u043d\u044b\u0435 \u044f\u0449\u0438\u043a\u0438",
-                          content: "",
-                          width: 50,
-                          minimize: false,
-                          apiLink:
-                            "http://system.elxis.test/inner.php/apiusers/api/login?uname=test2&pword=d58371c110100d4f9ff6d32aebdf6dc3d94c76c7&redirurl=aHR0cDovL3N5c3RlbS5lbHhpcy50ZXN0L2lubmVyLnBocC9zcGVlZGNhbXMvdmFuZGFsYm94ZXMv",
-                          itemId: 28,
-                          currentLink:
-                            "http://system.elxis.test/inner.php/speedcams/vandalboxes/"
-                        },
-                        {
-                          title:
-                            "\u0416\u0443\u0440\u043d\u0430\u043b \u0440\u0430\u0431\u043e\u0442",
-                          content: "",
-                          width: 50,
-                          minimize: false,
-                          apiLink:
-                            "http://system.elxis.test/inner.php/apiusers/api/login?uname=test2&pword=d58371c110100d4f9ff6d32aebdf6dc3d94c76c7&redirurl=aHR0cDovL3N5c3RlbS5lbHhpcy50ZXN0L2lubmVyLnBocC9zcGVlZGNhbXMvam9ibG9nLw,,",
-                          itemId: 27,
-                          currentLink:
-                            "http://system.elxis.test/inner.php/speedcams/joblog/"
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ],
-              groupPresets: [],
               lang: "ru"
             };
             commit("setStartmenuItems", data.dashboard);
@@ -932,7 +774,7 @@ export default {
         //url: 'http://esv.elxis.test/extusers/fpage/savedesktop/',
         url: window.location.href + "extusers/fpage/savedesktop/",
         data: {
-          settings: workspaces
+          settings: { workspaces }
         }
       })
         .then(response => {
@@ -970,17 +812,14 @@ export default {
       commit("restoreMinimizeWindows", arrIndexesWindowsRestore);
     },
 
-    actionCreateNewShortcut({ commit, state }, options) {
-
+    actionCreateNewShortcut({ commit, state }, { element, type, error }) {
       const shortcuts = state.activeWorkspace.shortcuts;
-      const element = options.element;
-      const error = options.error;
       const existShortcut = shortcuts.some(shortcut => {
         return element.id == shortcut.id;
       });
 
       if (!existShortcut) {
-        commit("createNewShortcut", element);
+        commit("createNewShortcut", { element, type });
       } else {
         commit("setError", error);
       }
@@ -1004,6 +843,15 @@ export default {
 
     actionUpdateShortcut({ commit }, data) {
       commit("updateShortcut", data);
+    },
+
+    actionCreateNewFolder({ state, commit }, options) {
+      const folder = options.folder;
+      commit("createNewFolder", folder);
+      commit("createNewShortcut", {
+        element: state.folders[state.folders.length - 1],
+        type: "folder"
+      });
     }
   },
   getters: {

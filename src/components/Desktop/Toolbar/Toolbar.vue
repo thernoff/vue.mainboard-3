@@ -1,35 +1,35 @@
 <template>
   <div class="mainboard-toolbar">
     <mainboard-info-dialog-window
-      v-bind:visible="visibleInfoDialogWindow"
-      v-bind:options="{
+      :visible="visibleInfoDialogWindow"
+      :options="{
         title: $t('toolbar_workspaces.messages.title_cant_delete'),
         text: $t('toolbar_workspaces.messages.text_cant_delete')
       }"
-      v-on:hideInfoDialogWindow="hideInfoDialogWindow"
+      @hideInfoDialogWindow="hideInfoDialogWindow"
     />
 
     <mainboard-input-dialog-window
-      v-bind:options="{
+      :options="{
         title: $t('toolbar_workspaces.messages.title_create_workspace'),
         label: $t('toolbar_workspaces.messages.label_create_workspace'),
       }"
-      v-bind:visible="visibleInputDialogWindow"
-      v-on:input="createNewWorkspace($event)"
-      v-on:hideInputDialogWindow="hideInputDialogWindow"
+      :visible="visibleInputDialogWindow"
+      @input="createNewWorkspace($event)"
+      @hideInputDialogWindow="hideInputDialogWindow"
     />
 
     <mainboard-dialog-window
-      v-bind:options="{
+      :options="{
         title: $t('toolbar_workspaces.messages.title_delete_workspace'),
         text: $t('toolbar_workspaces.messages.text_delete_workspace')
       }"
-      v-bind:visible="visibleDialogWindow"
-      v-on:hideDialogWindow="deleteCurrentWorkspace($event)"
+      :visible="visibleDialogWindow"
+      @hideDialogWindow="deleteCurrentWorkspace($event)"
     />
     <mainboard-cover
       v-if="visibleCover"
-      v-on:click.native="hideCover"
+      @click.native="hideCover"
     />
     <v-toolbar
       dark
@@ -47,19 +47,19 @@
           slot="activator"
           color="primary"
           dark
-          v-on:click="setNotActiveWindows"
+          @click="setNotActiveWindows"
         >
           {{ titleActiveWorkspace }}
         </v-btn>
         <v-list>
           <v-list-tile
-            v-on:click="showInputDialogWindow"
+            @click="showInputDialogWindow"
           >
             {{ $t('toolbar_workspaces.create') }}
           </v-list-tile>
 
           <v-list-tile
-            v-on:click="showDialogWindow"
+            @click="showDialogWindow"
           >
             {{ $t('toolbar_workspaces.delete') }}
           </v-list-tile>
@@ -67,8 +67,8 @@
 
           <v-list-tile
             v-for="(workspace, index) in workspaces"
-            v-bind:key="index"
-            v-on:click="setActiveWorkspace(index)"
+            :key="index"
+            @click="setActiveWorkspace(index)"
           >
             <v-list-tile-title>{{ workspace.title }}</v-list-tile-title>
           </v-list-tile>
@@ -77,10 +77,10 @@
       <v-toolbar-items class="hidden-sm-and-down">
         <!-- <v-btn flat>Link One</v-btn> -->
         <v-switch
-          v-bind:label="(isModeGrid) ? $t('toolbar.gridSwitcher.modeOn') : $t('toolbar.gridSwitcher.modeOff')"
+          :label="(isModeGrid) ? $t('toolbar.gridSwitcher.modeOn') : $t('toolbar.gridSwitcher.modeOff')"
           v-model="isModeGrid"
           color="warning"
-          v-on:click.stop="toggleModeGrid"
+          @click.stop="toggleModeGrid"
         />
       </v-toolbar-items>
     </v-toolbar>

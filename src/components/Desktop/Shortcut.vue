@@ -3,36 +3,36 @@
     ref="shortcut"
     :class = "{'mainboard-shortcut--active': shortcut.active, 'mainboard-shortcut--noimage': !shortcut.image}"
     class="mainboard-shortcut"
-    v-on:dblclick="createNewWindow"
-    v-on:tap="createNewWindow"
-    v-on:touchstart="createNewWindow"
-    v-on:mousedown="setActive"
-    v-on:contextmenu.prevent.stop="showContextMenu"
+    @dblclick="createNewWindow"
+    @tap="createNewWindow"
+    @touchstart="createNewWindow"
+    @mousedown="setActive"
+    @contextmenu.prevent.stop="showContextMenu"
   >
     <v-menu
       v-model="contextMenu.visible"
-      v-bind:position-x="contextMenu.x"
-      v-bind:position-y="contextMenu.y"
+      :position-x="contextMenu.x"
+      :position-y="contextMenu.y"
       class="mainboard-shortcut__context-menu context-menu"
       absolute
       offset-y
     >
       <v-list dense>
         <v-list-tile
-          v-on:click="''"
+          @click="''"
         >
           <v-list-tile-title
-            v-on:click="renameShortcut"
+            @click="renameShortcut"
           >
             {{ $t('rename') }}
           </v-list-tile-title>
         </v-list-tile>
 
         <v-list-tile
-          v-on:click="''"
+          @click="''"
         >
           <v-list-tile-title
-            v-on:click="deleteShortcut"
+            @click="deleteShortcut"
           >
             {{ $t('delete') }}
           </v-list-tile-title>
@@ -46,9 +46,19 @@
       class="mainboard-shortcut__img"
     >
       <img
-        v-bind:src="shortcut.image"
-        v-bind:alt="shortcut.label"
+        :src="shortcut.image"
+        :alt="shortcut.label"
       >
+    </div>
+    <div
+      v-else-if="shortcut.type === 'folder'"
+      class="mainboard-shortcut__icon-folder"
+    >
+      <span>
+        <i class="material-icons icon-folder">
+          folder
+        </i>
+      </span>
     </div>
     <div
       v-else
@@ -62,10 +72,10 @@
       <input
         v-show="rename"
         ref="renameinput"
-        v-bind:value="shortLabel"
+        :value="shortLabel"
         class="mainboard-shortcut__input"
-        v-on:blur="updateShortcut"
-        v-on:keyup.enter="updateShortcut"
+        @blur="updateShortcut"
+        @keyup.enter="updateShortcut"
       >
     </div>
   </div>
@@ -200,6 +210,17 @@ export default {
   text-align: center;
   font-size: 35px;
   font-weight: 600;
+}
+
+.mainboard-shortcut__icon-folder {
+  color: rgb(230, 199, 26);
+  /* padding: 5px; */
+  text-align: center;
+  font-weight: 600;
+}
+
+.icon-folder {
+  font-size: 48px !important;
 }
 
 .mainboard-shortcut__title {

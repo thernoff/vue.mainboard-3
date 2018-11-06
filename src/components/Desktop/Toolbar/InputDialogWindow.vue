@@ -18,7 +18,7 @@
             <v-flex xs12>
               <v-card-text>
                 <v-text-field
-                  v-bind:label="options.label"
+                  :label="options.label"
                   v-model="inputValue"
                   name="title"
                   type="text"
@@ -34,10 +34,10 @@
               text-xs-center>
               <v-btn
                 class="error"
-                v-on:click="onCancel">{{ $t('cancel') }}</v-btn>
+                @click="onCancel">{{ $t('cancel') }}</v-btn>
               <v-btn
                 class="info"
-                v-on:click="onSave">{{ $t('save') }}</v-btn>
+                @click="onSave">{{ $t('save') }}</v-btn>
             </v-flex>
           </v-layout>
         </v-container>

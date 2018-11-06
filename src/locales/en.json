@@ -23,6 +23,13 @@
   "errors": {
     "shortcut_exist": "Shortcut already created."
   },
+  "folder": {
+    "create": "Create folder",
+    "title": "Title folder",
+    "rules": {
+      "title_required": "Название папки обязательно"
+    }
+  },
   "page_refresh": "Refresh page",
   "signout": "Sign out",
   "startmenu": {
@@ -32,6 +39,7 @@
   "shortcut": {
     "add_to_desktop": "Add a shortcut to desktop",
     "create": "Create shortcut",
+    "create_folder": "Create folder",
     "name": "Name shortcut",
     "url": "Resource url",
     "rules": {

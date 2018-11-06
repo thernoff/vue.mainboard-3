@@ -1,6 +1,6 @@
 import Vue from "vue";
 import VueI18n from "vue-i18n";
-import axios from 'axios';
+import axios from "axios";
 
 Vue.use(VueI18n);
 
@@ -18,39 +18,41 @@ function loadLocaleMessages() {
       messages[locale] = locales(key);
     }
   });
-  console.log('messages', messages)
   return messages;
 }
-
 
 export default new VueI18n({
   //locale: process.env.VUE_APP_I18N_LOCALE || "en",
   //fallbackLocale: process.env.VUE_APP_I18N_FALLBACK_LOCALE || "en",
   locale: getUserLanguage() || "en",
   fallbackLocale: getUserLanguage() || "en",
-  //messages: loadLocaleMessages()
+  messages: loadLocaleMessages()
   //messages: dictonary
   //messages: getMessagesAsync()
-  messages: []
+  //messages: []
 });
 
 function getUserLanguage() {
-  var language = window.navigator ? (window.navigator.language ||
-    window.navigator.systemLanguage ||
-    window.navigator.userLanguage) : "ru";
-  return language = language.substr(0, 2).toLowerCase();
+  var language = window.navigator
+    ? window.navigator.language ||
+      window.navigator.systemLanguage ||
+      window.navigator.userLanguage
+    : "ru";
+  return (language = language.substr(0, 2).toLowerCase());
 }
 
 async function getMessagesAsync() {
-  const messages = {}
+  const messages = {};
   try {
-    const response = await axios.get(window.location.href + "extusers/fpage/dictonary/")
-    console.log('response', response);
+    const response = await axios.get(
+      window.location.href + "extusers/fpage/dictonary/"
+    );
+    console.log("response", response);
     messages[response.data.lang] = response.data.dictonary;
   } catch (error) {
-    console.log('error', error)
+    console.log("error", error);
   }
-  console.log('messages', messages);
+  console.log("messages", messages);
   //.then(response => { return response.data.dictonary; });
   return messages;
 }

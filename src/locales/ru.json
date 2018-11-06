@@ -23,6 +23,13 @@
   "errors": {
     "shortcut_exist": "Ярлык уже создан"
   },
+  "folder": {
+    "create": "Создать папку",
+    "title": "Название папки",
+    "rules": {
+      "title_required": "Название папки обязательно"
+    }
+  },
   "page_refresh": "Обновить страницу",
   "signout": "Выход из системы",
   "startmenu": {
@@ -32,6 +39,7 @@
   "shortcut": {
     "add_to_desktop": "Добавить ярлык на рабочий стол",
     "create": "Создать ярлык",
+    "create_folder": "Создать папку",
     "name": "Название ярлыка",
     "url": "Url ресурса",
     "rules": {

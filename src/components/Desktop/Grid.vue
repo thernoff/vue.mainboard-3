@@ -2,7 +2,7 @@
   <div
     :style="{ backgroundImage: 'url('+ require('@/assets/wallpaper.jpg') +')' }"
     class="mainboard-workspace__grid"
-    v-on:click="setNotActive"
+    @click="setNotActive"
   >
     <div
       v-if="isModeGrid"

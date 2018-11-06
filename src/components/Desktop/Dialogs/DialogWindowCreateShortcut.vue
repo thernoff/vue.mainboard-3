@@ -22,31 +22,31 @@
                 lazy-validation>
                 <v-text-field
                   v-model="name"
-                  v-bind:rules="nameRules"
+                  :rules="nameRules"
+                  :label=" $t('shortcut.name') "
                   name="name"
-                  v-bind:label=" $t('shortcut.name') "
                   required
                 />
                 <v-text-field
-                  v-bind:value="url"
-                  v-bind:rules="urlRules"
+                  :value="url"
+                  :rules="urlRules"
+                  :label=" $t('shortcut.url') "
                   name="url"
-                  v-bind:label=" $t('shortcut.url') "
                   required
-                  v-on:input="url = $event"
+                  @input="url = $event"
                 />
                 <v-layout align-center>
                   <v-flex text-xs-center>
                     <v-btn
                       :disabled="!valid"
                       color="info"
-                      v-on:click="create"
+                      @click="create"
                     >
                       {{ $t('save') }}
                     </v-btn>
                     <v-btn
                       color="error"
-                      v-on:click="cancel"
+                      @click="cancel"
                     >
                       {{ $t('cancel') }}
                     </v-btn>

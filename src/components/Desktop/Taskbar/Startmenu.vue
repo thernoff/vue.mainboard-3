@@ -1,14 +1,14 @@
 <template>
   <div class="mainboard-startmenu">
     <mainboard-startmenu-settings
-      v-bind:categories="categories"
-      v-bind:visible="visibleStartmenuSettings"
-      v-on:hideDialogWindow="visibleStartmenuSettings = false"
+      :categories="categories"
+      :visible="visibleStartmenuSettings"
+      @hideDialogWindow="visibleStartmenuSettings = false"
     />
     <v-menu
       v-model="contextMenuItem.visible"
-      v-bind:position-x="contextMenuItem.x"
-      v-bind:position-y="contextMenuItem.y"
+      :position-x="contextMenuItem.x"
+      :position-y="contextMenuItem.y"
       class="mainboard-startmenu__contextmenu-item"
       absolute
       offset-y
@@ -19,7 +19,7 @@
         <v-list-tile
           @click="''"
         >
-          <v-list-tile-title v-on:click="addShortcutToDesktop">
+          <v-list-tile-title @click="addShortcutToDesktop">
             {{ $t('shortcut.add_to_desktop') }}
           </v-list-tile-title>
         </v-list-tile>
@@ -27,8 +27,8 @@
     </v-menu>
     <v-menu
       v-model="contextMenuStartbutton.visible"
-      v-bind:position-x="contextMenuStartbutton.x"
-      v-bind:position-y="contextMenuStartbutton.y"
+      :position-x="contextMenuStartbutton.x"
+      :position-y="contextMenuStartbutton.y"
       class="mainboard-startmenu__contextmenu-startbutton"
       absolute
       offset-y
@@ -37,17 +37,17 @@
     >
       <v-list dense>
         <v-list-tile
-          v-on:click="''"
+          @click="''"
         >
-          <v-list-tile-title v-on:click="showStartmenuSettings">
+          <v-list-tile-title @click="showStartmenuSettings">
             {{ $t('startmenu.settings') }}
           </v-list-tile-title>
         </v-list-tile>
       </v-list>
     </v-menu>
     <v-menu
-      v-bind:close-on-content-click="false"
-      v-bind:close-delay="50"
+      :close-on-content-click="false"
+      :close-delay="50"
       v-model="startMenu"
       top
       offset-y
@@ -59,8 +59,8 @@
         slot="activator"
         color="btnTaskbar"
         dark
-        v-on:click="onClickBtnStart"
-        v-on:contextmenu.prevent.stop="showContextMenuStartbutton($event)"
+        @click="onClickBtnStart"
+        @contextmenu.prevent.stop="showContextMenuStartbutton($event)"
       >
         <v-icon>home</v-icon>
       </v-btn>
@@ -80,10 +80,10 @@
             <v-icon>settings</v-icon>
           </v-btn> -->
           <mainboard-user-form
-            v-bind:user="user"
-            v-on:click.native="onClickBtnSettingsUser"
+            :user="user"
+            @click.native="onClickBtnSettingsUser"
           />
-            <!-- <mainboard-window-settings
+          <!-- <mainboard-window-settings
             v-bind:user="user"
             v-on:click.native="onClickBtnSettingsUser"
             v-bind:categories="categories"
@@ -91,13 +91,13 @@
         </v-toolbar>
         <v-list
           v-if="!countSearchElements"
-          v-bind:style="{height: heightWorkspace * 0.45 + 'px'}"
+          :style="{height: heightWorkspace * 0.45 + 'px'}"
           class="mainboard-startmenu__categories"
         >
           <v-list-group
             v-for="category in categories"
             v-if="parseInt(category.visible)"
-            v-bind:key="category.id"
+            :key="category.id"
             class="mainboard-startmenu__category"
           >
             <v-list-tile slot="activator">
@@ -153,8 +153,8 @@
             <v-list-tile-content>
               <v-text-field
                 v-model="inputSearch"
-                class="mainboard-startmenu__input-search"
                 v-bind:label=" $t('search') "
+                class="mainboard-startmenu__input-search"
                 append-icon="search"
               />
             </v-list-tile-content>
@@ -301,6 +301,7 @@ export default {
       const element = this.contextMenuItem.element;
       this.$store.dispatch("actionCreateNewShortcut", {
         element,
+        type: "frame",
         error: this.$t("errors.shortcut_exist")
       });
       this.$store.dispatch("actionSaveSettingsDesktop");

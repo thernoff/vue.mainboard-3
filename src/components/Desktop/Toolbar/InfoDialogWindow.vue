@@ -27,7 +27,7 @@
                 <v-spacer/>
                 <v-btn
                   class="info"
-                  v-on:click="onAccept">{{ $t('accept') }}</v-btn>
+                  @click="onAccept">{{ $t('accept') }}</v-btn>
               </v-card-actions>
             </v-flex>
           </v-layout>

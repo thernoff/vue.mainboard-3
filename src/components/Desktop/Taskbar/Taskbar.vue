@@ -7,8 +7,8 @@
   >
     <v-menu
       v-model="contextMenuMinimizeButton.visible"
-      v-bind:position-x="contextMenuMinimizeButton.x"
-      v-bind:position-y="contextMenuMinimizeButton.y"
+      :position-x="contextMenuMinimizeButton.x"
+      :position-y="contextMenuMinimizeButton.y"
       class="mainboard-taskbar__context-menu-minimize-button context-menu"
       absolute
       offset-y
@@ -36,14 +36,14 @@
       </v-btn> -->
     <mainboard-startmenu :height-workspace="heightWorkspace"/>
     <v-btn
-      v-for="(window, index) in windows"
+      v-for="window in windows"
       v-if="!window.closed"
-      v-bind:key="index"
+      v-bind:key="window.id"
       v-bind:color="(!window.minimize) ? 'primary' : 'minimizeWindowTaskbar'"
       v-bind:style="{minWidth: widthBtnMinimizeWindows + '%', width: widthBtnMinimizeWindows + '%'}"
       class="mainboard-taskbar__btn-minimize-window"
-      v-on:click="toggleMinimizedWindow(index, window.minimize)"
-      v-on:contextmenu.prevent.stop="showContextMenuMinimizeButton(index, $event)"
+      v-on:click="toggleMinimizedWindow(window.id, window.minimize)"
+      v-on:contextmenu.prevent.stop="showContextMenuMinimizeButton(window.id, $event)"
     >
       <i
         v-if="window.minimize"
@@ -61,18 +61,18 @@
     <mainboard-system-clock/>
     <v-btn
       v-if="!showBtnRestoreMinimizeWindow"
+      v-bind:title=" $t('windows.minimize') "
       class="btn-minimize-windows"
       color="primary"
-      v-bind:title=" $t('windows.minimize') "
       v-on:click="minimizeWindows"
     >
       <v-icon>expand_more</v-icon>
     </v-btn>
     <v-btn
       v-if="showBtnRestoreMinimizeWindow"
+      v-bind:title=" $t('windows.restore') "
       class="btn-restore-windows"
       color="primary"
-      v-bind:title=" $t('windows.restore') "
       v-on:click="restoreMinimizeWindows"
     >
       <v-icon>expand_less</v-icon>
@@ -92,7 +92,7 @@ export default {
     return {
       visibleTaskbar: true,
       arrIndexesWindowsRestore: [],
-      indexCloseWindow: null,
+      idCloseWindow: null,
       contextMenuMinimizeButton: {
         visible: false,
         x: 0,
@@ -129,12 +129,11 @@ export default {
       this.visibleTaskbar = !this.visibleTaskbar;
     },
 
-    toggleMinimizedWindow(index, minimize) {
-      console.log("minimize", minimize, index);
+    toggleMinimizedWindow(id, minimize) {
       this.arrIndexesWindowsRestore = [];
-      this.$store.commit("toggleMinimizeWindow", index);
+      this.$store.commit("toggleMinimizeWindow", id);
       if (minimize) {
-        this.$store.commit("setActiveWindow", index);
+        this.$store.commit("setActiveWindow", id);
       }
       this.$store.dispatch("actionSaveSettingsDesktop");
     },
@@ -162,9 +161,9 @@ export default {
         .then((this.arrIndexesWindowsRestore = []));
     },
 
-    showContextMenuMinimizeButton(index, event) {
+    showContextMenuMinimizeButton(id, event) {
       event.preventDefault();
-      this.indexCloseWindow = index;
+      this.idCloseWindow = id;
       this.contextMenuMinimizeButton.visible = false;
       this.contextMenuMinimizeButton.x = event.clientX;
       this.contextMenuMinimizeButton.y = event.clientY;
@@ -175,7 +174,7 @@ export default {
 
     closeWindow() {
       this.arrIndexesWindowsRestore = [];
-      this.$store.dispatch("actionCloseWindow", this.indexCloseWindow);
+      this.$store.dispatch("actionCloseWindow", this.idCloseWindow);
       this.$store.dispatch("actionSaveSettingsDesktop");
     }
   }

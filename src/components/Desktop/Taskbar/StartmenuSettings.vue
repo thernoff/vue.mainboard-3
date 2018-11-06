@@ -2,8 +2,8 @@
   <div class="mainboard-startmenu-settings">
     <v-menu
       v-model="contextMenu.visible"
-      v-bind:position-x="contextMenu.x"
-      v-bind:position-y="contextMenu.y"
+      :position-x="contextMenu.x"
+      :position-y="contextMenu.y"
       absolute
       offset-y
       light
@@ -11,20 +11,20 @@
     >
       <v-list>
         <v-list-tile
-          v-on:click="''"
+          @click="''"
         >
           <v-list-tile-title
-            v-on:click="''"
+            @click="''"
           >
             {{ $t('rename') }}
           </v-list-tile-title>
         </v-list-tile>
 
         <v-list-tile
-          v-on:click="''"
+          @click="''"
         >
           <v-list-tile-title
-            v-on:click="''"
+            @click="''"
           >
             {{ $t('hide') }}
           </v-list-tile-title>
@@ -51,20 +51,20 @@
                 class="container-categories">
                 <mainboard-panel-elements
                   v-for="(category, index) in localCategories"
-                  v-bind:key="category.id"
-                  v-bind:title="category.label"
-                  v-bind:elements="category.elements"
-                  v-bind:visible-category="parseInt(category.visible)"
-                  v-on:startSortable="startSortable"
-                  v-on:receiveSortable="receiveSortable"
-                  v-on:stopSortable="stopSortable"
-                  v-on:createNewCategory="createNewCategory(index)"
-                  v-on:updateTitleCategory="updateTitleCategory(index, $event)"
-                  v-on:toggleVisibityCategory="toggleVisibityCategory(index)"
-                  v-on:removeCategory="removeCategory(index)"
-                  v-on:showContextMenuElement="showContextMenuElement(index, $event)"
-                  v-on:updateTitleElement="updateTitleElement(index, $event)"
-                  v-on:toggleVisibityElement="toggleVisibityElement(index, $event)"
+                  :key="category.id"
+                  :title="category.label"
+                  :elements="category.elements"
+                  :visible-category="parseInt(category.visible)"
+                  @startSortable="startSortable"
+                  @receiveSortable="receiveSortable"
+                  @stopSortable="stopSortable"
+                  @createNewCategory="createNewCategory(index)"
+                  @updateTitleCategory="updateTitleCategory(index, $event)"
+                  @toggleVisibityCategory="toggleVisibityCategory(index)"
+                  @removeCategory="removeCategory(index)"
+                  @showContextMenuElement="showContextMenuElement(index, $event)"
+                  @updateTitleElement="updateTitleElement(index, $event)"
+                  @toggleVisibityElement="toggleVisibityElement(index, $event)"
                 />
               </div>
             </v-flex>
@@ -73,13 +73,13 @@
             <v-flex text-xs-center>
               <v-btn
                 color="info"
-                v-on:click="saveCategories"
+                @click="saveCategories"
               >
                 {{ $t('save') }}
               </v-btn>
               <v-btn
                 color="error"
-                v-on:click="cancel"
+                @click="cancel"
               >
                 {{ $t('cancel') }}
               </v-btn>

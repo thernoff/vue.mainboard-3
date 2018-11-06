@@ -15,7 +15,7 @@
         light
       >
         <v-card-title
-          v-bind:class="{
+          :class="{
             'hidden': !visibleCategory
           }"
           class="mainboard-panel__title title-panel"
@@ -24,66 +24,66 @@
           <input
             v-show="renameTitleCategory && visibleCategory"
             ref="inputRenameTitleCategory"
-            v-bind:value="title"
+            :value="title"
             class="panel-title__input"
-            v-on:blur="updateTitleCategory"
-            v-on:keyup.enter="updateTitleCategory"
+            @blur="updateTitleCategory"
+            @keyup.enter="updateTitleCategory"
           >
           <v-spacer/>
           <v-btn
             v-show="!renameTitleCategory && visibleCategory"
+            :title=" $t('category.rename') "
             icon
             small
             class="mainboard-panel__btn"
-            v-bind:title=" $t('category.rename') "
-            v-on:click="showInputRenameTitleCategory"
+            @click="showInputRenameTitleCategory"
           >
             <!-- <v-icon color="white">fas fa-arrow-left</v-icon> -->
             <v-icon color="white">create</v-icon>
           </v-btn>
           <v-btn
             v-show="renameTitleCategory && visibleCategory"
+            :title=" $t('save') "
             icon
             small
             class="mainboard-panel__btn"
-            v-bind:title=" $t('save') "
-            v-on:click="updateTitleCategory">
+            @click="updateTitleCategory">
             <v-icon color="white">save</v-icon>
           </v-btn>
           <v-btn
             v-show="visibleCategory"
+            :title=" $t('category.create')"
             icon
             small
             class="mainboard-panel__btn"
-            v-bind:title=" $t('category.create')"
-            v-on:click="createNewCategory">
+            @click="createNewCategory">
             <v-icon color="white">add</v-icon>
           </v-btn>
           <v-btn
             v-show="visibleCategory"
+            :title=" $t('category.hide') "
             icon
             small
             class="mainboard-panel__btn"
-            v-bind:title=" $t('category.hide') "
-            v-on:click="toggleVisibityCategory">
+            @click="toggleVisibityCategory">
             <v-icon color="white">visibility_off</v-icon>
           </v-btn>
           <v-btn
             v-show="!visibleCategory"
+            :title=" $t('category.display') "
             icon
             small
             class="mainboard-panel__btn"
-            v-bind:title=" $t('category.display') "
-            v-on:click="toggleVisibityCategory">
+            @click="toggleVisibityCategory">
             <v-icon color="white">visibility</v-icon>
           </v-btn>
           <v-btn
             v-show="!countElements && visibleCategory"
+            :title=" $t('category.delete') "
             icon
             small
             class="mainboard-panel__btn"
-            v-bind:title=" $t('category.delete') "
-            v-on:click="removeCategory">
+            @click="removeCategory">
             <v-icon color="white">delete</v-icon>
           </v-btn>
         </v-card-title>
@@ -93,26 +93,26 @@
           class="mainboard-panel__body">
           <div
             v-for="(element, index) in elements"
-            v-bind:key="element.id"
-            v-bind:class="{
+            :key="element.id"
+            :class="{
               'hidden': !visibleCategory
             }"
             class="mainboard-panel__element sortable-element"
-            v-on:contextmenu.prevent="showContextMenuElement(index, $event)"
+            @contextmenu.prevent="showContextMenuElement(index, $event)"
           >
             <img
-              v-bind:src="element.image"
-              v-bind:class="{'hidden-image': !parseInt(element.visible)}"
+              :src="element.image"
+              :class="{'hidden-image': !parseInt(element.visible)}"
               alt="">
             <div class="sortable-element__caption">
               <span v-if="indexRenameElement !== index">{{ element.label }}</span>
               <input
                 v-show="parseInt(element.visible) && indexRenameElement === index"
                 ref="inputRenameTitleElement"
-                v-bind:value="element.label"
+                :value="element.label"
                 class="element-label__input"
-                v-on:blur="updateTitleElement(index)"
-                v-on:keyup.enter="updateTitleElement(index)"
+                @blur="updateTitleElement(index)"
+                @keyup.enter="updateTitleElement(index)"
               >
             </div>
             <div class="element-buttons">
@@ -122,13 +122,13 @@
                 <li>
                   <v-btn
                     v-show="parseInt(element.visible) && indexRenameElement !== index"
+                    :title=" $t('rename') "
                     fab
                     dark
                     small
                     color="primary"
                     class="element-buttons__button"
-                    v-bind:title=" $t('rename') "
-                    v-on:click="showInputRenameTitleElement(index)">
+                    @click="showInputRenameTitleElement(index)">
                     <v-icon
                       dark
                       class="element-buttons__icon"
@@ -140,13 +140,13 @@
                 <li>
                   <v-btn
                     v-show="parseInt(element.visible) && indexRenameElement === index"
+                    :title=" $t('save') "
                     fab
                     dark
                     small
                     color="primary"
                     class="element-buttons__button"
-                    v-bind:title=" $t('save') "
-                    v-on:click="updateTitleElement(index)">
+                    @click="updateTitleElement(index)">
                     <v-icon
                       dark
                       class="element-buttons__icon">save</v-icon>
@@ -154,13 +154,13 @@
                 </li>
                 <li v-show="!parseInt(element.visible)">
                   <v-btn
+                    :title=" $t('display') "
                     fab
                     dark
                     small
                     color="primary"
                     class="element-buttons__button"
-                    v-bind:title=" $t('display') "
-                    v-on:click="toggleVisibityElement(index)">
+                    @click="toggleVisibityElement(index)">
                     <v-icon
                       dark
                       class="element-buttons__icon"
@@ -171,13 +171,13 @@
                 </li>
                 <li v-show="parseInt(element.visible)">
                   <v-btn
+                    :title=" $t('hide') "
                     fab
                     dark
                     small
                     color="primary"
                     class="element-buttons__button"
-                    v-bind:title=" $t('hide') "
-                    v-on:click="toggleVisibityElement(index)">
+                    @click="toggleVisibityElement(index)">
                     <v-icon
                       dark
                       class="element-buttons__icon"

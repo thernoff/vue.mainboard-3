@@ -27,10 +27,10 @@
                 <v-spacer/>
                 <v-btn
                   class="danger"
-                  v-on:click="onCancel">{{ $t('cancel') }}</v-btn>
+                  @click="onCancel">{{ $t('cancel') }}</v-btn>
                 <v-btn
                   class="info"
-                  v-on:click="onAccept">{{ $t('accept') }}</v-btn>
+                  @click="onAccept">{{ $t('accept') }}</v-btn>
               </v-card-actions>
             </v-flex>
           </v-layout>

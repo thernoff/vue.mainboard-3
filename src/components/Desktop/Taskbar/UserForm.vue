@@ -5,7 +5,7 @@
       justify-center>
       <v-btn
         icon
-        v-on:click="modal=true">
+        @click="modal=true">
         <v-icon>settings</v-icon>
       </v-btn>
       <v-dialog
@@ -32,69 +32,69 @@
                   v-model="valid"
                   lazy-validation>
                   <v-text-field
-                    v-bind:value="user.firstname"
-                    v-bind:rules="nameRules"
+                    :value="user.firstname"
+                    :rules="nameRules"
+                    :label=" $t('user.firstname') "
                     name="firstname"
-                    v-bind:label=" $t('user.firstname') "
                     required
                     readonly
                   />
                   <v-text-field
-                    v-bind:value="user.lastname"
-                    v-bind:rules="nameRules"
+                    :value="user.lastname"
+                    :rules="nameRules"
+                    :label=" $t('user.lastname') "
                     name="lastname"
-                    v-bind:label=" $t('user.lastname') "
                     required
                     readonly
                   />
                   <v-text-field
-                    v-bind:value="user.email"
-                    v-bind:rules="emailRules"
+                    :value="user.email"
+                    :rules="emailRules"
+                    :label=" $t('user.email') "
                     name="email"
-                    v-bind:label=" $t('user.email') "
                     required
-                    v-on:input="email = $event"
+                    @input="email = $event"
                   />
                   <v-text-field
                     v-model="password"
-                    v-bind:rules="passwordRules"
-                    v-bind:type="'password'"
+                    :rules="passwordRules"
+                    :type="'password'"
+                    :label=" $t('user.password') "
                     name="password"
-                    v-bind:label=" $t('user.password') "
                   />
                   <v-text-field
                     v-model="repassword"
-                    v-bind:rules="repasswordRules"
-                    v-bind:type="'password'"
+                    :rules="repasswordRules"
+                    :type="'password'"
+                    :label=" $t('user.repassword') "
                     name="repassword"
-                    v-bind:label=" $t('user.repassword') "
                   />
                   <v-select
-                    v-bind:value="user.idActiveInterface"
-                    v-bind:items="interfaces"
+                    :value="user.idActiveInterface"
+                    :items="interfaces"
+                    :label=" $t('user.interface') "
                     item-text="name"
                     item-value="id"
-                    v-bind:label=" $t('user.interface') "
-                    v-on:input="idActiveInterface = $event"
+                    @input="idActiveInterface = $event"
                   />
                   <v-select
-                    v-bind:value="currentLanguage"
-                    v-bind:items="languages"
-                    v-bind:label=" $t('user.language') "
-                    v-on:input="changeLang($event)"
+                    :value="currentLanguage"
+                    :items="languages"
+                    :label=" $t('user.language') "
+                    @input="changeLang($event)"
                   />
                   <v-layout align-center>
                     <v-flex text-xs-center>
                       <v-btn
-                        v-bind:disabled="!valid"
+                        :disabled="!valid"
                         color="info"
-                        v-on:click="saveUser"
+                        @click="saveUser"
                       >
                         {{ $t('save') }}
                       </v-btn>
                       <v-btn
                         color="error"
-                        v-on:click="cancel"
+                        @click="cancel"
                       >
                         {{ $t('cancel') }}
                       </v-btn>

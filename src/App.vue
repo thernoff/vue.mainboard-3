@@ -2,34 +2,48 @@
 
   <v-app class="mainboard">
     <mainboard-dialog-window-create-shortcut
-      v-bind:visible="visibleDialogWindowCreateShortcut"
-      v-on:hideDialogWindow="createCustomShortcut"
+      :visible="visibleDialogWindowCreateShortcut"
+      @hideDialogWindow="createCustomShortcut"
+    />
+    <mainboard-dialog-window-create-folder
+      :visible="visibleDialogWindowCreateFolder"
+      @hideDialogWindow="createFolder"
     />
     <v-menu
       v-model="contextMenu.visible"
-      v-bind:position-x="contextMenu.x"
-      v-bind:position-y="contextMenu.y"
+      :position-x="contextMenu.x"
+      :position-y="contextMenu.y"
       absolute
       offset-y
     >
       <v-list>
         <v-list-tile
-          v-on:click="showDialogWindowCreateShortcut"
+          @click="showDialogWindowCreateShortcut"
         >
           <v-list-tile-title
-            v-on:click="''"
+            @click="''"
           >
             {{ $t('shortcut.create') }}
           </v-list-tile-title>
         </v-list-tile>
 
         <v-list-tile
-          v-on:click="''"
+          @click="''"
         >
           <v-list-tile-title
-            v-on:click="''"
+            @click="''"
           >
             {{ $t('shortcuts.order') }}
+          </v-list-tile-title>
+        </v-list-tile>
+
+        <v-list-tile
+          @click="showDialogWindowCreateFolder"
+        >
+          <v-list-tile-title
+            @click="''"
+          >
+            {{ $t('shortcut.create_folder') }}
           </v-list-tile-title>
         </v-list-tile>
 
@@ -41,7 +55,7 @@
     <div
       ref="workspace"
       class="mainboard-workspace"
-      v-on:contextmenu.stop.prevent="showContextMenu"
+      @contextmenu.stop.prevent="showContextMenu"
     >
       <!-- <mainboard-cover
         v-if="visibleStartmenu"
@@ -50,11 +64,20 @@
       </mainboard-cover> -->
       <!-- <v-container fluid> -->
       <!-- <v-layout row wrap> -->
-      <mainboard-shortcut-list :shortcuts="shortcuts"/>
-      <mainboard-window
-        v-for="(window, index) in windows"
+      <mainboard-shortcut-list v-bind:shortcuts="shortcuts"/>
+      <mainboard-frame-window
+        v-for="(window, index) in frameWindows"
         v-show="!window.minimize"
         v-bind:key="window.id"
+        v-bind:id="window.id"
+        v-bind:index="index"
+        v-bind:options="window"
+      />
+      <mainboard-folder-window
+        v-for="(window, index) in folderWindows"
+        v-show="!window.minimize"
+        v-bind:key="window.id"
+        v-bind:id="window.id"
         v-bind:index="index"
         v-bind:options="window"
       />
@@ -69,17 +92,17 @@
     <mainboard-taskbar class="mainboard-taskbar"/>
     <template v-if="error">
       <v-snackbar
-        v-bind:multi-line="true"
-        v-bind:timeout="3000"
-        v-bind:value="true"
+        :multi-line="true"
+        :timeout="3000"
+        :value="true"
         color="error"
-        v-on:input="closeError"
+        @input="closeError"
       >
         {{ error }}
         <v-btn
           dark
           flat
-          v-on:click="closeError"
+          @click="closeError"
         >
           {{ $t('close') }}
         </v-btn>
@@ -93,13 +116,15 @@
 import Taskbar from "@/components/Desktop/Taskbar/Taskbar.vue";
 import Toolbar from "@/components/Desktop/Toolbar/Toolbar.vue";
 import Startmenu from "@/components/Desktop/Taskbar/Startmenu.vue";
-import Window from "@/components/Desktop/Window.vue";
+import FrameWindow from "@/components/Desktop/Window/FrameWindow.vue";
+import FolderWindow from "@/components/Desktop/Window/FolderWindow.vue";
 import Grid from "@/components/Desktop/Grid.vue";
 import Cover from "@/components/Desktop/Cover.vue";
 import Shortcut from "@/components/Desktop/Shortcut.vue";
 import ShortcutList from "@/components/Desktop/ShortcutList.vue";
 import ResizableBlock from "@/components/Desktop/ResizableBlock.vue";
-import DialogWindowCreateShortcut from "@/components/Desktop/DialogWindowCreateShortcut.vue";
+import DialogWindowCreateShortcut from "@/components/Desktop/Dialogs/DialogWindowCreateShortcut.vue";
+import DialogWindowCreateFolder from "@/components/Desktop/Dialogs/DialogWindowCreateFolder.vue";
 
 import axios from "axios";
 
@@ -110,17 +135,20 @@ export default {
     mainboardTaskbar: Taskbar,
     mainboardToolbar: Toolbar,
     mainboardStartmenu: Startmenu,
-    mainboardWindow: Window,
+    mainboardFrameWindow: FrameWindow,
+    mainboardFolderWindow: FolderWindow,
     mainboardGrid: Grid,
     mainboardCover: Cover,
     mainboardShortcut: Shortcut,
     mainboardShortcutList: ShortcutList,
     mainboardResizableBlock: ResizableBlock,
-    mainboardDialogWindowCreateShortcut: DialogWindowCreateShortcut
+    mainboardDialogWindowCreateShortcut: DialogWindowCreateShortcut,
+    mainboardDialogWindowCreateFolder: DialogWindowCreateFolder
   },
   data() {
     return {
       visibleDialogWindowCreateShortcut: false,
+      visibleDialogWindowCreateFolder: false,
       contextMenu: {
         visible: false,
         x: 0,
@@ -140,6 +168,14 @@ export default {
 
     windows() {
       return this.$store.getters.windows;
+    },
+
+    frameWindows() {
+      return this.$store.getters.frameWindows;
+    },
+
+    folderWindows() {
+      return this.$store.getters.folderWindows;
     },
 
     shortcuts() {
@@ -267,10 +303,30 @@ export default {
       this.visibleDialogWindowCreateShortcut = true;
     },
 
+    showDialogWindowCreateFolder() {
+      this.visibleDialogWindowCreateFolder = true;
+    },
+
     createCustomShortcut(customShortcut) {
       this.visibleDialogWindowCreateShortcut = false;
       if (customShortcut) {
-        this.$store.dispatch("actionCreateNewShortcut", customShortcut);
+        const options = {
+          element: customShortcut,
+          type: "frame",
+          error: ""
+        };
+        this.$store.dispatch("actionCreateNewShortcut", options);
+        this.$store.dispatch("actionSaveSettingsDesktop");
+      }
+    },
+
+    createFolder(folder) {
+      this.visibleDialogWindowCreateFolder = false;
+      if (folder) {
+        this.$store.dispatch("actionCreateNewFolder", {
+          folder,
+          error: ""
+        });
         this.$store.dispatch("actionSaveSettingsDesktop");
       }
     },

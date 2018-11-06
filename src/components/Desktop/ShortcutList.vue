@@ -1,18 +1,18 @@
 <template>
   <div
     ref="shortcutList"
-    v-bind:style="{width: shortcutWidth + 'px'}"
+    :style="{width: shortcutWidth + 'px'}"
     class="mainboard-shortcut-list"
   >
     <div class="mainboard-shortcut-list__container">
       <div
         v-for="(shortcut, index) in shortcuts"
-        v-bind:key="shortcut.id"
+        :key="shortcut.id"
         class="sortable-shortcut"
       >
         <mainboard-shortcut
-          v-bind:index="index"
-          v-bind:shortcut="shortcut"
+          :index="index"
+          :shortcut="shortcut"
         />
       </div>
     </div>
