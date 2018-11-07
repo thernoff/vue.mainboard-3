@@ -11,6 +11,7 @@
     }"
     :class="[{'fullscreen': options.fullscreen}, options.classesCss.join(' ')]"
     class="mainboard-window"
+    @contextmenu.stop.prevent="''"
   >
     <v-card
       tile
@@ -21,8 +22,8 @@
         :title="options.title"
         class="mainboard-window__header"
         primary-title
-        v-on:mousedown="setActiveWindow"
-        v-on:dblclick="toggleFullscreenWindow"
+        @mousedown="setActiveWindow"
+        @dblclick="toggleFullscreenWindow"
       >
         <div class="mainboard-window__title">{{ options.title }}</div>
         <v-spacer/>
@@ -30,19 +31,19 @@
         <div
           class="mainboard-window__group-buttons">
           <v-btn
-            v-bind:title=" $t('minimize') "
+            :title=" $t('minimize') "
             icon
             small
             class="mainboard-window__btn"
-            v-on:click.stop="minimizeWindow">
+            @click.stop="minimizeWindow">
             <v-icon color="white">minimize</v-icon>
           </v-btn>
           <v-btn
-            v-bind:title=" $t('window.fullscreen') "
+            :title=" $t('window.fullscreen') "
             icon
             small
             class="mainboard-window__btn"
-            v-on:click.stop="toggleFullscreenWindow">
+            @click.stop="toggleFullscreenWindow">
             <v-icon
               v-if="!options.fullscreen"
               color="white">fullscreen</v-icon>
@@ -51,11 +52,11 @@
               color="white">fullscreen_exit</v-icon>
           </v-btn>
           <v-btn
-            v-bind:title=" $t('window.close') "
+            :title=" $t('window.close') "
             icon
             small
             class="mainboard-window__btn"
-            v-on:click.stop="closeWindow">
+            @click.stop="closeWindow">
             <v-icon color="white">close</v-icon>
           </v-btn>
         </div>
@@ -65,7 +66,7 @@
         <div
           v-if="!options.active"
           class="mainboard-window__cover-window"
-          v-on:click="setActiveWindow"
+          @click="setActiveWindow"
         />
         <slot name="body"/>
       </v-card-text>
@@ -139,8 +140,6 @@ export default {
         stop: function(event, ui) {
           var $window = $(this);
           $window.find(".mainboard-frame__cover").hide();
-          console.log("draggable window self.index", self.index);
-          console.log("draggable window data-index", $(this).data("index"));
           var options = {
             //index: $(this).data("index"),
             index: self.index,
@@ -171,7 +170,7 @@ export default {
           var $window = $(this);
           //$window.find('.mainboard-frame__cover').css({display: 'block'});
           $window.find(".mainboard-frame__cover").show();
-          self.$store.commit("setActiveWindow", self.index);
+          self.$store.commit("setActiveWindow", self.id);
         },
         stop: function(event, ui) {
           console.log("ui", ui);

@@ -1,20 +1,22 @@
 <template>
   <div
     ref="shortcutList"
-    :style="{width: shortcutWidth + 'px'}"
     class="mainboard-shortcut-list"
   >
     <div class="mainboard-shortcut-list__container">
-      <div
+      <!-- <div
         v-for="(shortcut, index) in shortcuts"
         :key="shortcut.id"
         class="sortable-shortcut"
-      >
+      > -->
         <mainboard-shortcut
+          v-for="(shortcut, index) in shortcuts"
+          :key="shortcut.id"
           :index="index"
+          :id="shortcut.id"
           :shortcut="shortcut"
         />
-      </div>
+      <!-- </div> -->
     </div>
   </div>
 </template>
@@ -32,10 +34,7 @@ export default {
     }
   },
   data() {
-    return {
-      widthShortcut: 100,
-      heighShortcut: 100
-    };
+    return {};
   },
   computed: {
     shortcutWidth() {
@@ -49,7 +48,7 @@ export default {
   mounted() {
     var self = this;
     var startIndex, stopIndex;
-    $(".mainboard-shortcut-list__container").sortable({
+    /* $(".mainboard-shortcut-list__container").sortable({
       distance: 5,
       items: ".sortable-shortcut",
       connectWith: ".mainboard-shortcut-list__container",
@@ -69,7 +68,7 @@ export default {
 
         self.$store.dispatch("actionSaveSettingsDesktop");
       }
-    });
+    }); */
   }
 };
 </script>
@@ -82,16 +81,21 @@ export default {
 
 .mainboard-shortcut-list {
   position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
   /* width: 120px; */
-  height: 0px;
+  /* height: 0px; */
   top: 0;
   left: 0;
-  padding: 5px;
+  /* padding: 5px; */
   z-index: 1;
 }
 
 .mainboard-shortcut-list__container {
   position: relative;
+  width: 100%;
+  height: 100%;
 }
 
 .mainboard-list-icons {

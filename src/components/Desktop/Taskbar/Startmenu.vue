@@ -112,13 +112,13 @@
             <v-list-tile
               v-for="element in category.elements"
               v-if="parseInt(element.visible)"
-              v-bind:key="element.id"
-              v-on:click="createNewWindow(element)"
-              v-on:contextmenu.prevent="showContextMenuItem(element, $event)"
+              :key="element.id"
+              @click="createNewWindow(element)"
+              @contextmenu.prevent="showContextMenuItem(element, $event)"
             >
               <img
-                v-bind:src="element.image"
-                v-bind:style="{width: '25px', marginRight: '5px'}"
+                :src="element.image"
+                :style="{width: '25px', marginRight: '5px'}"
               >
               <v-list-tile-title>
                 {{ element.label }}
@@ -132,13 +132,13 @@
         >
           <v-list-tile
             v-for="element in searchElements"
-            v-bind:key="element.id"
-            v-on:click="createNewWindow(element)"
-            v-on:contextmenu.prevent="showContextMenuItem(element, $event)"
+            :key="element.id"
+            @click="createNewWindow(element)"
+            @contextmenu.prevent="showContextMenuItem(element, $event)"
           >
             <img
-              v-bind:src="element.image"
-              v-bind:style="{width: '25px', marginRight: '5px'}"
+              :src="element.image"
+              :style="{width: '25px', marginRight: '5px'}"
             >
             <v-list-tile-title>
               {{ element.label }}
@@ -153,7 +153,7 @@
             <v-list-tile-content>
               <v-text-field
                 v-model="inputSearch"
-                v-bind:label=" $t('search') "
+                :label=" $t('search') "
                 class="mainboard-startmenu__input-search"
                 append-icon="search"
               />
@@ -162,18 +162,18 @@
         </v-list>
         <div class="text-md-center">
           <v-btn
-            v-bind:title=" $t('page_refresh') "
+            :title=" $t('page_refresh') "
             color="btnReload"
             dark
-            v-on:click="reloadApp"
+            @click="reloadApp"
           >
             <i class="material-icons">cached</i>
           </v-btn>
           <v-btn
-            v-bind:title=" $t('signout') "
+            :title=" $t('signout') "
             color="btnLogout"
             dark
-            v-on:click="signoutApp"
+            @click="signoutApp"
           >
             <i class="material-icons">power_settings_new</i>
           </v-btn>

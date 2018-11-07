@@ -1,15 +1,13 @@
 <template>
   <base-window
-    v-bind:index="index"
-    v-bind:id="id"
-    v-bind:options="options"
+    :index="index"
+    :id="id"
+    :options="options"
   >
 
     <v-card-text
       slot="body"
-      class="mainboard-window__body">
-
-    </v-card-text>
+      class="mainboard-window__body"/>
   </base-window>
 </template>
 

@@ -17,10 +17,10 @@
       <v-list dense>
         <v-list-tile
           class="context-menu__tile"
-          v-on:click="closeWindow"
+          @click="closeWindow"
         >
           <v-list-tile-title
-            v-on:click="''"
+            @click="''"
           >
             {{ $t('window.close') }}
           </v-list-tile-title>
@@ -38,12 +38,12 @@
     <v-btn
       v-for="window in windows"
       v-if="!window.closed"
-      v-bind:key="window.id"
-      v-bind:color="(!window.minimize) ? 'primary' : 'minimizeWindowTaskbar'"
-      v-bind:style="{minWidth: widthBtnMinimizeWindows + '%', width: widthBtnMinimizeWindows + '%'}"
+      :key="window.id"
+      :color="(!window.minimize) ? 'primary' : 'minimizeWindowTaskbar'"
+      :style="{minWidth: widthBtnMinimizeWindows + '%', width: widthBtnMinimizeWindows + '%'}"
       class="mainboard-taskbar__btn-minimize-window"
-      v-on:click="toggleMinimizedWindow(window.id, window.minimize)"
-      v-on:contextmenu.prevent.stop="showContextMenuMinimizeButton(window.id, $event)"
+      @click="toggleMinimizedWindow(window.id, window.minimize)"
+      @contextmenu.prevent.stop="showContextMenuMinimizeButton(window.id, $event)"
     >
       <i
         v-if="window.minimize"
@@ -52,7 +52,7 @@
         expand_less
       </i>
       <span
-        v-bind:title="window.title"
+        :title="window.title"
         class="mainboard-taskbar__minimize-window">
         {{ titleMinimizeWindow(window.title) }}
       </span>
@@ -61,19 +61,19 @@
     <mainboard-system-clock/>
     <v-btn
       v-if="!showBtnRestoreMinimizeWindow"
-      v-bind:title=" $t('windows.minimize') "
+      :title=" $t('windows.minimize') "
       class="btn-minimize-windows"
       color="primary"
-      v-on:click="minimizeWindows"
+      @click="minimizeWindows"
     >
       <v-icon>expand_more</v-icon>
     </v-btn>
     <v-btn
       v-if="showBtnRestoreMinimizeWindow"
-      v-bind:title=" $t('windows.restore') "
+      :title=" $t('windows.restore') "
       class="btn-restore-windows"
       color="primary"
-      v-on:click="restoreMinimizeWindows"
+      @click="restoreMinimizeWindows"
     >
       <v-icon>expand_less</v-icon>
     </v-btn>

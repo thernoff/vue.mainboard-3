@@ -1,8 +1,8 @@
 <template>
   <base-window
-    v-bind:index="index"
-    v-bind:id="id"
-    v-bind:options="options"
+    :index="index"
+    :id="id"
+    :options="options"
   >
     <div
       slot="buttons"
@@ -13,7 +13,7 @@
         small
         class="mainboard-window__btn"
         title="Назад"
-        v-on:click="back">
+        @click="back">
         <v-icon color="white">fas fa-arrow-left</v-icon>
       </v-btn>
       <!-- <v-btn icon small class="mainboard-window__btn" @click="toggleClassWindow('mainboard-window--fullheight')" title="Развернуть по высоте">
@@ -23,11 +23,11 @@
         <v-icon color="white">fas fa-arrows-alt-h</v-icon>
     </v-btn> -->
       <v-btn
-        v-bind:title=" $t('window.refresh') "
+        :title=" $t('window.refresh') "
         icon
         small
         class="mainboard-window__btn"
-        v-on:click.stop="reloadWindow">
+        @click.stop="reloadWindow">
         <v-icon color="white">refresh</v-icon>
       </v-btn>
     </div>
@@ -37,9 +37,9 @@
       class="mainboard-window__body">
       <base-mainboard-frame
         ref="baseMainboardFrame"
-        v-bind:back-link="backLink"
-        v-bind:api-link="options.apiLink"
-        v-on:loadFrame="updateWindow($event)"/>
+        :back-link="backLink"
+        :api-link="options.apiLink"
+        @loadFrame="updateWindow($event)"/>
     </v-card-text>
   </base-window>
 </template>

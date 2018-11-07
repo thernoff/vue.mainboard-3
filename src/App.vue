@@ -57,6 +57,7 @@
       class="mainboard-workspace"
       @contextmenu.stop.prevent="showContextMenu"
     >
+
       <!-- <mainboard-cover
         v-if="visibleStartmenu"
         v-on:click.native="toggleVisibleStartMenu"
@@ -64,26 +65,31 @@
       </mainboard-cover> -->
       <!-- <v-container fluid> -->
       <!-- <v-layout row wrap> -->
-      <mainboard-shortcut-list v-bind:shortcuts="shortcuts"/>
+
       <mainboard-frame-window
         v-for="(window, index) in frameWindows"
         v-show="!window.minimize"
-        v-bind:key="window.id"
-        v-bind:id="window.id"
-        v-bind:index="index"
-        v-bind:options="window"
+        :key="window.id"
+        :id="window.id"
+        :index="index"
+        :options="window"
+        @contextmenu.stop.prevent="''"
       />
       <mainboard-folder-window
         v-for="(window, index) in folderWindows"
         v-show="!window.minimize"
-        v-bind:key="window.id"
-        v-bind:id="window.id"
-        v-bind:index="index"
-        v-bind:options="window"
+        :key="window.id"
+        :id="window.id"
+        :index="index"
+        :options="window"
+        @contextmenu.stop.prevent="''"
       />
+
+      <mainboard-shortcut-list :shortcuts="shortcuts"/>
       <mainboard-grid
         ref="grid"
       />
+
       <!-- </v-layout> -->
       <!-- <mainboard-startmenu v-bind:heightWorkspace="heightWorkspace"></mainboard-startmenu> -->
       <!-- <router-view></router-view> -->

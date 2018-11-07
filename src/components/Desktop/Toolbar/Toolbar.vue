@@ -37,7 +37,11 @@
       height="40"
     >
       <!-- <v-toolbar-side-icon></v-toolbar-side-icon> -->
-      <v-toolbar-title>Incom</v-toolbar-title>
+      <v-toolbar-title>
+        <!-- <v-img src="@/assets/hawk.png"></v-img> -->
+        Incom
+        <!-- <img src="@/assets/hawk.png" alt=""> -->
+      </v-toolbar-title>
       <v-spacer/>
       <v-menu
         offset-y

@@ -1,6 +1,12 @@
 <template>
   <div
     ref="shortcut"
+    :style="{
+      position: 'absolute',
+      width: widthShortcut + 'px',
+      height: heightShortcut + 'px',
+      top: shortcut.top * heightWorkspace / 100 + 'px',
+      left: shortcut.left * widthWorkspace / 100 + 'px' }"
     :class = "{'mainboard-shortcut--active': shortcut.active, 'mainboard-shortcut--noimage': !shortcut.image}"
     class="mainboard-shortcut"
     @dblclick="createNewWindow"
@@ -52,7 +58,7 @@
     </div>
     <div
       v-else-if="shortcut.type === 'folder'"
-      class="mainboard-shortcut__icon-folder"
+      class="mainboard-shortcut__icon-folder shortcut-folder"
     >
       <span>
         <i class="material-icons icon-folder">
@@ -88,6 +94,10 @@ export default {
       type: Number,
       required: true
     },
+    id: {
+      type: String,
+      required: true
+    },
     shortcut: {
       type: Object,
       required: true
@@ -113,15 +123,53 @@ export default {
       return this.shortcut.label.length > 33
         ? this.shortcut.label.slice(0, 33) + "..."
         : this.shortcut.label;
+    },
+
+    widthWorkspace() {
+      return this.$store.state.desktop.widthWorkspace;
+    },
+
+    heightWorkspace() {
+      return this.$store.state.desktop.heightWorkspace;
+    },
+
+    widthShortcut() {
+      return this.$store.state.workspaces.widthShortcut;
+    },
+
+    heightShortcut() {
+      return this.$store.state.workspaces.heightShortcut;
     }
+  },
+  mounted() {
+    var self = this;
+    $(this.$refs.shortcut).draggable({
+      //containment: ".mainboard-workspace",
+      containment: ".mainboard-shortcut-list",
+      zIndex: 1000,
+      start: function(event) {},
+      stop: function(event, ui) {
+        var $shortcut = $(this);
+        var options = {
+          id: self.shortcut.id,
+          top: ui.position.top < 0 ? 0 : ui.position.top,
+          left: ui.position.left < 0 ? 0 : ui.position.left,
+          diffTop: ui.position.top - ui.originalPosition.top,
+          diffLeft: ui.position.left - ui.originalPosition.left
+        };
+
+        self.$store.dispatch("actionUpdateShortcutCoords", options);
+      }
+    });
   },
   methods: {
     setActive() {
-      this.$store.dispatch("actionSetActiveShortcut", this.index);
+      this.$store.dispatch("actionSetActiveShortcut", this.id);
       this.$store.dispatch("actionSaveSettingsDesktop");
     },
 
     createNewWindow() {
+      console.log("createNewWindow this.shortcut", this.shortcut);
       this.$store.dispatch("actionCreateNewWindow", this.shortcut);
       this.$store.dispatch("actionSaveSettingsDesktop");
     },
@@ -145,7 +193,8 @@ export default {
       this.rename = false;
       const label = this.$refs.renameinput.value;
       const data = {
-        index: this.index,
+        //index: this.index,
+        id: this.id,
         options: {
           label
         }
@@ -156,8 +205,8 @@ export default {
     },
 
     deleteShortcut() {
-      this.$store.dispatch("actionSetActiveShortcut", this.index);
-      this.$store.dispatch("actionDeleteShortcut", this.index);
+      this.$store.dispatch("actionSetActiveShortcut", this.id);
+      this.$store.dispatch("actionDeleteShortcut", this.id);
       this.$store.dispatch("actionSaveSettingsDesktop");
     }
   }
@@ -166,9 +215,10 @@ export default {
 
 <style scoped>
 .mainboard-shortcut {
-  margin: 5px;
-  width: 100px;
-  height: 110px;
+  /* margin: 5px; */
+  display: inline-block;
+  /* width: 100px;
+  height: 110px; */
   /* background-color: #fff;
   border: 2px solid #b1a0a0; */
   border-radius: 5px;

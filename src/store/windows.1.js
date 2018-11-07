@@ -132,11 +132,11 @@ export default {
     },
 
     toggleMinimizeWindow(state, id) {
-      console.log('id', id);
+      console.log("id", id);
       //state.windows[index].minimize = !state.windows[index].minimize;
       const window = state.windows.find(window => {
         return window.id === id;
-      })
+      });
 
       window.minimize = !window.minimize;
     },
@@ -145,7 +145,7 @@ export default {
       //state.windows[index].fullscreen = !state.windows[index].fullscreen;
       const window = state.windows.find(window => {
         return window.id === id;
-      })
+      });
 
       window.fullscreen = !window.fullscreen;
     },
@@ -154,7 +154,7 @@ export default {
       //state.windows[index].fullscreen = false;
       const window = state.windows.find(window => {
         return window.id === id;
-      })
+      });
 
       window.fullscreen == false;
     },
@@ -189,7 +189,7 @@ export default {
       if (state.activeWindow) {
         state.maxZIndex += 1;
         const zIndex = state.activeWindow.zIndex;
-        state.windows.forEach(function (window) {
+        state.windows.forEach(function(window) {
           if (window.zIndex > zIndex) {
             window.zIndex -= 1;
           }
@@ -213,7 +213,7 @@ export default {
       if (state.activeWindow) {
         state.maxZIndex += 1;
         const zIndex = state.activeWindow.zIndex;
-        state.windows.forEach(function (window) {
+        state.windows.forEach(function(window) {
           if (window.zIndex > zIndex) {
             window.zIndex -= 1;
           }
@@ -223,7 +223,7 @@ export default {
     },
 
     setNotActiveWindows(state) {
-      state.windows.forEach(function (window) {
+      state.windows.forEach(function(window) {
         window.active = false;
       });
       state.activeWindow = null;
@@ -318,7 +318,7 @@ export default {
           options.height = 100;
         }
 
-        setTimeout(function () {
+        setTimeout(function() {
           commit("updateWindowSize", options);
           commit("updateWindowCoords", {
             options,
@@ -391,7 +391,7 @@ export default {
         }
 
         //console.log('actionUpdateWindowSize', options.width)
-        setTimeout(function () {
+        setTimeout(function() {
           commit("updateWindowCoords", {
             options,
             widthWorkspace,
@@ -411,7 +411,7 @@ export default {
     },
 
     windows(state) {
-      console.log('state.windows', state.windows);
+      console.log("state.windows", state.windows);
       return state.windows;
     },
 

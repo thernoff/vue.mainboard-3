@@ -18,7 +18,7 @@ export default {
     leftPrevWindow: 5,
     stepShift: 10,
     indexActiveWindow: null,
-    idActiveWindow: '',
+    idActiveWindow: "",
     activeWindow: null,
     windows: [] // хранится ссылка на массив activeWorkspace.windows
   },
@@ -28,13 +28,13 @@ export default {
     },
 
     createNewWindow(state, { element, widthWorkspace, heightWorkspace }) {
+      console.log('createNewWindow element', element);
       const title = element.title || element.label;
       const top = state.topPrevWindow > 0 ? state.topPrevWindow : 5;
       const left = state.leftPrevWindow > 0 ? state.leftPrevWindow : 5;
       const newWindow = {
         id: getRandomId(),
         title,
-        itemId: element.id,
         top: (100 * top) / heightWorkspace,
         left: (100 * left) / widthWorkspace,
         width: 40,
@@ -45,16 +45,18 @@ export default {
         closed: false,
         active: true,
         classesCss: [],
-        type: element.type
       };
 
       switch (element.type) {
-        case "frame":
+        case "folder":
+          newWindow.type = "folder";
+          break;
+        default:
+          newWindow.type = "frame";
           newWindow.link = element.link;
           newWindow.apiLink = element.apiLink;
           newWindow.currentLink = element.link;
-          break;
-        case "folder":
+          newWindow.itemId = element.id;
           break;
       }
 
@@ -72,7 +74,7 @@ export default {
     },
 
     updateWindow(state, options) {
-      console.log('updateWindow options', options);
+      console.log("updateWindow options", options);
       //let window = state.windows[options.index];
       const id = options.id;
       const window = state.windows.find(window => {
@@ -141,6 +143,7 @@ export default {
     closeWindow(state, id) {
       state.activeWindow = null;
       state.indexActiveWindow = null;
+      state.idActiveWindow = '';
 
       for (let i = 0; i < state.windows.length; i++) {
         if (id === state.windows[i].id) {
@@ -174,7 +177,7 @@ export default {
       //state.windows[index].fullscreen = !state.windows[index].fullscreen;
       const window = state.windows.find(window => {
         return window.id === id;
-      })
+      });
 
       window.fullscreen = !window.fullscreen;
     },
@@ -183,7 +186,7 @@ export default {
       //state.windows[index].fullscreen = false;
       const window = state.windows.find(window => {
         return window.id === id;
-      })
+      });
 
       window.fullscreen == false;
     },
@@ -227,19 +230,19 @@ export default {
       }
     }, */
 
-    setActiveWindow(state, id = '') {
+    setActiveWindow(state, id = "") {
       if (state.windows.length > 0) {
-        if (id === state.idActiveWindow && state.activeWindow.active) {
+        if (state.activeWindow && id === state.idActiveWindow && state.activeWindow.active) {
           return;
         }
 
-        if (id != '') {
+        if (id != "") {
           if (state.activeWindow !== null) {
             state.activeWindow.active = false;
           }
           state.activeWindow = state.windows.find(window => {
             return window.id === id;
-          })
+          });
           state.activeWindow.active = true;
           state.idActiveWindow = id;
         } else {
@@ -253,10 +256,11 @@ export default {
           }
           state.activeWindow = state.windows[0];
           state.idActiveWindow = state.windows[0].id;
+          state.activeWindow.active = true;
         }
       } else {
         state.activeWindow = null;
-        state.idActiveWindow = '';
+        state.idActiveWindow = "";
       }
 
       if (state.activeWindow) {
@@ -302,7 +306,7 @@ export default {
       });
       state.activeWindow = null;
       state.indexActiveWindow = null;
-      state.idActiveWindow = '';
+      state.idActiveWindow = "";
     }
   },
   actions: {
@@ -482,13 +486,13 @@ export default {
     },
 
     windows(state) {
-      console.log('state.windows', state.windows);
+      console.log("state.windows", state.windows);
       return state.windows;
     },
 
     frameWindows(state) {
       return state.windows.filter(window => {
-        return window.type == "frame";
+        return (!("type" in window) || window.type == "frame");
       });
     },
 
