@@ -114,36 +114,38 @@ export default {
     /***** SHORTCUT *****/
     createNewShortcut(
       state,
-      { element, widthWorkspace, heightWorkspace, type }
+      { object, typeObject, widthWorkspace, heightWorkspace }
     ) {
-      const shortcuts = state.activeWorkspace.shortcuts;
-
       /* let top = 0;
       if (shortcuts.length > 0) {
         top = shortcuts[shortcuts.length - 1].top + 100;
       } */
       const top = state.topPrevShortcut > 0 ? state.topPrevShortcut : 5;
       const left = state.leftPrevShortcut > 0 ? state.leftPrevShortcut : 5;
-      console.log("createNewShortcut from element", element);
+      console.log("createNewShortcut from object", object);
       const newShortcut = {
         id: getRandomId(),
-        image: "image" in element ? element.image : "",
+        image: "image" in object ? object.image : "",
         top: (100 * top) / heightWorkspace,
         left: (100 * left) / widthWorkspace,
         zIndex: 5,
         active: false,
-        type: type || "",
-        objectId: element.id || "",
+        type: "shortcut",
+        object: {
+          id: object.id,
+          title: object.title || object.label,
+          type: typeObject || "",
+        },
         folderId: 0
       };
 
-      switch (type) {
+      switch (typeObject) {
         case "folder":
-          newShortcut.label = element.title;
+          newShortcut.label = object.title;
           break;
         case "frame":
-          newShortcut.apiLink = element.apiLink || element.url;
-          newShortcut.label = element.label;
+          newShortcut.object.apiLink = object.apiLink || object.url;
+          newShortcut.label = object.label;
           break;
       }
       state.activeWorkspace.shortcuts.push(newShortcut);
@@ -225,11 +227,11 @@ export default {
         options
       ); */
 
-      const shortcut = state.activeWorkspace.shortcuts.find(shortcut => {
+      let shortcut = state.activeWorkspace.shortcuts.find(shortcut => {
         return shortcut.id === id;
       });
 
-      shortcut = Object.assign(state.activeWorkspace.shortcuts[index], options);
+      shortcut = Object.assign(shortcut, options);
     },
 
     updateShortcutCoords(state, { options, widthWorkspace, heightWorkspace }) {
@@ -255,8 +257,15 @@ export default {
 
     /***** FOLDERS *****/
     createNewFolder(state, folder) {
-      folder.id = getRandomId();
-      state.folders.push(folder);
+
+      const newFolder = {
+        id: getRandomId(),
+        title: folder.title,
+        type: "folder",
+        folderId: 0
+      };
+
+      state.folders.push(newFolder);
       console.log("createNewFolder state.folders", state.folders);
     },
 
@@ -920,21 +929,21 @@ export default {
 
     actionCreateNewShortcut(
       { commit, state, rootState },
-      { element, type, error }
+      { object, typeObject, error }
     ) {
       const widthWorkspace = rootState.desktop.widthWorkspace;
       const heightWorkspace = rootState.desktop.heightWorkspace;
       const shortcuts = state.activeWorkspace.shortcuts;
       const existShortcut = shortcuts.some(shortcut => {
-        return element.id == shortcut.id;
+        return object.id == shortcut.object.id;
       });
 
       if (!existShortcut) {
         commit("createNewShortcut", {
-          element,
+          object,
+          typeObject,
           widthWorkspace,
-          heightWorkspace,
-          type
+          heightWorkspace
         });
       } else {
         commit("setError", error);
@@ -1013,17 +1022,25 @@ export default {
           options.height = 100;
         }
 
-        setTimeout(function () {
+        commit("updateShortcutCoords", {
+          options,
+          widthWorkspace,
+          heightWorkspace
+        });
+
+        /* setTimeout(function () {
           commit("updateShortcutCoords", {
             options,
             widthWorkspace,
             heightWorkspace
           });
           dispatch("actionSaveSettingsDesktop");
-        }, 1);
+        }, 1); */
       } else {
-        dispatch("actionSaveSettingsDesktop");
+        //dispatch("actionSaveSettingsDesktop");
       }
+
+      //dispatch("actionSaveSettingsDesktop");
     },
 
     actionCreateNewFolder({ state, commit, rootState }, options) {
@@ -1032,10 +1049,10 @@ export default {
       const folder = options.folder;
       commit("createNewFolder", folder);
       commit("createNewShortcut", {
-        element: state.folders[state.folders.length - 1],
+        object: state.folders[state.folders.length - 1],
+        typeObject: "folder",
         widthWorkspace,
-        heightWorkspace,
-        type: "folder"
+        heightWorkspace
       });
     },
 
@@ -1044,6 +1061,7 @@ export default {
     },
 
     actionMoveElementToFolder({ commit }, data) {
+      console.log('actionMoveElementToFolder data', data);
       commit("moveElementToFolder", data);
     },
 

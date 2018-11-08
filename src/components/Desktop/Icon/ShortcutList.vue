@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import DesktopShortcut from "@/components/Desktop/Shortcut/DesktopShortcut.vue";
+import DesktopShortcut from "@/components/Desktop/Icon/DesktopShortcut.vue";
 export default {
   components: {
     mainboardDesktopShortcut: DesktopShortcut

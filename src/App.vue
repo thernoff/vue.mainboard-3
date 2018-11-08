@@ -70,9 +70,7 @@
         :key="shortcut.id"
         :index="index"
         :id="shortcut.id"
-        :shortcut="shortcut"
         :options="shortcut"
-        :position="'absolute'"
       />
       <mainboard-frame-window
         v-for="(window, index) in frameWindows"
@@ -83,6 +81,15 @@
         :options="window"
         @contextmenu.stop.prevent="''"
       />
+      <!-- <mainboard-folder-window
+        v-for="(window, index) in folderWindows"
+        v-show="!window.minimize"
+        :key="window.id"
+        :id="window.id"
+        :index="index"
+        :options="window"
+        @contextmenu.stop.prevent="''"
+      /> -->
       <mainboard-folder-window
         v-for="(window, index) in folderWindows"
         v-show="!window.minimize"
@@ -131,10 +138,11 @@ import Toolbar from "@/components/Desktop/Toolbar/Toolbar.vue";
 import Startmenu from "@/components/Desktop/Taskbar/Startmenu.vue";
 import FrameWindow from "@/components/Desktop/Window/FrameWindow.vue";
 import FolderWindow from "@/components/Desktop/Window/FolderWindow.vue";
+import FileManager from "@/components/Desktop/Window/FileManager.vue";
 import Grid from "@/components/Desktop/Grid.vue";
 import Cover from "@/components/Desktop/Cover.vue";
-import DesktopShortcut from "@/components/Desktop/Shortcut/DesktopShortcut.vue";
-import ShortcutList from "@/components/Desktop/Shortcut/ShortcutList.vue";
+import DesktopShortcut from "@/components/Desktop/Icon/DesktopShortcut.vue";
+import ShortcutList from "@/components/Desktop/Icon/ShortcutList.vue";
 import ResizableBlock from "@/components/Desktop/ResizableBlock.vue";
 import DialogWindowCreateShortcut from "@/components/Desktop/Dialogs/DialogWindowCreateShortcut.vue";
 import DialogWindowCreateFolder from "@/components/Desktop/Dialogs/DialogWindowCreateFolder.vue";
@@ -150,6 +158,7 @@ export default {
     mainboardStartmenu: Startmenu,
     mainboardFrameWindow: FrameWindow,
     mainboardFolderWindow: FolderWindow,
+    mainboardFileManager: FileManager,
     mainboardGrid: Grid,
     mainboardCover: Cover,
     mainboardDesktopShortcut: DesktopShortcut,
@@ -188,6 +197,10 @@ export default {
     },
 
     folderWindows() {
+      console.log(
+        "folderWindows this.$store.getters.folderWindows",
+        this.$store.getters.folderWindows
+      );
       return this.$store.getters.folderWindows;
     },
 
@@ -332,8 +345,8 @@ export default {
       this.visibleDialogWindowCreateShortcut = false;
       if (customShortcut) {
         const options = {
-          element: customShortcut,
-          type: "frame",
+          object: customShortcut,
+          typeObject: "frame",
           error: ""
         };
         this.$store.dispatch("actionCreateNewShortcut", options);

@@ -94,6 +94,16 @@
           :style="{height: heightWorkspace * 0.45 + 'px'}"
           class="mainboard-startmenu__categories"
         >
+            <!-- <v-list-tile
+              @click="''"
+            >
+              <i class="material-icons">
+                apps
+              </i>
+              <v-list-tile-title>
+                Файловый менеджер
+              </v-list-tile-title>
+            </v-list-tile> -->
           <v-list-group
             v-for="category in categories"
             v-if="parseInt(category.visible)"
@@ -299,10 +309,10 @@ export default {
     },
 
     addShortcutToDesktop() {
-      const element = this.contextMenuItem.element;
+      const object = this.contextMenuItem.element;
       this.$store.dispatch("actionCreateNewShortcut", {
-        element,
-        type: "frame",
+        object,
+        typeObject: "frame",
         error: this.$t("errors.shortcut_exist")
       });
       this.$store.dispatch("actionSaveSettingsDesktop");

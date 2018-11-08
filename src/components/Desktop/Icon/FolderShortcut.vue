@@ -5,12 +5,11 @@
     :id = "id"
     :options="options"
     :size="size"
-    :position="position"
   />
 </template>
 
 <script>
-import baseShortcut from "@/components/Desktop/Shortcut/BaseShortcut.vue";
+import baseShortcut from "@/components/Desktop/Icon/BaseShortcut.vue";
 export default {
   components: {
     mainboardBaseShortcut: baseShortcut
@@ -32,10 +31,6 @@ export default {
           height: 110
         };
       }
-    },
-    position: {
-      type: String,
-      default: ""
     }
   },
   data() {
@@ -68,6 +63,7 @@ export default {
           };
 
           self.$store.dispatch("actionUpdateShortcutCoords", options);
+          self.$store.dispatch("actionSaveSettingsDesktop");
         }
       }
     });
@@ -76,5 +72,8 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
+.mainboard-folder-shortcut .mainboard-shortcut__title {
+  color: rgb(51, 51, 51);
+}
 </style>

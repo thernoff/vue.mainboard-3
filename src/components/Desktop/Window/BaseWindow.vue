@@ -2,6 +2,7 @@
   <div
     ref="window"
     :data-index="index"
+    :data-id="id"
     :style="{
       top: options.top * heightWorkspace / 100 + 'px',
       left: options.left * widthWorkspace / 100 + 'px',
@@ -61,15 +62,17 @@
           </v-btn>
         </div>
       </v-card-title>
-
-      <v-card-text class="mainboard-window__body">
+      <div class="mainboard-window__body">
+        <slot name="body"/>
+      </div>
+      <!-- <v-card-text class="mainboard-window__body"> -->
         <!-- <div
           v-if="!options.active"
           class="mainboard-window__cover-window"
           @click="setActiveWindow"
         /> -->
-        <slot name="body"/>
-      </v-card-text>
+        <!-- <slot name="body"/> -->
+     <!--  </v-card-text> -->
       <v-divider/>
     </v-card>
   </div>
@@ -128,11 +131,6 @@ export default {
         start: function(event) {
           var $window = $(this);
           $window.find(".mainboard-frame__cover").show();
-          if (self.options.height == 100) {
-            //$window.addClass("half-height");
-            //$window.css("height", "90%");
-          }
-
           if ($window.hasClass("fullscreen")) {
             return false;
           }
@@ -140,10 +138,10 @@ export default {
         stop: function(event, ui) {
           var $window = $(this);
           $window.find(".mainboard-frame__cover").hide();
+          var id = $window.data("id");
           var options = {
             //index: $(this).data("index"),
-            index: self.index,
-            id: self.id,
+            id: id,
             top: ui.position.top < 0 ? 0 : ui.position.top,
             left: ui.position.left < 0 ? 0 : ui.position.left,
             width: $window.width(),
@@ -155,7 +153,7 @@ export default {
           //$window.removeClass("half-height");
 
           self.$store.dispatch("actionUpdateWindowCoords", options);
-          //self.$store.dispatch("actionSaveSettingsDesktop");
+          self.$store.dispatch("actionSaveSettingsDesktop");
         }
       })
       .resizable({
@@ -170,19 +168,20 @@ export default {
           var $window = $(this);
           //$window.find('.mainboard-frame__cover').css({display: 'block'});
           $window.find(".mainboard-frame__cover").show();
-          self.$store.commit("setActiveWindow", self.id);
+          var id = $window.data("id");
+          self.$store.commit("setActiveWindow", id);
         },
         stop: function(event, ui) {
           console.log("ui", ui);
           var $window = $(this);
           $window.find(".mainboard-frame__cover").hide();
-
+          var id = $window.data("id");
           //var coefWidth = ui.size.width / ui.originalSize.width;
           //var coefHeight = ui.size.height / ui.originalSize.height;
           //console.log(coefWidth, coefHeight);
           var options = {
-            index: self.index,
-            id: self.id,
+            //index: self.index,
+            id: id,
             //index: $(this).data("index"),
             //coefWidth: coefWidth,
             //coefHeight: coefHeight,
@@ -195,7 +194,7 @@ export default {
           };
           //self.$store.dispatch("actionUpdateWindowCoords", options);
           self.$store.dispatch("actionUpdateWindowSize", options);
-          //self.$store.dispatch("actionSaveSettingsDesktop");
+          self.$store.dispatch("actionSaveSettingsDesktop");
         }
       });
   },

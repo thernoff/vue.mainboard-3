@@ -3,21 +3,36 @@
     :index="index"
     :id="id"
     :options="options"
-    class="mainboard-folder-window"
-    :data-object-id="options.object.id"
+    class="mainboard-file-manager"
+    :data-object-id="options.objectId"
   >
-
     <div
       slot="body"
-      class="mainboard-folder-window__body"
-      @mousedown="setActiveWindow"
+      class="mainboard-file-manager__body"
+      @click="setActiveWindow"
     >
-      <mainboard-folder-shortcut
-        v-for="element in elements"
-        :key="element.id"
-        :id="element.id"
-        :options="element"
-      />
+
+
+    <!-- <v-card-text
+      slot="body"
+
+      @click="setActiveWindow"
+    > -->
+      <div class="file-manager-sidebar">
+        <ul>
+          <li v-for="folder in folders"
+            :key="folder.id"
+          >
+            <span>
+              <i class="material-icons icon-folder">
+                folder
+              </i>
+            </span>
+            {{ folder.title }}
+          </li>
+        </ul>
+      </div>
+    <!-- </v-card-text> -->
     </div>
   </base-window>
 </template>
@@ -53,28 +68,17 @@ export default {
       return this.$store.isModeGrid;
     },
 
-    widthWorkspace() {
-      return this.$store.state.desktop.widthWorkspace;
-    },
-
-    heightWorkspace() {
-      return this.$store.state.desktop.heightWorkspace;
-    },
-
     elements() {
       let elements = [];
       elements = this.$store.getters.shortcuts.filter(shortcut => {
-        return shortcut.folderId === this.options.object.id;
+        return shortcut.folderId === this.options.objectId;
       });
-      elements.sort(function(a, b) {
-        const a1 = a.label.toLowerCase();
-        const b1 = b.label.toLowerCase();
-        if (a1 < b1) return -1;
-        if (a1 > b1) return 1;
-        return 0;
-      });
-      console.log("elements", this.$store.getters.shortcuts);
+      console.log("elements", elements);
       return elements;
+    },
+
+    folders() {
+      return this.$store.state.workspaces.folders;
     }
   },
 
@@ -94,7 +98,6 @@ export default {
             elementId,
             folderId: $window.data("object-id")
           });
-          self.$store.dispatch("actionSaveSettingsDesktop");
         }
       },
       out: function(event, ui) {
@@ -104,11 +107,10 @@ export default {
         $dragElement.removeClass("over-folder-window");
       },
       over: function(event, ui) {
+        console.log(".mainboard-window__body over event", event);
+        console.log(".mainboard-window__body over ui", ui);
         var $dragElement = $(ui.draggable);
         $dragElement.addClass("over-folder-window");
-        var $window = $(this).closest(".mainboard-window");
-        var id = $window.data("id");
-        self.$store.commit("setActiveWindow", id);
       }
     });
   },
@@ -123,8 +125,18 @@ export default {
 </script>
 
 <style scoped>
-.mainboard-folder-window__body {
+.file-manager-sidebar {
+  width: 200px;
   height: 100%;
-  overflow: auto;
+  /* background-color: rgb(192, 196, 201); */
+  border-right: 2px solid rgb(203, 209, 216);
+}
+
+.file-manager-sidebar li {
+  list-style: none;
+}
+
+.mainboard-file-manager__body {
+  height: 100%;
 }
 </style>

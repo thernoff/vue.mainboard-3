@@ -29,6 +29,16 @@
           @click="''"
         >
           <v-list-tile-title
+            @click="createNewWindow"
+          >
+            {{ $t('openInNewWindow') }}
+          </v-list-tile-title>
+        </v-list-tile>
+
+        <v-list-tile
+          @click="''"
+        >
+          <v-list-tile-title
             @click="renameShortcut"
           >
             {{ $t('rename') }}
@@ -48,6 +58,12 @@
       </v-list>
     </v-menu>
 
+    <!-- <div class="mainboard-shortcut__arrow">
+      <i class="material-icons">
+        link
+      </i>
+    </div> -->
+
     <div
       v-if="options.image"
       class="mainboard-shortcut__img"
@@ -58,7 +74,7 @@
       >
     </div>
     <div
-      v-else-if="options.type === 'folder'"
+      v-else-if="options.object.type === 'folder'"
       class="mainboard-shortcut__icon-folder shortcut-folder"
     >
       <span>
@@ -108,6 +124,12 @@ export default {
         };
       }
     },
+    /* style: {
+      type: Object,
+      default: () => {
+        return {};
+      }
+    }, */
     position: {
       type: String,
       default: ""
@@ -151,8 +173,8 @@ export default {
     },
 
     createNewWindow() {
-      console.log("createNewWindow this.shortcut", this.options);
-      this.$store.dispatch("actionCreateNewWindow", this.options);
+      console.log("createNewWindow this.shortcut", this.options.object);
+      this.$store.dispatch("actionCreateNewWindow", this.options.object);
       this.$store.dispatch("actionSaveSettingsDesktop");
     },
 
@@ -230,6 +252,12 @@ export default {
   overflow: hidden;
 }
 
+.mainboard-shortcut__arrow {
+  position: absolute;
+  top: 30px;
+  left: 50px;
+}
+
 .mainboard-shortcut__img {
   /* padding: 5px; */
   margin-top: 5px;
@@ -260,8 +288,8 @@ export default {
 }
 
 .mainboard-shortcut__title {
-  color: #fff;
-  text-shadow: 1px 2px 5px #000;
+  /*   color: #fff; */
+  /* text-shadow: 1px 2px 5px #000; */
   text-align: center;
   font-size: 12px;
   line-height: 1;
