@@ -63,11 +63,11 @@
       </v-card-title>
 
       <v-card-text class="mainboard-window__body">
-        <div
+        <!-- <div
           v-if="!options.active"
           class="mainboard-window__cover-window"
           @click="setActiveWindow"
-        />
+        /> -->
         <slot name="body"/>
       </v-card-text>
       <v-divider/>

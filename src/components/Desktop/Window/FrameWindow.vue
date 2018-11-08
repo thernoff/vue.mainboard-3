@@ -34,7 +34,13 @@
 
     <v-card-text
       slot="body"
-      class="mainboard-window__body">
+      class="mainboard-window__body"
+    >
+      <div
+          v-if="!options.active"
+          class="mainboard-window__cover-window"
+          @click="setActiveWindow"
+        />
       <base-mainboard-frame
         ref="baseMainboardFrame"
         :back-link="backLink"
@@ -99,6 +105,11 @@ export default {
   },
 
   methods: {
+    setActiveWindow() {
+      this.$store.commit("setActiveWindow", this.id);
+      this.$store.dispatch("actionSaveSettingsDesktop");
+    },
+
     reloadWindow() {
       this.$refs.baseMainboardFrame.$refs.baseFrame.src = this.options.apiLink;
     },

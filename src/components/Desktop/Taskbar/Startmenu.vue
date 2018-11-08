@@ -254,6 +254,7 @@ export default {
   methods: {
     createNewWindow(element) {
       this.startMenu = false;
+      element = Object.assign(element, { objectId: element.id });
       this.$store.dispatch("actionCreateNewWindow", element);
       this.$store.dispatch("actionToggleVisibleStartMenu");
       this.$store.dispatch("actionSaveSettingsDesktop");

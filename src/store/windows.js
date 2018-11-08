@@ -28,7 +28,7 @@ export default {
     },
 
     createNewWindow(state, { element, widthWorkspace, heightWorkspace }) {
-      console.log('createNewWindow element', element);
+      console.log("createNewWindow element", element);
       const title = element.title || element.label;
       const top = state.topPrevWindow > 0 ? state.topPrevWindow : 5;
       const left = state.leftPrevWindow > 0 ? state.leftPrevWindow : 5;
@@ -45,6 +45,7 @@ export default {
         closed: false,
         active: true,
         classesCss: [],
+        objectId: element.objectId
       };
 
       switch (element.type) {
@@ -56,7 +57,7 @@ export default {
           newWindow.link = element.link;
           newWindow.apiLink = element.apiLink;
           newWindow.currentLink = element.link;
-          newWindow.itemId = element.id;
+          newWindow.itemId = element.objectId
           break;
       }
 
@@ -143,7 +144,7 @@ export default {
     closeWindow(state, id) {
       state.activeWindow = null;
       state.indexActiveWindow = null;
-      state.idActiveWindow = '';
+      state.idActiveWindow = "";
 
       for (let i = 0; i < state.windows.length; i++) {
         if (id === state.windows[i].id) {
@@ -232,7 +233,11 @@ export default {
 
     setActiveWindow(state, id = "") {
       if (state.windows.length > 0) {
-        if (state.activeWindow && id === state.idActiveWindow && state.activeWindow.active) {
+        if (
+          state.activeWindow &&
+          id === state.idActiveWindow &&
+          state.activeWindow.active
+        ) {
           return;
         }
 
@@ -492,7 +497,7 @@ export default {
 
     frameWindows(state) {
       return state.windows.filter(window => {
-        return (!("type" in window) || window.type == "frame");
+        return !("type" in window) || window.type == "frame";
       });
     },
 

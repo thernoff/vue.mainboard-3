@@ -3,21 +3,34 @@
     :index="index"
     :id="id"
     :options="options"
+    class="folder-window"
+    :data-object-id="options.objectId"
   >
 
     <v-card-text
       slot="body"
-      class="mainboard-window__body"/>
+      class="mainboard-window__body"
+      @click="setActiveWindow"
+    >
+      <mainboard-folder-shortcut
+        v-for="element in elements"
+        :key="element.id"
+        :id="element.id"
+        :shortcut="element"
+        :options="element"
+      />
+    </v-card-text>
   </base-window>
 </template>
 
 <script>
 import baseWindow from "@/components/Desktop/Window/BaseWindow.vue";
-import baseFrame from "@/components/Base/BaseFrame.vue";
+import folderShortcut from "@/components/Desktop/Shortcut/FolderShortcut.vue";
+
 export default {
   components: {
-    baseMainboardFrame: baseFrame,
-    baseWindow: baseWindow
+    baseWindow: baseWindow,
+    mainboardFolderShortcut: folderShortcut
   },
   props: {
     index: {
@@ -47,15 +60,54 @@ export default {
 
     heightWorkspace() {
       return this.$store.state.desktop.heightWorkspace;
+    },
+
+    elements() {
+      let elements = [];
+      elements = this.$store.getters.shortcuts.filter(shortcut => {
+        return shortcut.folderId === this.options.objectId;
+      });
+      console.log("elements", elements);
+      return elements;
     }
   },
 
+  mounted() {
+    var self = this;
+    $(".mainboard-window__body").droppable({
+      accept: ".mainboard-shortcut",
+      drop: function(event, ui) {
+        console.log("mainboard-window__body drop event", event);
+        console.log("mainboard-window__body drop ui", ui);
+        var $dragElement = $(ui.draggable);
+        var $window = $(this).closest(".mainboard-window");
+        console.log('$window.data("object-id")', $window.data("object-id"));
+        if ($dragElement.hasClass("mainboard-shortcut")) {
+          var elementId = ui.draggable.data("id");
+          self.$store.dispatch("actionMoveElementToFolder", {
+            elementId,
+            folderId: $window.data("object-id")
+          });
+        }
+      },
+      out: function(event, ui) {
+        console.log(".mainboard-window__body out event", event);
+        console.log(".mainboard-window__body out ui", ui);
+        var $dragElement = $(ui.draggable);
+        $dragElement.removeClass("over-folder-window");
+      },
+      over: function(event, ui) {
+        console.log(".mainboard-window__body over event", event);
+        console.log(".mainboard-window__body over ui", ui);
+        var $dragElement = $(ui.draggable);
+        $dragElement.addClass("over-folder-window");
+      }
+    });
+  },
+
   methods: {
-    toggleClassWindow(classCss) {
-      this.$store.commit("toggleClassWindow", {
-        index: this.index,
-        classCss: classCss
-      });
+    setActiveWindow() {
+      this.$store.commit("setActiveWindow", this.id);
       this.$store.dispatch("actionSaveSettingsDesktop");
     }
   }
@@ -129,6 +181,7 @@ export default {
 .mainboard-window__body {
   height: calc(100% - 40px);
   position: relative;
+  overflow: auto;
   padding: 0;
   margin: 0;
   /* border-radius: inherit; */

@@ -1,13 +1,14 @@
 <template>
   <div
-    ref="shortcut"
+    :id = "id"
     :style="{
-      position: 'absolute',
-      width: widthShortcut + 'px',
-      height: heightShortcut + 'px',
-      top: shortcut.top * heightWorkspace / 100 + 'px',
-      left: shortcut.left * widthWorkspace / 100 + 'px' }"
-    :class = "{'mainboard-shortcut--active': shortcut.active, 'mainboard-shortcut--noimage': !shortcut.image}"
+      display: 'inline-block',
+      position: position,
+      width: size.width + 'px',
+      height: size.height + 'px',
+    }"
+    :class = "{'mainboard-shortcut--active': options.active, 'mainboard-shortcut--noimage': !options.image}"
+    :data-id=" id "
     class="mainboard-shortcut"
     @dblclick="createNewWindow"
     @tap="createNewWindow"
@@ -48,16 +49,16 @@
     </v-menu>
 
     <div
-      v-if="shortcut.image"
+      v-if="options.image"
       class="mainboard-shortcut__img"
     >
       <img
-        :src="shortcut.image"
-        :alt="shortcut.label"
+        :src="options.image"
+        :alt="options.label"
       >
     </div>
     <div
-      v-else-if="shortcut.type === 'folder'"
+      v-else-if="options.type === 'folder'"
       class="mainboard-shortcut__icon-folder shortcut-folder"
     >
       <span>
@@ -74,7 +75,7 @@
     </div>
 
     <div class="mainboard-shortcut__title">
-      <p v-if="!rename">{{ shortcut.label }}</p>
+      <p v-if="!rename">{{ options.label }}</p>
       <input
         v-show="rename"
         ref="renameinput"
@@ -90,17 +91,26 @@
 <script>
 export default {
   props: {
-    index: {
-      type: Number,
-      required: true
-    },
     id: {
       type: String,
       required: true
     },
-    shortcut: {
+    options: {
       type: Object,
       required: true
+    },
+    size: {
+      type: Object,
+      default: () => {
+        return {
+          width: 100,
+          height: 110
+        };
+      }
+    },
+    position: {
+      type: String,
+      default: ""
     }
   },
   data() {
@@ -116,13 +126,13 @@ export default {
   },
   computed: {
     firstLetterLabel() {
-      return this.shortcut.label[0].toUpperCase();
+      return this.options.label[0].toUpperCase();
     },
 
     shortLabel() {
-      return this.shortcut.label.length > 33
-        ? this.shortcut.label.slice(0, 33) + "..."
-        : this.shortcut.label;
+      return this.options.label.length > 33
+        ? this.options.label.slice(0, 33) + "..."
+        : this.options.label;
     },
 
     widthWorkspace() {
@@ -131,37 +141,9 @@ export default {
 
     heightWorkspace() {
       return this.$store.state.desktop.heightWorkspace;
-    },
-
-    widthShortcut() {
-      return this.$store.state.workspaces.widthShortcut;
-    },
-
-    heightShortcut() {
-      return this.$store.state.workspaces.heightShortcut;
     }
   },
-  mounted() {
-    var self = this;
-    $(this.$refs.shortcut).draggable({
-      //containment: ".mainboard-workspace",
-      containment: ".mainboard-shortcut-list",
-      zIndex: 1000,
-      start: function(event) {},
-      stop: function(event, ui) {
-        var $shortcut = $(this);
-        var options = {
-          id: self.shortcut.id,
-          top: ui.position.top < 0 ? 0 : ui.position.top,
-          left: ui.position.left < 0 ? 0 : ui.position.left,
-          diffTop: ui.position.top - ui.originalPosition.top,
-          diffLeft: ui.position.left - ui.originalPosition.left
-        };
-
-        self.$store.dispatch("actionUpdateShortcutCoords", options);
-      }
-    });
-  },
+  mounted() {},
   methods: {
     setActive() {
       this.$store.dispatch("actionSetActiveShortcut", this.id);
@@ -169,8 +151,8 @@ export default {
     },
 
     createNewWindow() {
-      console.log("createNewWindow this.shortcut", this.shortcut);
-      this.$store.dispatch("actionCreateNewWindow", this.shortcut);
+      console.log("createNewWindow this.shortcut", this.options);
+      this.$store.dispatch("actionCreateNewWindow", this.options);
       this.$store.dispatch("actionSaveSettingsDesktop");
     },
 
@@ -207,6 +189,9 @@ export default {
     deleteShortcut() {
       this.$store.dispatch("actionSetActiveShortcut", this.id);
       this.$store.dispatch("actionDeleteShortcut", this.id);
+      if (this.options.folderId) {
+        this.$store.dispatch("actionDeleteFolder", this.options.folderId);
+      }
       this.$store.dispatch("actionSaveSettingsDesktop");
     }
   }
@@ -227,6 +212,7 @@ export default {
   /* -webkit-box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
   box-shadow: 1px 2px 8px rgba(0, 0, 0, 0.2); */
   box-sizing: border-box;
+  z-index: 1;
 }
 
 .mainboard-shortcut--active,

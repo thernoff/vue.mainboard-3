@@ -9,23 +9,23 @@
         :key="shortcut.id"
         class="sortable-shortcut"
       > -->
-        <mainboard-shortcut
-          v-for="(shortcut, index) in shortcuts"
-          :key="shortcut.id"
-          :index="index"
-          :id="shortcut.id"
-          :shortcut="shortcut"
-        />
+      <mainboard-shortcut
+        v-for="(shortcut, index) in shortcuts"
+        :key="shortcut.id"
+        :index="index"
+        :id="shortcut.id"
+        :shortcut="shortcut"
+      />
       <!-- </div> -->
     </div>
   </div>
 </template>
 
 <script>
-import Shortcut from "@/components/Desktop/Shortcut.vue";
+import DesktopShortcut from "@/components/Desktop/Shortcut/DesktopShortcut.vue";
 export default {
   components: {
-    mainboardShortcut: Shortcut
+    mainboardDesktopShortcut: DesktopShortcut
   },
   props: {
     shortcuts: {

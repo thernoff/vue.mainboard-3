@@ -57,7 +57,6 @@
       class="mainboard-workspace"
       @contextmenu.stop.prevent="showContextMenu"
     >
-
       <!-- <mainboard-cover
         v-if="visibleStartmenu"
         v-on:click.native="toggleVisibleStartMenu"
@@ -65,7 +64,16 @@
       </mainboard-cover> -->
       <!-- <v-container fluid> -->
       <!-- <v-layout row wrap> -->
-
+      <!-- <mainboard-shortcut-list :shortcuts="shortcuts" /> -->
+      <mainboard-desktop-shortcut
+        v-for="(shortcut, index) in shortcutsNotHaveFolder"
+        :key="shortcut.id"
+        :index="index"
+        :id="shortcut.id"
+        :shortcut="shortcut"
+        :options="shortcut"
+        :position="'absolute'"
+      />
       <mainboard-frame-window
         v-for="(window, index) in frameWindows"
         v-show="!window.minimize"
@@ -85,7 +93,6 @@
         @contextmenu.stop.prevent="''"
       />
 
-      <mainboard-shortcut-list :shortcuts="shortcuts"/>
       <mainboard-grid
         ref="grid"
       />
@@ -126,8 +133,8 @@ import FrameWindow from "@/components/Desktop/Window/FrameWindow.vue";
 import FolderWindow from "@/components/Desktop/Window/FolderWindow.vue";
 import Grid from "@/components/Desktop/Grid.vue";
 import Cover from "@/components/Desktop/Cover.vue";
-import Shortcut from "@/components/Desktop/Shortcut.vue";
-import ShortcutList from "@/components/Desktop/ShortcutList.vue";
+import DesktopShortcut from "@/components/Desktop/Shortcut/DesktopShortcut.vue";
+import ShortcutList from "@/components/Desktop/Shortcut/ShortcutList.vue";
 import ResizableBlock from "@/components/Desktop/ResizableBlock.vue";
 import DialogWindowCreateShortcut from "@/components/Desktop/Dialogs/DialogWindowCreateShortcut.vue";
 import DialogWindowCreateFolder from "@/components/Desktop/Dialogs/DialogWindowCreateFolder.vue";
@@ -145,7 +152,7 @@ export default {
     mainboardFolderWindow: FolderWindow,
     mainboardGrid: Grid,
     mainboardCover: Cover,
-    mainboardShortcut: Shortcut,
+    mainboardDesktopShortcut: DesktopShortcut,
     mainboardShortcutList: ShortcutList,
     mainboardResizableBlock: ResizableBlock,
     mainboardDialogWindowCreateShortcut: DialogWindowCreateShortcut,
@@ -186,6 +193,12 @@ export default {
 
     shortcuts() {
       return this.$store.getters.shortcuts;
+    },
+
+    shortcutsNotHaveFolder() {
+      return this.shortcuts.filter(shortcut => {
+        return !shortcut.folderId;
+      });
     },
 
     error() {
@@ -240,27 +253,29 @@ export default {
     this.$store.commit("setHeightWorkspace", this.$refs.workspace.clientHeight);
 
     window.addEventListener("resize", function() {
-      /* const oldWidthWorkspace = self.$store.state.desktop.widthWorkspace;
-      const oldHeightWorkspace = self.$store.state.desktop.heightWorkspace;
-      const newWidthWorkspace = self.$refs.workspace.clientWidth;
-      const newHeightWorkspace = self.$refs.workspace.clientHeight; */
-
-      /* const options = {
-        coefLeft: newWidthWorkspace / oldWidthWorkspace,
-        coefTop: newHeightWorkspace / oldHeightWorkspace
-      }; */
-
-      //self.$store.dispatch("actionRecalcWindowsCoords", options);
-      //self.$store.commit("setWidthGrid", self.$refs.grid.$el.clientWidth);
-      //self.$store.commit("setHeightGrid", self.$refs.grid.$el.clientHeight);
-
       self.$store.commit("setWidthWorkspace", self.$refs.workspace.clientWidth);
       self.$store.commit(
         "setHeightWorkspace",
         self.$refs.workspace.clientHeight
       );
+    });
 
-      //self.$store.dispatch("actionSaveSettingsDesktop");
+    $(".mainboard-workspace").droppable({
+      accept: ".mainboard-shortcut",
+      drop: function(event, ui) {
+        console.log("mainboard-workspace drop event", event);
+        console.log("mainboard-workspace drop ui", ui);
+        var $dragElement = $(ui.draggable);
+        if (
+          $dragElement.hasClass("mainboard-folder-shortcut") &&
+          !$dragElement.hasClass("over-folder-window")
+        ) {
+          var elementId = ui.draggable.data("id");
+          self.$store.dispatch("actionMoveElementFromFolderToDesktop", {
+            elementId
+          });
+        }
+      }
     });
   },
 
