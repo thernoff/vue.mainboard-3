@@ -14,8 +14,8 @@ function getRandomId() {
 export default {
   state: {
     maxZIndex: 0,
-    topPrevWindow: 5,
-    leftPrevWindow: 5,
+    topPrevWindow: 5, // значение координаты top окна в пикселях
+    leftPrevWindow: 5, // значение координаты left окна в пикселях
     stepShift: 10,
     indexActiveWindow: null,
     idActiveWindow: "",
@@ -146,6 +146,12 @@ export default {
 
       for (let i = 0; i < state.windows.length; i++) {
         if (id === state.windows[i].id) {
+          /* console.log('closeWindow state.topPrevWindow', state.topPrevWindow);
+          console.log('closeWindow state.leftPrevWindow', state.leftPrevWindow);
+          state.topPrevWindow = state.windows[i].top;
+          state.leftPrevWindow = state.windows[i].left;
+          console.log('closeWindow state.topPrevWindow', state.topPrevWindow);
+          console.log('closeWindow state.leftPrevWindow', state.leftPrevWindow); */
           state.windows.splice(i, 1);
         }
       }
@@ -346,7 +352,7 @@ export default {
       commit("updateWindow", options);
     },
 
-    actionUpdateWindowCoords({ commit, dispatch, rootState }, options) {
+    actionUpdateWindowCoords({ commit, rootState }, options) {
       const widthWorkspace = rootState.desktop.widthWorkspace;
       const heightWorkspace = rootState.desktop.heightWorkspace;
 

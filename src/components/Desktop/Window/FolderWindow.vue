@@ -83,8 +83,9 @@ export default {
     $(".mainboard-window__body").droppable({
       accept: ".mainboard-shortcut",
       drop: function(event, ui) {
-        console.log("mainboard-window__body drop event", event);
-        console.log("mainboard-window__body drop ui", ui);
+        //console.log("mainboard-window__body drop event", event);
+        //console.log("mainboard-window__body drop ui", ui);
+        console.log("FOLDER WINDOW DROP", this);
         var $dragElement = $(ui.draggable);
         var $window = $(this).closest(".mainboard-window");
         console.log('$window.data("object-id")', $window.data("object-id"));
@@ -96,15 +97,25 @@ export default {
           });
           self.$store.dispatch("actionSaveSettingsDesktop");
         }
+
+        var $windowBodies = $(".mainboard-window__body");
+        $windowBodies.droppable("option", "disabled", false);
       },
       out: function(event, ui) {
-        console.log(".mainboard-window__body out event", event);
-        console.log(".mainboard-window__body out ui", ui);
+        console.log("FOLDER WINDOW OUT", this);
+        //console.log(".mainboard-window__body out event", event);
+        //console.log(".mainboard-window__body out ui", ui);
+        var $windowBodies = $(".mainboard-window__body");
+        $windowBodies.droppable("option", "disabled", false);
         var $dragElement = $(ui.draggable);
         $dragElement.removeClass("over-folder-window");
       },
       over: function(event, ui) {
+        console.log("FOLDER WINDOW OVER", this);
         var $dragElement = $(ui.draggable);
+        var $windowBodies = $(".mainboard-window__body").not(this);
+        $windowBodies.droppable("option", "disabled", true);
+        console.log("FOLDER WINDOW OVER", $windowBodies);
         $dragElement.addClass("over-folder-window");
         var $window = $(this).closest(".mainboard-window");
         var id = $window.data("id");
