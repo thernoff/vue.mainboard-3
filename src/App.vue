@@ -276,8 +276,8 @@ export default {
     $(".mainboard-workspace").droppable({
       accept: ".mainboard-shortcut, .mainboard-startmenu__item",
       drop: function(event, ui) {
-        console.log("mainboard-workspace drop event", event);
-        console.log("mainboard-workspace drop ui", ui);
+        //console.log("mainboard-workspace drop event", event);
+        //console.log("mainboard-workspace drop ui", ui);
         var $dragElement = $(ui.draggable);
         // Если перетаскиваемый объект является значком папки рабочего стола
         if (

@@ -1,6 +1,5 @@
 <template>
   <mainboard-base-shortcut
-    ref="shortcut"
     class="mainboard-folder-shortcut"
     :id = "id"
     :options="options"
@@ -37,7 +36,7 @@ export default {
     return {};
   },
   computed: {},
-  mounted() {
+  /* mounted() {
     var self = this;
     console.log("mounted", this.$refs.shortcut.$el);
     $(this.$refs.shortcut.$el).draggable({
@@ -67,7 +66,7 @@ export default {
         }
       }
     });
-  },
+  }, */
   methods: {}
 };
 </script>

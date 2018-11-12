@@ -158,24 +158,13 @@ export default {
         heightWorkspace - (state.topPrevShortcut + state.heightShortcut) <
         state.stepShift
       ) {
-        console.log("1");
         state.topPrevShortcut = 5;
         state.leftPrevShortcut += state.stepShift;
       } else {
-        console.log("2");
-        console.log("2 state.topPrevShortcut", state.topPrevShortcut);
-        console.log(
-          "2 heightWorkspace + state.heightShortcut",
-          heightWorkspace + state.heightShortcut
-        );
-        //console.log('2 state.leftPrevShortcut', state.leftPrevShortcut);
         state.topPrevShortcut += state.stepShift;
-        //console.log('2 state.topPrevShortcut', state.topPrevShortcut);
-        //console.log('2 state.leftPrevShortcut', state.leftPrevShortcut);
       }
 
       if (state.leftPrevShortcut >= widthWorkspace + state.widthShortcut) {
-        console.log("3");
         state.topPrevShortcut = 5;
         state.leftPrevShortcut = 5;
       }
@@ -247,7 +236,6 @@ export default {
 
     deleteShortcut(state, id) {
       //state.activeWorkspace.shortcuts.splice(indexShortcut, 1);
-
       for (let i = 0; i < state.activeWorkspace.shortcuts.length; i++) {
         if (id === state.activeWorkspace.shortcuts[i].id) {
           state.activeWorkspace.shortcuts.splice(i, 1);
@@ -960,7 +948,23 @@ export default {
       commit("updateOrderShortcuts", data);
     },
 
-    actionDeleteShortcut({ commit }, id) {
+    actionDeleteShortcut({ state, commit }, id) {
+      const shortcut = state.activeWorkspace.shortcuts.find((shortcut) => {
+        return shortcut.id === id;
+      })
+      console.log("actionDeleteShortcut shortcut", shortcut);
+      if (shortcut.object.type === "folder") {
+        console.log('actionDeleteFolder before', state.activeWorkspace.shortcuts);
+        state.activeWorkspace.shortcuts.forEach((s) => {
+          if (s.folderId === shortcut.object.id) {
+            console.log("YIES");
+            commit("deleteShortcut", s.id);
+          }
+        });
+        console.log('actionDeleteFolder after', state.activeWorkspace.shortcuts);
+        commit("deleteFolder", shortcut.object.id);
+      }
+
       commit("deleteShortcut", id);
     },
 
@@ -1053,8 +1057,8 @@ export default {
       });
     },
 
-    actionDeleteFolder({ commit }, id) {
-      commit("deleteFolder", id);
+    actionDeleteFolder({ state, commit }, id) {
+
     },
 
     actionMoveElementToFolder({ commit }, data) {

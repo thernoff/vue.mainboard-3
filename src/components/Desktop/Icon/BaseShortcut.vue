@@ -10,6 +10,7 @@
     :class = "{'mainboard-shortcut--active': options.active, 'mainboard-shortcut--noimage': !options.image}"
     :data-id=" id "
     class="mainboard-shortcut"
+    ref="shortcut"
     @dblclick="createNewWindow"
     @tap="createNewWindow"
     @touchstart="createNewWindow"
@@ -167,7 +168,48 @@ export default {
       return this.$store.state.desktop.heightWorkspace;
     }
   },
-  mounted() {},
+  mounted() {
+    var self = this;
+    //console.log("mounted", this.$refs.shortcut.$el);
+    $(this.$refs.shortcut).draggable({
+      appendTo: ".mainboard-workspace",
+      containment: ".mainboard-workspace",
+      helper: "clone",
+      zIndex: 1000,
+      start: function(event, ui) {
+        console.log("BASE SHORTCUT DRAG shortcut", this);
+        var $shortcut = $(this);
+        var $windowBody = $shortcut.closest(".mainboard-window__body");
+        if ($windowBody.length > 0) {
+          console.log("BASE SHORTCUT DRAG $windowBody", $windowBody);
+          var $windowBodies = $(".mainboard-window__body").not($windowBody);
+          $windowBodies.droppable("option", "disabled", true);
+        }
+        //console.log("BASE SHORTCUT DRAG window", $window);
+        //$shortcut.css({ position: "relative" });
+      },
+      stop: function(event, ui) {
+        var $shortcut = $(this);
+        if (!$shortcut.hasClass("over-folder-window")) {
+          var options = {
+            id: self.id,
+            top: ui.position.top < 0 ? 0 : ui.position.top,
+            left: ui.position.left < 0 ? 0 : ui.position.left,
+            diffTop: ui.position.top - ui.originalPosition.top,
+            diffLeft: ui.position.left - ui.originalPosition.left
+          };
+
+          /* var $windowBodies = $(".mainboard-window__body");
+          if ($windowBodies.length > 0) {
+            $windowBodies.droppable("option", "disabled", false);
+          } */
+
+          self.$store.dispatch("actionUpdateShortcutCoords", options);
+          self.$store.dispatch("actionSaveSettingsDesktop");
+        }
+      }
+    });
+  },
   methods: {
     setActive() {
       this.$store.dispatch("actionSetActiveShortcut", this.id);
@@ -213,9 +255,6 @@ export default {
     deleteShortcut() {
       this.$store.dispatch("actionSetActiveShortcut", this.id);
       this.$store.dispatch("actionDeleteShortcut", this.id);
-      if (this.options.folderId) {
-        this.$store.dispatch("actionDeleteFolder", this.options.folderId);
-      }
       this.$store.dispatch("actionSaveSettingsDesktop");
     }
   }

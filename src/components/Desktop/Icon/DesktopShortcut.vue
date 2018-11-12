@@ -1,6 +1,5 @@
 <template>
   <mainboard-base-shortcut
-    ref="shortcut"
     class="mainboard-desktop-shortcut"
     :id = "id"
     :options="options"
@@ -49,7 +48,7 @@ export default {
       return this.$store.state.desktop.heightWorkspace;
     }
   },
-  mounted() {
+  /*   mounted() {
     var self = this;
     console.log("mounted", this.$refs.shortcut.$el);
     $(this.$refs.shortcut.$el).draggable({
@@ -76,7 +75,7 @@ export default {
         self.$store.dispatch("actionSaveSettingsDesktop");
       }
     });
-  },
+  }, */
   methods: {}
 };
 </script>
