@@ -277,13 +277,6 @@ export default {
   border-radius: inherit;
 }
 
-.mainboard-window__cover-window {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  z-index: 10;
-}
-
 .mainboard-window__header {
   font-size: 16px;
   color: #fff;

@@ -118,22 +118,31 @@
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
-
-            <v-list-tile
+            <div
+              ref="menuitem"
+              class="mainboard-startmenu__item"
               v-for="element in category.elements"
               v-if="parseInt(element.visible)"
               :key="element.id"
+              :data-id="element.id"
               @click="createNewWindow(element)"
               @contextmenu.prevent="showContextMenuItem(element, $event)"
             >
-              <img
-                :src="element.image"
-                :style="{width: '25px', marginRight: '5px'}"
+              <v-list-tile
+                tag="a"
               >
-              <v-list-tile-title>
-                {{ element.label }}
-              </v-list-tile-title>
-            </v-list-tile>
+                <img
+                  :src="element.image"
+                  :style="{width: '25px', marginRight: '5px'}"
+                >
+                <v-list-tile-content>
+                  <v-list-tile-title>
+                    {{ element.label }}
+                  </v-list-tile-title>
+                </v-list-tile-content>
+
+              </v-list-tile>
+            </div>
           </v-list-group>
         </v-list>
         <v-list
@@ -219,7 +228,8 @@ export default {
         x: 0,
         y: 0,
         indexItem: null,
-        indexElement: null
+        indexElement: null,
+        element: null
       },
       contextMenuStartbutton: {
         visible: false,
@@ -261,16 +271,37 @@ export default {
       return this.$store.getters.user;
     }
   },
+  mounted() {
+    /* var self = this;
+    console.log("STARTMENU $(this.$refs.menuitem)", $(this.$refs.menuitem));
+    console.log(
+      "STARTMENU $(.mainboard-startmenu__item)",
+      $(".mainboard-startmenu__item")
+    );
+    //$(".mainboard-startmenu__item").draggable({
+    $(this.$refs.menuitem).draggable({
+      appendTo: ".mainboard-workspace",
+      containment: ".mainboard-workspace",
+      helper: "clone",
+      zIndex: 1000
+    }); */
+  },
   methods: {
     createNewWindow(element) {
+      console.log("createNewWindow element", element);
       this.startMenu = false;
-      element = Object.assign(element, { objectId: element.id });
       this.$store.dispatch("actionCreateNewWindow", element);
       this.$store.dispatch("actionToggleVisibleStartMenu");
       this.$store.dispatch("actionSaveSettingsDesktop");
     },
 
     onClickBtnStart() {
+      $(this.$refs.menuitem).draggable({
+        appendTo: ".mainboard-workspace",
+        containment: ".mainboard-workspace",
+        helper: "clone",
+        zIndex: 1000
+      });
       this.inputSearch = "";
       this.$store.dispatch("actionSetNotActiveWindows");
       this.$store.dispatch("actionSaveSettingsDesktop");
@@ -309,10 +340,13 @@ export default {
     },
 
     addShortcutToDesktop() {
-      const object = this.contextMenuItem.element;
+      //const object = this.contextMenuItem.element;
+      const object = this.$store.getters.itemStartmenuById(
+        this.contextMenuItem.element.id
+      );
+      console.log("addShortcutToDesktop object", object);
       this.$store.dispatch("actionCreateNewShortcut", {
         object,
-        typeObject: "frame",
         error: this.$t("errors.shortcut_exist")
       });
       this.$store.dispatch("actionSaveSettingsDesktop");

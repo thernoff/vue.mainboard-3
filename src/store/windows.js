@@ -14,9 +14,12 @@ function getRandomId() {
 export default {
   state: {
     maxZIndex: 0,
-    topPrevWindow: 5, // значение координаты top окна в пикселях
-    leftPrevWindow: 5, // значение координаты left окна в пикселях
-    stepShift: 10,
+    //topPrevWindow: 5, // значение координаты top окна в пикселях
+    //leftPrevWindow: 5, // значение координаты left окна в пикселях
+    topPrevWindow: 1, // значение координаты top окна в процентах
+    leftPrevWindow: 1, // значение координаты left окна в процентах
+    //stepShift: 10, // сдвиг в пикселях
+    stepShift: 1, // сдвиг в процентах
     indexActiveWindow: null,
     idActiveWindow: "",
     activeWindow: null,
@@ -29,14 +32,17 @@ export default {
 
     createNewWindow(state, { object, widthWorkspace, heightWorkspace }) {
       console.log("createNewWindow object", object);
+      console.log("createNewWindow windows", state.windows);
       const title = object.title || object.label;
-      const top = state.topPrevWindow > 0 ? state.topPrevWindow : 5;
-      const left = state.leftPrevWindow > 0 ? state.leftPrevWindow : 5;
+      const top = state.topPrevWindow > 0 ? state.topPrevWindow : 1;
+      const left = state.leftPrevWindow > 0 ? state.leftPrevWindow : 1;
       const newWindow = {
         id: getRandomId(),
         title,
-        top: (100 * top) / heightWorkspace,
-        left: (100 * left) / widthWorkspace,
+        top,
+        left,
+        /* top: (100 * top) / heightWorkspace,
+        left: (100 * left) / widthWorkspace, */
         width: 40,
         height: 45,
         zIndex: state.windows.length + 2,
@@ -48,7 +54,7 @@ export default {
         type: "window",
         object: {
           id: object.id,
-          type: object.type
+          type: object.type || "frame"
         }
       };
 
@@ -59,7 +65,7 @@ export default {
           newWindow.link = object.link;
           newWindow.apiLink = object.apiLink;
           newWindow.currentLink = object.link;
-          newWindow.itemId = object.objectId
+          newWindow.itemId = object.objectId;
           break;
       }
 
@@ -146,12 +152,12 @@ export default {
 
       for (let i = 0; i < state.windows.length; i++) {
         if (id === state.windows[i].id) {
-          /* console.log('closeWindow state.topPrevWindow', state.topPrevWindow);
-          console.log('closeWindow state.leftPrevWindow', state.leftPrevWindow);
+          //console.log('closeWindow state.topPrevWindow', state.topPrevWindow);
+          //console.log('closeWindow state.leftPrevWindow', state.leftPrevWindow);
           state.topPrevWindow = state.windows[i].top;
           state.leftPrevWindow = state.windows[i].left;
-          console.log('closeWindow state.topPrevWindow', state.topPrevWindow);
-          console.log('closeWindow state.leftPrevWindow', state.leftPrevWindow); */
+          //console.log('closeWindow state.topPrevWindow', state.topPrevWindow);
+          //console.log('closeWindow state.leftPrevWindow', state.leftPrevWindow);
           state.windows.splice(i, 1);
         }
       }
@@ -196,45 +202,6 @@ export default {
       window.fullscreen == false;
     },
 
-    /* setActiveWindow(state, index = undefined) {
-      if (state.windows.length > 0) {
-        if (index === state.indexActiveWindow && state.activeWindow.active) {
-          return;
-        }
-
-        if (index != undefined) {
-          if (state.activeWindow !== null) {
-            state.activeWindow.active = false;
-          }
-          state.activeWindow = state.windows[index];
-          state.activeWindow.active = true;
-          state.indexActiveWindow = index;
-        } else {
-          for (let i = 0; i < state.windows.length; i++) {
-            if (state.windows[i].active) {
-              state.activeWindow = state.windows[i];
-              state.indexActiveWindow = i;
-              break;
-            }
-          }
-        }
-      } else {
-        state.activeWindow = null;
-        state.indexActiveWindow = null;
-      }
-
-      if (state.activeWindow) {
-        state.maxZIndex += 1;
-        const zIndex = state.activeWindow.zIndex;
-        state.windows.forEach(function (window) {
-          if (window.zIndex > zIndex) {
-            window.zIndex -= 1;
-          }
-        });
-        state.activeWindow.zIndex = state.windows.length + 1;
-      }
-    }, */
-
     setActiveWindow(state, id = "") {
       if (state.windows.length > 0) {
         if (
@@ -242,6 +209,7 @@ export default {
           id === state.idActiveWindow &&
           state.activeWindow.active
         ) {
+          state.activeWindow.minimize = false;
           return;
         }
 
@@ -267,6 +235,9 @@ export default {
           state.idActiveWindow = state.windows[0].id;
           state.activeWindow.active = true;
         }
+
+        state.activeWindow.minimize = false;
+        console.log('setActiveWindow state.activeWindow', state.activeWindow);
       } else {
         state.activeWindow = null;
         state.idActiveWindow = "";
@@ -319,12 +290,21 @@ export default {
     }
   },
   actions: {
-    actionCreateNewWindow({ commit, rootState }, object) {
+    actionCreateNewWindow({ state, commit, rootState }, object) {
       const widthWorkspace = rootState.desktop.widthWorkspace;
       const heightWorkspace = rootState.desktop.heightWorkspace;
-      commit("setNotActiveWindows");
-      commit("createNewWindow", { object, widthWorkspace, heightWorkspace });
-      commit("setActiveWindow");
+      console.log('actionCreateNewWindow object', object);
+      let window = null;
+      window = state.windows.find(window => window.object.id === object.id);
+      if (window) {
+        commit("setActiveWindow", window.id);
+      } else {
+        commit("setNotActiveWindows");
+        commit("createNewWindow", { object, widthWorkspace, heightWorkspace });
+        commit("setActiveWindow");
+      }
+
+
     },
 
     actionCloseWindow({ commit }, id) {

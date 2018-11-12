@@ -35,28 +35,36 @@
           <v-icon>home</v-icon>
       </v-btn> -->
     <mainboard-startmenu :height-workspace="heightWorkspace"/>
-    <v-btn
-      v-for="window in windows"
-      v-if="!window.closed"
-      :key="window.id"
-      :color="(!window.minimize) ? 'primary' : 'minimizeWindowTaskbar'"
-      :style="{minWidth: widthBtnMinimizeWindows + '%', width: widthBtnMinimizeWindows + '%'}"
-      class="mainboard-taskbar__btn-minimize-window"
-      @click="toggleMinimizedWindow(window.id, window.minimize)"
-      @contextmenu.prevent.stop="showContextMenuMinimizeButton(window.id, $event)"
-    >
-      <i
-        v-if="window.minimize"
-        class="material-icons"
-        small>
-        expand_less
-      </i>
-      <span
-        :title="window.title"
-        class="mainboard-taskbar__minimize-window">
-        {{ titleMinimizeWindow(window.title) }}
-      </span>
-    </v-btn>
+
+    <div class="mainboard-taskbar__minimize-windows">
+      <v-btn
+        v-for="window in windows"
+        v-if="!window.closed"
+        :key="window.id"
+        :color="(!window.minimize) ? 'primary' : 'minimizeWindowTaskbar'"
+        :style="{minWidth: widthBtnMinimizeWindows + '%', width: widthBtnMinimizeWindows + '%'}"
+        class="mainboard-taskbar__btn-minimize-window"
+        @click="toggleMinimizedWindow(window.id, window.minimize)"
+        @contextmenu.prevent.stop="showContextMenuMinimizeButton(window.id, $event)"
+      >
+        <i
+          v-if="window.minimize"
+          class="material-icons"
+          small>
+          expand_less
+        </i>
+        <span
+          :title="window.title"
+          :style="{
+            maxWidth: maxWidthTitle
+          }"
+          class="mainboard-taskbar__minimize-window-title"
+        >
+          {{ titleMinimizeWindow(window.title) }}
+        </span>
+      </v-btn>
+    </div>
+
     <v-spacer/>
     <mainboard-system-clock/>
     <v-btn
@@ -90,6 +98,7 @@ export default {
   },
   data() {
     return {
+      maxWidthTitle: 85,
       visibleTaskbar: true,
       arrIndexesWindowsRestore: [],
       idCloseWindow: null,
@@ -182,15 +191,18 @@ export default {
 </script>
 
 <style scoped>
-.mainboard-taskbar__minimize-window {
-  max-width: 85px;
+.mainboard-taskbar__minimize-windows {
+  height: 100%;
+}
+.mainboard-taskbar__minimize-window-title {
+  /* max-width: 85px; */
   overflow: hidden;
   font-size: 12px;
 }
 
 .mainboard-taskbar__btn-minimize-window {
   max-width: 120px;
-  margin: 8px 3px;
+  margin: 2px 3px;
   padding: 5px;
 }
 

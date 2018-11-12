@@ -114,7 +114,7 @@ export default {
     /***** SHORTCUT *****/
     createNewShortcut(
       state,
-      { object, typeObject, widthWorkspace, heightWorkspace }
+      { object, widthWorkspace, heightWorkspace }
     ) {
       /* let top = 0;
       if (shortcuts.length > 0) {
@@ -134,16 +134,16 @@ export default {
         object: {
           id: object.id,
           title: object.title || object.label,
-          type: typeObject || "",
+          type: object.type || "frame",
         },
         folderId: 0
       };
 
-      switch (typeObject) {
+      switch (object.type) {
         case "folder":
           newShortcut.label = object.title;
           break;
-        case "frame":
+        default:
           newShortcut.object.apiLink = object.apiLink || object.url;
           newShortcut.label = object.label;
           break;
@@ -256,11 +256,10 @@ export default {
     },
 
     /***** FOLDERS *****/
-    createNewFolder(state, folder) {
-
+    createNewFolder(state, data) {
       const newFolder = {
         id: getRandomId(),
-        title: folder.title,
+        title: data.title,
         type: "folder",
         folderId: 0
       };
@@ -929,7 +928,7 @@ export default {
 
     actionCreateNewShortcut(
       { commit, state, rootState },
-      { object, typeObject, error }
+      { object, error }
     ) {
       const widthWorkspace = rootState.desktop.widthWorkspace;
       const heightWorkspace = rootState.desktop.heightWorkspace;
@@ -941,7 +940,6 @@ export default {
       if (!existShortcut) {
         commit("createNewShortcut", {
           object,
-          typeObject,
           widthWorkspace,
           heightWorkspace
         });
@@ -1050,7 +1048,6 @@ export default {
       commit("createNewFolder", folder);
       commit("createNewShortcut", {
         object: state.folders[state.folders.length - 1],
-        typeObject: "folder",
         widthWorkspace,
         heightWorkspace
       });

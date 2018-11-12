@@ -274,11 +274,12 @@ export default {
     });
 
     $(".mainboard-workspace").droppable({
-      accept: ".mainboard-shortcut",
+      accept: ".mainboard-shortcut, .mainboard-startmenu__item",
       drop: function(event, ui) {
         console.log("mainboard-workspace drop event", event);
         console.log("mainboard-workspace drop ui", ui);
         var $dragElement = $(ui.draggable);
+        // Если перетаскиваемый объект является значком папки рабочего стола
         if (
           $dragElement.hasClass("mainboard-folder-shortcut") &&
           !$dragElement.hasClass("over-folder-window")
@@ -287,6 +288,19 @@ export default {
           self.$store.dispatch("actionMoveElementFromFolderToDesktop", {
             elementId
           });
+        }
+
+        // Если перетаскиваемый объект является пунктом меню Пуск
+        if ($dragElement.hasClass("mainboard-startmenu__item")) {
+          var elementId = ui.draggable.data("id");
+
+          var object = self.$store.getters.itemStartmenuById(elementId);
+          self.$store.dispatch("actionCreateNewShortcut", {
+            object,
+            typeObject: "frame",
+            error: self.$t("errors.shortcut_exist")
+          });
+          self.$store.dispatch("actionSaveSettingsDesktop");
         }
       }
     });

@@ -54,6 +54,19 @@ export default {
     getItemStartMenu(state) {
       return (indexItem, indexElement) =>
         state.categories[indexItem].elements[indexElement];
+    },
+
+    itemStartmenuById(state) {
+      return (id) => {
+        let itemStartmenu = null;
+        for (let i = 0; i < state.categories.length; i++) {
+          itemStartmenu = state.categories[i].elements.find(element => element.id == id);
+          if (itemStartmenu) {
+            return itemStartmenu;
+          }
+        }
+      }
+
     }
   }
 };

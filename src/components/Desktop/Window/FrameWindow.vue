@@ -155,4 +155,11 @@ export default {
 .mainboard-frame-window__body {
   height: 100%;
 }
+
+.mainboard-window__cover-window {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+}
 </style>

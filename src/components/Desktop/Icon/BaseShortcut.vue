@@ -152,6 +152,8 @@ export default {
     },
 
     shortLabel() {
+      console.log("shortLabel this.options", this.options);
+      return false;
       return this.options.label.length > 33
         ? this.options.label.slice(0, 33) + "..."
         : this.options.label;
