@@ -45,10 +45,6 @@ export default {
     load() {
       console.log("Load frame first");
       if (!this.firstLoad) {
-        console.log(
-          "Load frame",
-          this.$refs.baseFrame.contentWindow.document.title
-        );
         let apiLink = "";
         const currentLink = this.$refs.baseFrame.contentWindow.location.href;
         const posRedirurl = this.apiLink.search(/redirurl/i);

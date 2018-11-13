@@ -17,7 +17,7 @@
       offset-y
     >
       <v-list>
-        <v-list-tile
+        <!-- <v-list-tile
           @click="showDialogWindowCreateShortcut"
         >
           <v-list-tile-title
@@ -35,7 +35,7 @@
           >
             {{ $t('shortcuts.order') }}
           </v-list-tile-title>
-        </v-list-tile>
+        </v-list-tile> -->
 
         <v-list-tile
           @click="showDialogWindowCreateFolder"

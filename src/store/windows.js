@@ -223,17 +223,25 @@ export default {
           state.activeWindow.active = true;
           state.idActiveWindow = id;
         } else {
+
           for (let i = 0; i < state.windows.length; i++) {
-            state.windows[i].active = false;
-            /* if (state.windows[i].active) {
+            if (state.windows[i].active) {
               state.activeWindow = state.windows[i];
               state.idActiveWindow = state.windows[i].id;
               break;
-            } */
+            }
           }
-          state.activeWindow = state.windows[0];
-          state.idActiveWindow = state.windows[0].id;
-          state.activeWindow.active = true;
+
+          if (!state.activeWindow || !state.idActiveWindow) {
+            state.activeWindow = state.windows[0];
+            state.idActiveWindow = state.windows[0].id;
+            state.activeWindow.active = true;
+          }
+
+          /* for (let i = 0; i < state.windows.length; i++) {
+            state.windows[i].active = false;
+          } */
+
         }
 
         state.activeWindow.minimize = false;

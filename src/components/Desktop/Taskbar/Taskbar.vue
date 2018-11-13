@@ -44,7 +44,7 @@
         :color="(!window.minimize) ? 'primary' : 'minimizeWindowTaskbar'"
         :style="{minWidth: widthBtnMinimizeWindows + '%', width: widthBtnMinimizeWindows + '%'}"
         class="mainboard-taskbar__btn-minimize-window"
-        @click="toggleMinimizedWindow(window.id, window.minimize)"
+        @click="toggleMinimizedWindow(window)"
         @contextmenu.prevent.stop="showContextMenuMinimizeButton(window.id, $event)"
       >
         <i
@@ -138,11 +138,12 @@ export default {
       this.visibleTaskbar = !this.visibleTaskbar;
     },
 
-    toggleMinimizedWindow(id, minimize) {
+    toggleMinimizedWindow(window) {
       this.arrIndexesWindowsRestore = [];
-      this.$store.commit("toggleMinimizeWindow", id);
-      if (minimize) {
-        this.$store.commit("setActiveWindow", id);
+      if (window.minimize || !window.active) {
+        this.$store.commit("setActiveWindow", window.id);
+      } else {
+        this.$store.commit("toggleMinimizeWindow", window.id);
       }
       this.$store.dispatch("actionSaveSettingsDesktop");
     },
