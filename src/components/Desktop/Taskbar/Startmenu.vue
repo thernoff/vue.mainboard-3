@@ -113,6 +113,7 @@
                 class="mainboard-startmenu__item"
                 :key="element.id"
                 :data-id="element.id"
+                :title="element.label"
                 @click="createNewWindow(element)"
                 @contextmenu.prevent="showContextMenuItem(element, $event)"
               >
@@ -471,6 +472,10 @@ export default {
   overflow-y: scroll;
   overflow-x: hidden; */
   width: 320px;
+}
+
+.mainboard-startmenu__item:hover {
+  background-color: rgba(208, 225, 245, 0.5);
 }
 
 .mainboard-startmenu__input-search {
