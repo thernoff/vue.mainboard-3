@@ -337,7 +337,6 @@ export default {
           if (response.data.settingsDesktop) {
             const workspaces = response.data.settingsDesktop.workspaces;
             if (workspaces && workspaces.length > 0) {
-              console.log("TEST workspaces", workspaces);
               commit("setWorkspaces", workspaces);
               commit("setActiveWorkspace");
               if (state.activeWorkspace.windows) {

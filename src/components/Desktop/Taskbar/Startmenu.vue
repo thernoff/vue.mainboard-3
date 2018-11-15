@@ -69,49 +69,25 @@
         <v-toolbar
           color="primary"
           dark
-          depressed>
+          depressed
+        >
           <!-- <v-toolbar-side-icon></v-toolbar-side-icon> -->
 
           <v-toolbar-title>
             {{ user.lastname + ' ' + user.firstname }}
           </v-toolbar-title>
           <v-spacer/>
-
-          <!-- <v-btn icon>
-            <v-icon>settings</v-icon>
-          </v-btn> -->
           <mainboard-user-form
             :user="user"
             @click.native="onClickBtnSettingsUser"
           />
-          <!-- <mainboard-window-settings
-            v-bind:user="user"
-            v-on:click.native="onClickBtnSettingsUser"
-            v-bind:categories="categories"
-          ></mainboard-window-settings> -->
         </v-toolbar>
-        <!-- <v-list
-          v-if="!countSearchElements"
-          :style="{height: heightWorkspace * 0.45 + 'px'}"
-          class="mainboard-startmenu__categories"
-        > -->
 
         <v-list
-          :style="{height: heightWorkspace * 0.45 + 'px'}"
+          ref="listCategories"
           class="mainboard-startmenu__categories"
+          :style="{height: heightWorkspace * 0.45 + 'px'}"
         >
-
-        <!-- <v-list-tile
-              @click="''"
-            >
-              <i class="material-icons">
-                apps
-              </i>
-              <v-list-tile-title>
-                Файловый менеджер
-              </v-list-tile-title>
-            </v-list-tile> -->
-
           <!--Если строка поиска меню "Пуск" пуста, то отображаем шаблон для всех элементов -->
           <template
             v-if="!countSearchElements"
@@ -290,20 +266,12 @@ export default {
       return this.$store.getters.user;
     }
   },
+
   mounted() {
-    /* var self = this;
-    console.log("STARTMENU $(this.$refs.menuitem)", $(this.$refs.menuitem));
-    console.log(
-      "STARTMENU $(.mainboard-startmenu__item)",
-      $(".mainboard-startmenu__item")
+    this.$refs.listCategories.$el.addEventListener(
+      "scroll",
+      this.onScrollListCategories
     );
-    //$(".mainboard-startmenu__item").draggable({
-    $(this.$refs.menuitem).draggable({
-      appendTo: ".mainboard-workspace",
-      containment: ".mainboard-workspace",
-      helper: "clone",
-      zIndex: 1000
-    }); */
   },
 
   updated() {
@@ -311,6 +279,10 @@ export default {
   },
 
   methods: {
+    onScrollListCategories() {
+      this.contextMenuItem.visible = false;
+    },
+
     createNewWindow(element) {
       console.log("createNewWindow from element", element);
       this.startMenu = false;
@@ -320,10 +292,11 @@ export default {
     },
 
     addDroppableToItemMenu() {
+      console.log("addDroppableToItemMenu");
       const self = this;
-      console.log("SEARCH");
-      //$(this.$refs.menuitem).draggable({
-      $(".mainboard-startmenu__item").draggable({
+
+      $(this.$refs.menuitem).draggable({
+        //$(".mainboard-startmenu__item").draggable({
         appendTo: ".mainboard-workspace",
         containment: ".mainboard-workspace",
         helper: "clone",
@@ -394,7 +367,11 @@ export default {
     },
 
     onClickBtnStart() {
-      this.addDroppableToItemMenu();
+      //this.addDroppableToItemMenu();
+      //$(".mainboard-startmenu__categories").on("scroll", this.onScrollListCategories);
+      //listCategories
+      console.log("onClickBtnStart", this.$refs.listCategories);
+
       this.inputSearch = "";
       this.$store.dispatch("actionSetNotActiveWindows");
       this.$store.dispatch("actionSaveSettingsDesktop");
