@@ -90,12 +90,18 @@
             v-bind:categories="categories"
           ></mainboard-window-settings> -->
         </v-toolbar>
-        <v-list
+        <!-- <v-list
           v-if="!countSearchElements"
           :style="{height: heightWorkspace * 0.45 + 'px'}"
           class="mainboard-startmenu__categories"
+        > -->
+
+        <v-list
+          :style="{height: heightWorkspace * 0.45 + 'px'}"
+          class="mainboard-startmenu__categories"
         >
-          <!-- <v-list-tile
+
+        <!-- <v-list-tile
               @click="''"
             >
               <i class="material-icons">
@@ -105,27 +111,60 @@
                 Файловый менеджер
               </v-list-tile-title>
             </v-list-tile> -->
-          <v-list-group
-            v-for="category in categories"
-            v-if="parseInt(category.visible)"
-            :key="category.id"
-            class="mainboard-startmenu__category"
+
+          <!--Если строка поиска меню "Пуск" пуста, то отображаем шаблон для всех элементов -->
+          <template
+            v-if="!countSearchElements"
           >
-            <v-list-tile slot="activator">
-              <i class="material-icons icon-folder">folder</i>
-              <v-list-tile-content>
-                <v-list-tile-title>
-                  {{ category.label }}
-                </v-list-tile-title>
-              </v-list-tile-content>
-            </v-list-tile>
+            <v-list-group
+              v-for="category in categories"
+              v-if="parseInt(category.visible)"
+              :key="category.id"
+              class="mainboard-startmenu__category"
+            >
+              <v-list-tile slot="activator">
+                <i class="material-icons icon-folder">folder</i>
+                <v-list-tile-content>
+                  <v-list-tile-title>
+                    {{ category.label }}
+                  </v-list-tile-title>
+                </v-list-tile-content>
+              </v-list-tile>
+              <div
+                v-for="element in category.elements"
+                v-if="parseInt(element.visible)"
+                ref="menuitem"
+                class="mainboard-startmenu__item"
+                :key="element.id"
+                :data-id="element.id"
+                @click="createNewWindow(element)"
+                @contextmenu.prevent="showContextMenuItem(element, $event)"
+              >
+                <v-list-tile
+                  tag="a"
+                >
+                  <img
+                    :src="element.image"
+                    :style="{width: '25px', marginRight: '5px'}"
+                  >
+                  <v-list-tile-content>
+                    <v-list-tile-title>
+                      {{ element.label }}
+                    </v-list-tile-title>
+                  </v-list-tile-content>
+
+                </v-list-tile>
+              </div>
+            </v-list-group>
+          </template>
+          <!--Если строка поиска меню "Пуск" не пуста, то отображаем шаблон для найденных элементов -->
+          <template  v-else>
             <div
-              v-for="element in category.elements"
-              v-if="parseInt(element.visible)"
+              v-for="element in searchElements"
               ref="menuitem"
+              class="mainboard-startmenu__item"
               :key="element.id"
               :data-id="element.id"
-              class="mainboard-startmenu__item"
               @click="createNewWindow(element)"
               @contextmenu.prevent="showContextMenuItem(element, $event)"
             >
@@ -141,31 +180,10 @@
                     {{ element.label }}
                   </v-list-tile-title>
                 </v-list-tile-content>
-
               </v-list-tile>
             </div>
-          </v-list-group>
+          </template>
         </v-list>
-        <v-list
-          v-else
-          class="mainboard-startmenu__categories"
-        >
-          <v-list-tile
-            v-for="element in searchElements"
-            :key="element.id"
-            @click="createNewWindow(element)"
-            @contextmenu.prevent="showContextMenuItem(element, $event)"
-          >
-            <img
-              :src="element.image"
-              :style="{width: '25px', marginRight: '5px'}"
-            >
-            <v-list-tile-title>
-              {{ element.label }}
-            </v-list-tile-title>
-          </v-list-tile>
-        </v-list>
-
         <v-divider/>
 
         <v-list>
@@ -287,6 +305,11 @@ export default {
       zIndex: 1000
     }); */
   },
+
+  updated() {
+    this.addDroppableToItemMenu();
+  },
+
   methods: {
     createNewWindow(element) {
       console.log("createNewWindow from element", element);
@@ -296,9 +319,11 @@ export default {
       this.$store.dispatch("actionSaveSettingsDesktop");
     },
 
-    onClickBtnStart() {
+    addDroppableToItemMenu() {
       const self = this;
-      $(this.$refs.menuitem).draggable({
+      console.log("SEARCH");
+      //$(this.$refs.menuitem).draggable({
+      $(".mainboard-startmenu__item").draggable({
         appendTo: ".mainboard-workspace",
         containment: ".mainboard-workspace",
         helper: "clone",
@@ -366,6 +391,10 @@ export default {
             });
         }
       });
+    },
+
+    onClickBtnStart() {
+      this.addDroppableToItemMenu();
       this.inputSearch = "";
       this.$store.dispatch("actionSetNotActiveWindows");
       this.$store.dispatch("actionSaveSettingsDesktop");
