@@ -289,7 +289,7 @@ export default {
   },
   methods: {
     createNewWindow(element) {
-      console.log("createNewWindow element", element);
+      console.log("createNewWindow from element", element);
       this.startMenu = false;
       this.$store.dispatch("actionCreateNewWindow", element);
       this.$store.dispatch("actionToggleVisibleStartMenu");
@@ -297,11 +297,74 @@ export default {
     },
 
     onClickBtnStart() {
+      const self = this;
       $(this.$refs.menuitem).draggable({
         appendTo: ".mainboard-workspace",
         containment: ".mainboard-workspace",
         helper: "clone",
-        zIndex: 1000
+        zIndex: 1000,
+        drag: function(event, ui) {
+          var helper = ui.helper;
+          helper.hide();
+          var elemOverDrag = document.elementFromPoint(
+            event.clientX,
+            event.clientY
+          );
+          var $elemOverDrag = $(elemOverDrag);
+          if ($elemOverDrag.closest(".mainboard-window").length > 0) {
+            var $window = $elemOverDrag.closest(".mainboard-window");
+            if (!$window.hasClass("window-active")) {
+              var id = $window.data("id");
+              self.$store.commit("setActiveWindow", id);
+            }
+          }
+          helper.show();
+        },
+        stop: function(event, ui) {
+          var $menuItem = $(this);
+          var elemOverDrag = document.elementFromPoint(
+            event.clientX,
+            event.clientY
+          );
+          var $elemOverDrag = $(elemOverDrag);
+          var elementId = $(this).data("id");
+          var object = self.$store.getters.itemStartmenuById(elementId);
+
+          var folderId = 0;
+          if ($elemOverDrag.closest(".mainboard-window").length > 0) {
+            var $window = $elemOverDrag.closest(".mainboard-window");
+            var folderId = $window.data("object-id") || 0;
+          }
+          self.$store
+            .dispatch("actionCreateNewShortcut", {
+              object,
+              folderId,
+              error: self.$t("errors.shortcut_exist")
+            })
+            .then(response => {
+              if (!folderId && response) {
+                //object = this.$store.getters.itemStartmenuById(id);
+                var options = {
+                  id: response.id,
+                  top: ui.position.top < 0 ? 0 : ui.position.top,
+                  left: ui.position.left < 0 ? 0 : ui.position.left,
+                  diffTop: ui.position.top - ui.originalPosition.top,
+                  diffLeft: ui.position.left - ui.originalPosition.left
+                };
+
+                self.$store
+                  .dispatch("actionUpdateShortcutCoords", options)
+                  .then(() => {
+                    self.$store.dispatch("actionSaveSettingsDesktop");
+                  });
+              } else {
+                self.$store.dispatch("actionSaveSettingsDesktop");
+              }
+            })
+            .catch(error => {
+              console.log("error", error);
+            });
+        }
       });
       this.inputSearch = "";
       this.$store.dispatch("actionSetNotActiveWindows");
@@ -346,11 +409,17 @@ export default {
         this.contextMenuItem.element.id
       );
       console.log("addShortcutToDesktop object", object);
-      this.$store.dispatch("actionCreateNewShortcut", {
-        object,
-        error: this.$t("errors.shortcut_exist")
-      });
-      this.$store.dispatch("actionSaveSettingsDesktop");
+      if (object) {
+        this.$store
+          .dispatch("actionCreateNewShortcut", {
+            object,
+            folderId: 0,
+            error: this.$t("errors.shortcut_exist")
+          })
+          .then(() => {
+            this.$store.dispatch("actionSaveSettingsDesktop");
+          });
+      }
     },
 
     reloadApp() {

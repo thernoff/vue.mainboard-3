@@ -286,7 +286,7 @@ export default {
         }
 
         // Если перетаскиваемый объект является пунктом меню Пуск
-        if ($dragElement.hasClass("mainboard-startmenu__item")) {
+        /* if ($dragElement.hasClass("mainboard-startmenu__item")) {
           var object = self.$store.getters.itemStartmenuById(elementId);
           self.$store.dispatch("actionCreateNewShortcut", {
             object,
@@ -294,7 +294,7 @@ export default {
             error: self.$t("errors.shortcut_exist")
           });
           self.$store.dispatch("actionSaveSettingsDesktop");
-        }
+        } */
       }
     });
   },
@@ -332,7 +332,7 @@ export default {
       if (customShortcut) {
         const options = {
           object: customShortcut,
-          typeObject: "frame",
+          folderId: 0,
           error: ""
         };
         this.$store.dispatch("actionCreateNewShortcut", options);

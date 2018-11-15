@@ -64,6 +64,7 @@ export default {
           itemStartmenu = state.categories[i].elements.find(
             element => element.id == id
           );
+
           if (itemStartmenu) {
             return itemStartmenu;
           }

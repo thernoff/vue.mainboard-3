@@ -111,7 +111,7 @@ export default {
     },
 
     /***** SHORTCUT *****/
-    createNewShortcut(state, { object, widthWorkspace, heightWorkspace }) {
+    createNewShortcut(state, { object, folderId, widthWorkspace, heightWorkspace }) {
       /* let top = 0;
       if (shortcuts.length > 0) {
         top = shortcuts[shortcuts.length - 1].top + 100;
@@ -133,7 +133,7 @@ export default {
           //title: object.title || object.label,
           type: object.type || "frame"
         },
-        folderId: 0
+        folderId
       };
 
       /* switch (object.type) {
@@ -906,7 +906,7 @@ export default {
       commit("restoreMinimizeWindows", arrIndexesWindowsRestore);
     },
 
-    actionCreateNewShortcut({ commit, state, rootState }, { object, error }) {
+    actionCreateNewShortcut({ commit, state, rootState }, { object, folderId, error }) {
       const widthWorkspace = rootState.desktop.widthWorkspace;
       const heightWorkspace = rootState.desktop.heightWorkspace;
       const shortcuts = state.activeWorkspace.shortcuts;
@@ -917,12 +917,15 @@ export default {
       if (!existShortcut) {
         commit("createNewShortcut", {
           object,
+          folderId,
           widthWorkspace,
           heightWorkspace
         });
       } else {
         commit("setError", error);
+        return null;
       }
+      return state.activeWorkspace.shortcuts[state.activeWorkspace.shortcuts.length - 1];
     },
 
     actionSetActiveShortcut({ commit }, id) {
@@ -1040,6 +1043,7 @@ export default {
       commit("createNewFolder", folder);
       commit("createNewShortcut", {
         object: state.folders[state.folders.length - 1],
+        folderId: 0,
         widthWorkspace,
         heightWorkspace
       });
@@ -1108,6 +1112,16 @@ export default {
     isActiveShortcut(state) {
       const activeShortcuts = state.activeWorkspace.shortcuts.filter(shortcut => shortcut.active);
       return activeShortcuts.length > 0 ? true : false;
+    },
+
+    shortcutById(state) {
+      return id => {
+        let shortcut = null;
+        shortcut = state.activeWorkspace.shortcuts.find(
+          shortcut => shortcut.id == id
+        );
+        return shortcut;
+      };
     }
   }
 };

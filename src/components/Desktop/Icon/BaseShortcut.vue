@@ -2,6 +2,7 @@
   <div
     ref="shortcut"
     :id = "id"
+    :date-type = "options.object.type"
     :style="{
       display: 'inline-block',
       position: position,
@@ -176,13 +177,13 @@ export default {
       drag: function(event, ui) {
         var helper = ui.helper;
         helper.hide();
-        var dragOverElem = document.elementFromPoint(
+        var elemOverDrag = document.elementFromPoint(
           event.clientX,
           event.clientY
         );
-        var $dragOverElem = $(dragOverElem);
-        if ($dragOverElem.closest(".mainboard-window").length > 0) {
-          var $window = $dragOverElem.closest(".mainboard-window");
+        var $elemOverDrag = $(elemOverDrag);
+        if ($elemOverDrag.closest(".mainboard-window").length > 0) {
+          var $window = $elemOverDrag.closest(".mainboard-window");
           if (!$window.hasClass("window-active")) {
             var id = $window.data("id");
             self.$store.commit("setActiveWindow", id);
@@ -191,15 +192,15 @@ export default {
         helper.show();
       },
       stop: function(event, ui) {
-        var dragOverElem = document.elementFromPoint(
+        var $shortcut = $(this);
+        var elemOverDrag = document.elementFromPoint(
           event.clientX,
           event.clientY
         );
-        var $dragOverElem = $(dragOverElem);
-        var $shortcut = $(this);
+        var $elemOverDrag = $(elemOverDrag);
         var elementId = $shortcut.data("id");
-        if ($dragOverElem.closest(".mainboard-window").length > 0) {
-          var $window = $dragOverElem.closest(".mainboard-window");
+        if ($elemOverDrag.closest(".mainboard-window").length > 0) {
+          var $window = $elemOverDrag.closest(".mainboard-window");
           var folderId = $window.data("object-id");
           if (elementId && folderId) {
             self.$store
