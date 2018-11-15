@@ -2,7 +2,6 @@
   <div
     :class="{
       'mainboard-panel--noelements': countElements == 0,
-      'mainboard-panel--hidden1': !visibleCategory
     }"
     class="mainboard-panel"
   >
@@ -226,10 +225,13 @@ export default {
   mounted() {
     const self = this;
     $(this.$refs.body).sortable({
-      tolerance: "pointer",
-      items: ".sortable-element",
       connectWith: ".mainboard-panel__body",
       distance: 5,
+      items: ".sortable-element",
+      helper: "clone",
+      tolerance: "pointer",
+      placeholder: false,
+      revert: true,
       start: function(event, ui) {
         const $body = $(this);
         const startIndexElement = $(this)

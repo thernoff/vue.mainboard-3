@@ -1,7 +1,6 @@
 <template>
   <div
     ref="window"
-    :data-index="index"
     :data-id="id"
     :style="{
       top: options.top * heightWorkspace / 100 + 'px',
@@ -10,7 +9,7 @@
       height: options.height + '%',
       zIndex: options.zIndex,
     }"
-    :class="[{'fullscreen': options.fullscreen}, options.classesCss.join(' ')]"
+    :class="[{'fullscreen': options.fullscreen, 'window-active': options.active}, options.classesCss.join(' ')]"
     class="mainboard-window"
     @contextmenu.stop.prevent="''"
   >
@@ -62,17 +61,11 @@
           </v-btn>
         </div>
       </v-card-title>
-      <div ref="windowBody" class="mainboard-window__body">
+      <div
+        ref="windowBody"
+        class="mainboard-window__body">
         <slot name="body"/>
       </div>
-      <!-- <v-card-text class="mainboard-window__body"> -->
-        <!-- <div
-          v-if="!options.active"
-          class="mainboard-window__cover-window"
-          @click="setActiveWindow"
-        /> -->
-        <!-- <slot name="body"/> -->
-     <!--  </v-card-text> -->
       <v-divider/>
     </v-card>
   </div>
@@ -85,10 +78,6 @@ export default {
     baseMainboardFrame: baseFrame
   },
   props: {
-    index: {
-      type: Number,
-      required: true
-    },
     id: {
       type: String,
       required: true
@@ -123,12 +112,13 @@ export default {
     var self = this;
     //var countRows = self.$store.getters.getCountRows;
     //var countColumns = self.$store.getters.getCountColumns;
+    //console.log("BaseWindow MOUNTED this.$refs.window", this.$refs.window);
     $(this.$refs.window)
       .draggable({
         handle: ".mainboard-window__header",
         containment: ".mainboard-workspace",
         snap: !self.isModeGrid ? false : ".mainboard-window",
-        start: function(event) {
+        start: function(event, ui) {
           var $window = $(this);
           $window.find(".mainboard-frame__cover").show();
           if ($window.hasClass("fullscreen")) {
@@ -140,7 +130,6 @@ export default {
           $window.find(".mainboard-frame__cover").hide();
           var id = $window.data("id");
           var options = {
-            //index: $(this).data("index"),
             id: id,
             top: ui.position.top < 0 ? 0 : ui.position.top,
             left: ui.position.left < 0 ? 0 : ui.position.left,
@@ -149,8 +138,6 @@ export default {
             diffTop: ui.position.top - ui.originalPosition.top,
             diffLeft: ui.position.left - ui.originalPosition.left
           };
-
-          //$window.removeClass("half-height");
 
           self.$store.dispatch("actionUpdateWindowCoords", options);
           self.$store.dispatch("actionSaveSettingsDesktop");
@@ -163,28 +150,18 @@ export default {
         iframeFix: true,
         minHeight: 150,
         minWidth: 300,
-        //helper: "ui-resizable-helper",
-        start: function(event) {
+        start: function(event, ui) {
           var $window = $(this);
-          //$window.find('.mainboard-frame__cover').css({display: 'block'});
           $window.find(".mainboard-frame__cover").show();
           var id = $window.data("id");
           self.$store.commit("setActiveWindow", id);
         },
         stop: function(event, ui) {
-          console.log("ui", ui);
           var $window = $(this);
           $window.find(".mainboard-frame__cover").hide();
           var id = $window.data("id");
-          //var coefWidth = ui.size.width / ui.originalSize.width;
-          //var coefHeight = ui.size.height / ui.originalSize.height;
-          //console.log(coefWidth, coefHeight);
           var options = {
-            //index: self.index,
             id: id,
-            //index: $(this).data("index"),
-            //coefWidth: coefWidth,
-            //coefHeight: coefHeight,
             top: ui.position.top < 0 ? 0 : ui.position.top,
             left: ui.position.left < 0 ? 0 : ui.position.left,
             width: ui.size.width,
@@ -192,124 +169,11 @@ export default {
             diffTop: ui.position.top - ui.originalPosition.top,
             diffLeft: ui.position.left - ui.originalPosition.left
           };
-          //self.$store.dispatch("actionUpdateWindowCoords", options);
+
           self.$store.dispatch("actionUpdateWindowSize", options);
           self.$store.dispatch("actionSaveSettingsDesktop");
         }
       });
-
-    $(this.$refs.windowBody).droppable({
-      accept: ".mainboard-shortcut",
-      greedy: true,
-      create: function(event, ui) {
-        console.log("FOLDER WINDOW CREATE", ui);
-      },
-      /* activate: function(event, ui) {
-        console.log("FOLDER WINDOW ACTIVATE", ui);
-        console.log("FOLDER WINDOW ACTIVATE this", this);
-        var $dragElement = $(ui.draggable);
-        var $window = $dragElement.closest(".mainboard-window");
-        if ($window.length > 0) {
-          console.log(
-            "FOLDER WINDOW ACTIVATE $dragElement.length",
-            $dragElement.length
-          );
-          var $windowBodies = $(".mainboard-window__body").not(this);
-          $windowBodies.droppable("option", "disabled", true);
-        }
-      }, */
-      drop: function(event, ui) {
-        console.log("mainboard-window__body drop event", event);
-        //console.log("mainboard-window__body drop ui", ui);
-        console.log("FOLDER WINDOW DROP", this);
-        var $dragElement = $(ui.draggable);
-        var $window = $(this).closest(".mainboard-window");
-        console.log('$window.data("object-id")', $window.data("object-id"));
-        if ($dragElement.hasClass("mainboard-shortcut")) {
-          var elementId = ui.draggable.data("id");
-          console.log(
-            "mainboard-window__body drop $window.data(object-id)",
-            $window.data("object-id")
-          );
-          self.$store.dispatch("actionMoveElementToFolder", {
-            elementId,
-            folderId: $window.data("object-id")
-          });
-          self.$store.dispatch("actionSaveSettingsDesktop").then(() => {
-            var $windowBodies = $(".mainboard-window__body");
-            $windowBodies.droppable("option", "disabled", false);
-          });
-        } else {
-          var $windowBodies = $(".mainboard-window__body");
-          $windowBodies.droppable("option", "disabled", false);
-        }
-      },
-      out: function(event, ui) {
-        console.log("FOLDER WINDOW OUT", this);
-        //console.log(".mainboard-window__body out event", event);
-        //console.log(".mainboard-window__body out ui", ui);
-        var $windowBodies = $(".mainboard-window__body");
-        $windowBodies.droppable("option", "disabled", false);
-        var $dragElement = $(ui.draggable);
-        $dragElement.removeClass("over-folder-window");
-      },
-      over: function(event, ui) {
-        console.log("FOLDER WINDOW OVER this", this);
-        console.log("FOLDER WINDOW OVER ui", ui);
-        var $dragElement = $(ui.draggable);
-        var $windowBodies = $(".mainboard-window__body").not(this);
-        $windowBodies.droppable("option", "disabled", true);
-        //console.log("FOLDER WINDOW OVER", $windowBodies);
-        $dragElement.addClass("over-folder-window");
-        var $window = $(this).closest(".mainboard-window");
-        var id = $window.data("id");
-        self.$store.commit("setActiveWindow", id);
-      }
-    });
-
-    /* $(".mainboard-window__body").droppable({
-      accept: ".mainboard-shortcut",
-      drop: function(event, ui) {
-        //console.log("mainboard-window__body drop event", event);
-        //console.log("mainboard-window__body drop ui", ui);
-        console.log("FOLDER WINDOW DROP", this);
-        var $dragElement = $(ui.draggable);
-        var $window = $(this).closest(".mainboard-window");
-        console.log('$window.data("object-id")', $window.data("object-id"));
-        if ($window.hasClass("mainboard-folder-window")) {
-          if ($dragElement.hasClass("mainboard-shortcut")) {
-            var elementId = ui.draggable.data("id");
-            self.$store.dispatch("actionMoveElementToFolder", {
-              elementId,
-              folderId: $window.data("object-id")
-            });
-            self.$store.dispatch("actionSaveSettingsDesktop");
-          }
-        }
-        var $windowBodies = $(".mainboard-window__body");
-        $windowBodies.droppable("option", "disabled", false);
-      },
-      out: function(event, ui) {
-        console.log("FOLDER WINDOW OUT", this);
-        //console.log(".mainboard-window__body out event", event);
-        //console.log(".mainboard-window__body out ui", ui);
-        var $windowBodies = $(".mainboard-window__body");
-        $windowBodies.droppable("option", "disabled", false);
-        var $dragElement = $(ui.draggable);
-        $dragElement.removeClass("over-folder-window");
-      },
-      over: function(event, ui) {
-        console.log("FOLDER WINDOW OVER", this);
-        var $dragElement = $(ui.draggable);
-        var $window = $(this).closest(".mainboard-window");
-        var $windowBodies = $(".mainboard-window__body").not(this);
-        $windowBodies.droppable("option", "disabled", true);
-        console.log("FOLDER WINDOW OVER", $windowBodies);
-        $dragElement.addClass("over-folder-window");
-        var id = $window.data("id");
-        self.$store.commit("setActiveWindow", id);
-      }
-    }); */
   },
 
   methods: {
@@ -340,9 +204,10 @@ export default {
     },
 
     closeWindow() {
-      this.$store.dispatch("actionCloseWindow", this.id);
-      //this.$store.commit("setActiveWindow");
-      this.$store.dispatch("actionSaveSettingsDesktop");
+      this.$store.dispatch("actionCloseWindow", this.id).then(() => {
+        //this.$store.commit("setActiveWindow");
+        this.$store.dispatch("actionSaveSettingsDesktop");
+      });
     }
   }
 };

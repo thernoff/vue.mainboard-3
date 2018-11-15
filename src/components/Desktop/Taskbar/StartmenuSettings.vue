@@ -1,6 +1,7 @@
+<!--Компонент окна для настройки категорий и элементво меню "Пуск"-->
 <template>
   <div class="mainboard-startmenu-settings">
-    <v-menu
+    <!-- <v-menu
       v-model="contextMenu.visible"
       :position-x="contextMenu.x"
       :position-y="contextMenu.y"
@@ -30,7 +31,7 @@
           </v-list-tile-title>
         </v-list-tile>
       </v-list>
-    </v-menu>
+    </v-menu> -->
     <v-dialog
       v-model="visible"
       width="800px"
@@ -89,8 +90,6 @@
       </v-card>
     </v-dialog>
   </div>
-
-<!-- </div> -->
 </template>
 <script>
 import PanelElements from "@/components/Desktop/Taskbar/PanelElements.vue";

@@ -25,7 +25,8 @@ export default {
         method: "post",
         headers: { "Content-Type": "application/form-data" },
         //url: 'http://esv.elxis.test/extusers/fpage/saveuser/',
-        url: window.location.href + "extusers/fpage/savedashboard/",
+        //url: window.location.href + "extusers/fpage/savedashboard/",
+        url: "/extusers/fpage/savedashboard/",
         data: { categories: categories }
       })
         .then(response => {
@@ -57,16 +58,17 @@ export default {
     },
 
     itemStartmenuById(state) {
-      return (id) => {
+      return id => {
         let itemStartmenu = null;
         for (let i = 0; i < state.categories.length; i++) {
-          itemStartmenu = state.categories[i].elements.find(element => element.id == id);
+          itemStartmenu = state.categories[i].elements.find(
+            element => element.id == id
+          );
           if (itemStartmenu) {
             return itemStartmenu;
           }
         }
-      }
-
+      };
     }
   }
 };

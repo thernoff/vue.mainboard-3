@@ -25,7 +25,6 @@ export default {
 
   data() {
     return {
-      cover: false,
       src: this.apiLink,
       firstLoad: true
     };
@@ -33,8 +32,6 @@ export default {
 
   watch: {
     backLink(newVal, oldVal) {
-      console.log("newVal", newVal);
-      console.log("oldVal", oldVal);
       if (newVal) {
         this.$refs.baseFrame.src = newVal;
       }
@@ -43,7 +40,7 @@ export default {
 
   methods: {
     load() {
-      console.log("Load frame first");
+      console.log("First load frame");
       if (!this.firstLoad) {
         let apiLink = "";
         const currentLink = this.$refs.baseFrame.contentWindow.location.href;
@@ -69,31 +66,6 @@ export default {
       }
     }
   }
-
-  /*   created() {
-    console.log("created", this);
-    console.log("created", this.$refs);
-    console.log("created", this.$refs["baseFrame"]);
-  },
-
-  mounted() {
-    console.log("mounted", this);
-    console.log("mounted", this.$refs);
-    console.log("mounted", this.$refs["baseFrame"]);
-    //this.$refs.baseFrame.src = this.frameSrc
-  },
-
-  beforeUpdate() {
-    console.log("beforeUpdate", this.$refs.baseFrame);
-    this.$refs.baseFrame.src = "";
-  },
-
-  updated() {
-    console.log("updated", this);
-    console.log("updated", this.$refs);
-    console.log("updated", this.$refs["baseFrame"]);
-    this.$refs.baseFrame.src = this.frameSrc;
-  } */
 };
 </script>
 
@@ -117,8 +89,6 @@ export default {
   position: absolute;
   left: 0px;
   top: 0px;
-  /* right: 0px;
-        bottom: 0px; */
   overflow: hidden;
 }
 </style>

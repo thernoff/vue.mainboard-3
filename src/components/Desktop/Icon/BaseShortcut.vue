@@ -1,5 +1,6 @@
 <template>
   <div
+    ref="shortcut"
     :id = "id"
     :style="{
       display: 'inline-block',
@@ -10,7 +11,6 @@
     :class = "{'mainboard-shortcut--active': options.active, 'mainboard-shortcut--noimage': !options.image}"
     :data-id=" id "
     class="mainboard-shortcut"
-    ref="shortcut"
     @dblclick="createNewWindow"
     @tap="createNewWindow"
     @touchstart="createNewWindow"
@@ -153,8 +153,6 @@ export default {
     },
 
     shortLabel() {
-      console.log("shortLabel this.options", this.options);
-      return false;
       return this.options.label.length > 33
         ? this.options.label.slice(0, 33) + "..."
         : this.options.label;
@@ -170,56 +168,100 @@ export default {
   },
   mounted() {
     var self = this;
-    //console.log("mounted", this.$refs.shortcut.$el);
     $(this.$refs.shortcut).draggable({
       appendTo: ".mainboard-workspace",
       containment: ".mainboard-workspace",
       helper: "clone",
       zIndex: 1000,
-      start: function(event, ui) {
-        console.log("BASE SHORTCUT DRAG shortcut", this);
-        var $shortcut = $(this);
-        var $windowBody = $shortcut.closest(".mainboard-window__body");
-        if ($windowBody.length > 0) {
-          console.log("BASE SHORTCUT DRAG $windowBody", $windowBody);
-          var $windowBodies = $(".mainboard-window__body").not($windowBody);
-          $windowBodies.droppable("option", "disabled", true);
+      drag: function(event, ui) {
+        var helper = ui.helper;
+        helper.hide();
+        var dragOverElem = document.elementFromPoint(
+          event.clientX,
+          event.clientY
+        );
+        var $dragOverElem = $(dragOverElem);
+        if ($dragOverElem.closest(".mainboard-window").length > 0) {
+          var $window = $dragOverElem.closest(".mainboard-window");
+          if (!$window.hasClass("window-active")) {
+            var id = $window.data("id");
+            self.$store.commit("setActiveWindow", id);
+          }
         }
-        //console.log("BASE SHORTCUT DRAG window", $window);
-        //$shortcut.css({ position: "relative" });
+        helper.show();
       },
       stop: function(event, ui) {
+        var dragOverElem = document.elementFromPoint(
+          event.clientX,
+          event.clientY
+        );
+        var $dragOverElem = $(dragOverElem);
         var $shortcut = $(this);
-        if (!$shortcut.hasClass("over-folder-window")) {
+        var elementId = $shortcut.data("id");
+        if ($dragOverElem.closest(".mainboard-window").length > 0) {
+          var $window = $dragOverElem.closest(".mainboard-window");
+          var folderId = $window.data("object-id");
+          if (elementId && folderId) {
+            self.$store
+              .dispatch("actionMoveElementToFolder", {
+                elementId,
+                folderId
+              })
+              .then(() => {
+                self.$store.dispatch("actionSaveSettingsDesktop");
+              })
+              .catch(error => {
+                console.log("error", error);
+              });
+          }
+        } else {
           var options = {
-            id: self.id,
+            id: elementId,
             top: ui.position.top < 0 ? 0 : ui.position.top,
             left: ui.position.left < 0 ? 0 : ui.position.left,
             diffTop: ui.position.top - ui.originalPosition.top,
             diffLeft: ui.position.left - ui.originalPosition.left
           };
 
-          /* var $windowBodies = $(".mainboard-window__body");
-          if ($windowBodies.length > 0) {
-            $windowBodies.droppable("option", "disabled", false);
-          } */
-
-          self.$store.dispatch("actionUpdateShortcutCoords", options);
-          self.$store.dispatch("actionSaveSettingsDesktop");
+          self.$store
+            .dispatch("actionUpdateShortcutCoords", options)
+            .then(() => {
+              self.$store.dispatch("actionSaveSettingsDesktop");
+            });
         }
       }
     });
+
+    $(this.$refs.shortcut).click();
   },
   methods: {
     setActive() {
-      this.$store.dispatch("actionSetActiveShortcut", this.id);
-      this.$store.dispatch("actionSaveSettingsDesktop");
+      this.$store.dispatch("actionSetActiveShortcut", this.id).then(() => {
+        this.$store.dispatch("actionSaveSettingsDesktop");
+      });
     },
 
     createNewWindow() {
+      const type = this.options.object.type;
+      const id = this.options.object.id;
+      let object = null;
+      switch (type) {
+        case "folder":
+          object = this.$store.state.workspaces.folders.find(f => f.id === id);
+          break;
+        case "frame": {
+          object = this.$store.getters.itemStartmenuById(id);
+          break;
+        }
+      }
       console.log("createNewWindow this.shortcut", this.options.object);
-      this.$store.dispatch("actionCreateNewWindow", this.options.object);
-      this.$store.dispatch("actionSaveSettingsDesktop");
+      console.log("createNewWindow from object", object);
+
+      if (object) {
+        this.$store.dispatch("actionCreateNewWindow", object).then(() => {
+          this.$store.dispatch("actionSaveSettingsDesktop");
+        });
+      }
     },
 
     showContextMenu(e) {
@@ -247,15 +289,17 @@ export default {
           label
         }
       };
-      this.$store.dispatch("actionUpdateShortcut", data);
-      this.$store.dispatch("actionSaveSettingsDesktop");
+      this.$store.dispatch("actionUpdateShortcut", data).then(() => {
+        this.$store.dispatch("actionSaveSettingsDesktop");
+      });
       this.$nextTick(() => this.$refs.renameinput.blur());
     },
 
     deleteShortcut() {
-      this.$store.dispatch("actionSetActiveShortcut", this.id);
-      this.$store.dispatch("actionDeleteShortcut", this.id);
-      this.$store.dispatch("actionSaveSettingsDesktop");
+      this.$store.commit("setActiveShortcut", this.id);
+      this.$store.dispatch("actionDeleteShortcut", this.id).then(() => {
+        this.$store.dispatch("actionSaveSettingsDesktop");
+      });
     }
   }
 };
@@ -271,7 +315,7 @@ export default {
   border: 2px solid #b1a0a0; */
   border-radius: 5px;
   overflow: hidden;
-  cursor: pointer;
+  cursor: default;
   /* -webkit-box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
   box-shadow: 1px 2px 8px rgba(0, 0, 0, 0.2); */
   box-sizing: border-box;

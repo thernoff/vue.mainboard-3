@@ -3,8 +3,8 @@
     :index="index"
     :id="id"
     :options="options"
-    class="mainboard-file-manager"
     :data-object-id="options.objectId"
+    class="mainboard-file-manager"
   >
     <div
       slot="body"
@@ -13,14 +13,15 @@
     >
 
 
-    <!-- <v-card-text
+      <!-- <v-card-text
       slot="body"
 
       @click="setActiveWindow"
     > -->
       <div class="file-manager-sidebar">
         <ul>
-          <li v-for="folder in folders"
+          <li 
+            v-for="folder in folders"
             :key="folder.id"
           >
             <span>

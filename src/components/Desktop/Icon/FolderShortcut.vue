@@ -1,9 +1,9 @@
 <template>
   <mainboard-base-shortcut
-    class="mainboard-folder-shortcut"
     :id = "id"
     :options="options"
     :size="size"
+    class="mainboard-folder-shortcut"
   />
 </template>
 

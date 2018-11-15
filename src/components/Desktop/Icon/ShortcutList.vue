@@ -44,31 +44,6 @@ export default {
         Math.ceil(this.shortcuts.length / Math.floor(heightWorkspace / 120))
       );
     }
-  },
-  mounted() {
-    var self = this;
-    var startIndex, stopIndex;
-    /* $(".mainboard-shortcut-list__container").sortable({
-      distance: 5,
-      items: ".sortable-shortcut",
-      connectWith: ".mainboard-shortcut-list__container",
-      start: function(event, ui) {
-        startIndex = $(this)
-          .find(".sortable-shortcut")
-          .index(ui.item);
-      },
-      stop: function(event, ui) {
-        stopIndex = $(this)
-          .find(".sortable-shortcut")
-          .index(ui.item);
-        self.$store.dispatch("actionUpdateOrderShortcuts", {
-          startIndex,
-          stopIndex
-        });
-
-        self.$store.dispatch("actionSaveSettingsDesktop");
-      }
-    }); */
   }
 };
 </script>

@@ -1,14 +1,16 @@
 <template>
-
   <v-app class="mainboard">
+    <!--Компонент диалогового окна для создания пользовательского ярлыка-->
     <mainboard-dialog-window-create-shortcut
       :visible="visibleDialogWindowCreateShortcut"
       @hideDialogWindow="createCustomShortcut"
     />
+    <!--Компонент диалогового окна для создания папки-->
     <mainboard-dialog-window-create-folder
       :visible="visibleDialogWindowCreateFolder"
       @hideDialogWindow="createFolder"
     />
+    <!--Компонент контекстного меню (вызывается щелчком правой кнопки мыши по рабочему столу)-->
     <v-menu
       v-model="contextMenu.visible"
       :position-x="contextMenu.x"
@@ -46,12 +48,15 @@
             {{ $t('shortcut.create_folder') }}
           </v-list-tile-title>
         </v-list-tile>
-
       </v-list>
     </v-menu>
+
     <!-- <v-navigation-drawer app temporary></v-navigation-drawer> -->
+
+    <!--Компонент верхнего тулбара-->
     <mainboard-toolbar class="mainboard-toolbar"/>
 
+    <!--Компонент рабочей области (используется для отображения остальных компонентов)-->
     <div
       ref="workspace"
       class="mainboard-workspace"
@@ -65,6 +70,8 @@
       <!-- <v-container fluid> -->
       <!-- <v-layout row wrap> -->
       <!-- <mainboard-shortcut-list :shortcuts="shortcuts" /> -->
+
+      <!--Компонент ярлыка для таких сущностей как folder и frame-->
       <mainboard-desktop-shortcut
         v-for="(shortcut, index) in shortcutsNotHaveFolder"
         :key="shortcut.id"
@@ -72,6 +79,8 @@
         :id="shortcut.id"
         :options="shortcut"
       />
+
+      <!--Компонент окна для отображения такой сущности как frame-->
       <mainboard-frame-window
         v-for="(window, index) in frameWindows"
         v-show="!window.minimize"
@@ -81,25 +90,18 @@
         :options="window"
         @contextmenu.stop.prevent="''"
       />
-      <!-- <mainboard-folder-window
-        v-for="(window, index) in folderWindows"
-        v-show="!window.minimize"
-        :key="window.id"
-        :id="window.id"
-        :index="index"
-        :options="window"
-        @contextmenu.stop.prevent="''"
-      /> -->
+
+      <!--Компонент окна для отображения такой сущности как folder-->
       <mainboard-folder-window
-        v-for="(window, index) in folderWindows"
+        v-for="window in folderWindows"
         v-show="!window.minimize"
         :key="window.id"
         :id="window.id"
-        :index="index"
         :options="window"
         @contextmenu.stop.prevent="''"
       />
 
+      <!--Компонент сетки к которой происходит выравнивание ярлыков и окон при перемещении (при условии если выбран соответствующий режим)-->
       <mainboard-grid
         ref="grid"
       />
@@ -109,7 +111,11 @@
       <!-- <router-view></router-view> -->
       <!-- </v-container> -->
     </div>
+
+    <!--Компонент нижней панели задач-->
     <mainboard-taskbar class="mainboard-taskbar"/>
+
+    <!--Компонент для вывода ошибок-->
     <template v-if="error">
       <v-snackbar
         :multi-line="true"
@@ -129,7 +135,6 @@
       </v-snackbar>
     </template>
   </v-app>
-
 </template>
 
 <script>
@@ -228,7 +233,8 @@ export default {
   beforeCreate() {
     const dictonary = {};
     axios
-      .get(window.location.href + "extusers/fpage/dictonary/")
+      //.get(window.location.href + "extusers/fpage/dictonary/")
+      .get("/extusers/fpage/dictonary/")
       .then(response => {
         const lang = response.data.lang;
         dictonary[lang] = response.data.dictonary;
@@ -246,21 +252,12 @@ export default {
   },
 
   created() {
-    /* const promise = this.getDictonary();
-    console.log("created promise", promise);
-    promise.then(response => {
-      console.log("response", response);
-      this.$i18n.setLocaleMessage("ru", response["ru"]);
-      this.$i18n.locale = "ru";
-    }); */
     this.$store.dispatch("actionGetDashboard");
   },
 
   mounted() {
     //console.log("process.env.NODE_ENV", process.env.NODE_ENV);
     const self = this;
-    //this.$store.commit("setWidthGrid", this.$refs.grid.$el.clientWidth);
-    //this.$store.commit("setHeightGrid", this.$refs.grid.$el.clientHeight);
 
     this.$store.commit("setWidthWorkspace", this.$refs.workspace.clientWidth);
     this.$store.commit("setHeightWorkspace", this.$refs.workspace.clientHeight);
@@ -276,15 +273,13 @@ export default {
     $(".mainboard-workspace").droppable({
       accept: ".mainboard-shortcut, .mainboard-startmenu__item",
       drop: function(event, ui) {
-        //console.log("mainboard-workspace drop event", event);
-        //console.log("mainboard-workspace drop ui", ui);
         var $dragElement = $(ui.draggable);
+        var elementId = ui.draggable.data("id");
         // Если перетаскиваемый объект является значком папки рабочего стола
         if (
           $dragElement.hasClass("mainboard-folder-shortcut") &&
           !$dragElement.hasClass("over-folder-window")
         ) {
-          var elementId = ui.draggable.data("id");
           self.$store.dispatch("actionMoveElementFromFolderToDesktop", {
             elementId
           });
@@ -292,8 +287,6 @@ export default {
 
         // Если перетаскиваемый объект является пунктом меню Пуск
         if ($dragElement.hasClass("mainboard-startmenu__item")) {
-          var elementId = ui.draggable.data("id");
-
           var object = self.$store.getters.itemStartmenuById(elementId);
           self.$store.dispatch("actionCreateNewShortcut", {
             object,
@@ -307,27 +300,6 @@ export default {
   },
 
   methods: {
-    /* toggleWorkspace(step, event) {
-      const touchElement = document.elementFromPoint(
-        event.touchstartX,
-        event.touchstartY
-      );
-      if (this.$refs.grid.$el.contains(touchElement)) {
-        const indexActiveWorkspace = this.$store.getters.indexActiveWorkspace;
-        const countWorkspaces = this.$store.getters.countWorkspaces;
-        if (
-          step + indexActiveWorkspace >= 0 &&
-          step + indexActiveWorkspace < countWorkspaces
-        ) {
-          this.$store.dispatch(
-            "actionSetActiveWorkspace",
-            step + indexActiveWorkspace
-          );
-          this.$store.dispatch("actionSaveSettingsDesktop");
-        }
-      }
-    }, */
-
     toggleVisibleStartMenu() {
       this.$store.dispatch("actionToggleVisibleStartMenu");
     },
@@ -382,16 +354,13 @@ export default {
     async getDictonary() {
       const dictonary = {};
       try {
-        const response = await axios.get(
-          window.location.href + "extusers/fpage/dictonary/"
-        );
+        const response = await axios.get("/extusers/fpage/dictonary/");
         console.log("getDictonary response", response);
         dictonary[response.data.lang] = response.data.dictonary;
       } catch (error) {
         console.log("error", error);
       }
-      //console.log("dictonary", dictonary);
-      //.then(response => { return response.data.dictonary; });
+
       return dictonary;
     }
   }
@@ -411,12 +380,4 @@ export default {
   height: 100%;
   overflow: hidden;
 }
-
-/* .mainboard-toolbar {
-  position: relative;
-}
-
-.mainboard-taskbar {
-  position: relative;
-} */
 </style>

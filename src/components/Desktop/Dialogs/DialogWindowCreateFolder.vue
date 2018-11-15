@@ -19,12 +19,15 @@
               <v-form
                 ref="form"
                 v-model="valid"
-                lazy-validation>
+                lazy-validation
+                v-on:submit.prevent="''"
+              >
                 <v-text-field
                   v-model="title"
                   :rules="titleRules"
                   :label=" $t('folder.title') "
                   name="title"
+                  @keyup.prevent.enter="create"
                   required
                 />
                 <v-layout align-center>

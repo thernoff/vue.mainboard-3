@@ -1,5 +1,4 @@
 <template>
-  <!-- <v-footer app dark color="primary"> -->
   <v-footer
     class="mainboard-taskbar"
     dark
@@ -140,7 +139,10 @@ export default {
 
     toggleMinimizedWindow(window) {
       this.arrIndexesWindowsRestore = [];
-      if (window.minimize || !window.active) {
+      if (window.minimize) {
+        this.$store.commit("toggleMinimizeWindow", window.id);
+        this.$store.commit("setActiveWindow", window.id);
+      } else if (!window.active) {
         this.$store.commit("setActiveWindow", window.id);
       } else {
         this.$store.commit("toggleMinimizeWindow", window.id);
@@ -184,8 +186,9 @@ export default {
 
     closeWindow() {
       this.arrIndexesWindowsRestore = [];
-      this.$store.dispatch("actionCloseWindow", this.idCloseWindow);
-      this.$store.dispatch("actionSaveSettingsDesktop");
+      this.$store.dispatch("actionCloseWindow", this.idCloseWindow).then(() => {
+        this.$store.dispatch("actionSaveSettingsDesktop");
+      });
     }
   }
 };

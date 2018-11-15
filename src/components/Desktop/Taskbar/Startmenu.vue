@@ -1,3 +1,4 @@
+<!--Компонент меню "Пуск"-->
 <template>
   <div class="mainboard-startmenu">
     <mainboard-startmenu-settings
@@ -94,7 +95,7 @@
           :style="{height: heightWorkspace * 0.45 + 'px'}"
           class="mainboard-startmenu__categories"
         >
-            <!-- <v-list-tile
+          <!-- <v-list-tile
               @click="''"
             >
               <i class="material-icons">
@@ -119,12 +120,12 @@
               </v-list-tile-content>
             </v-list-tile>
             <div
-              ref="menuitem"
-              class="mainboard-startmenu__item"
               v-for="element in category.elements"
               v-if="parseInt(element.visible)"
+              ref="menuitem"
               :key="element.id"
               :data-id="element.id"
+              class="mainboard-startmenu__item"
               @click="createNewWindow(element)"
               @contextmenu.prevent="showContextMenuItem(element, $event)"
             >

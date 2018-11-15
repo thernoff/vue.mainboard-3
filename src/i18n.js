@@ -35,8 +35,8 @@ export default new VueI18n({
 function getUserLanguage() {
   var language = window.navigator
     ? window.navigator.language ||
-      window.navigator.systemLanguage ||
-      window.navigator.userLanguage
+    window.navigator.systemLanguage ||
+    window.navigator.userLanguage
     : "ru";
   return (language = language.substr(0, 2).toLowerCase());
 }
@@ -44,9 +44,7 @@ function getUserLanguage() {
 async function getMessagesAsync() {
   const messages = {};
   try {
-    const response = await axios.get(
-      window.location.href + "extusers/fpage/dictonary/"
-    );
+    const response = await axios.get("/extusers/fpage/dictonary/");
     console.log("response", response);
     messages[response.data.lang] = response.data.dictonary;
   } catch (error) {

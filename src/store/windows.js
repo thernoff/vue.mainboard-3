@@ -30,7 +30,7 @@ export default {
       state.windows = windows;
     },
 
-    createNewWindow(state, { object, widthWorkspace, heightWorkspace }) {
+    createNewWindow(state, object) {
       console.log("createNewWindow object", object);
       console.log("createNewWindow windows", state.windows);
       const title = object.title || object.label;
@@ -41,8 +41,6 @@ export default {
         title,
         top,
         left,
-        /* top: (100 * top) / heightWorkspace,
-        left: (100 * left) / widthWorkspace, */
         width: 40,
         height: 45,
         zIndex: state.windows.length + 2,
@@ -80,46 +78,44 @@ export default {
 
     updateWindow(state, options) {
       console.log("updateWindow options", options);
-      //let window = state.windows[options.index];
       const id = options.id;
       let window = state.windows.find(window => {
         return window.id === id;
       });
-      //state.windows[options.index] = Object.assign(window, options);
       window = Object.assign(window, options);
     },
 
     updateWindowCoords(state, { options, widthWorkspace, heightWorkspace }) {
       console.log("updateWindowCoords options", options);
-      //let window = state.windows[options.index];
       const id = options.id;
       let window = state.windows.find(window => {
         return window.id === id;
       });
+      console.log("updateWindowCoords before window.top", window.top);
+      console.log("updateWindowCoords before window.left", window.left);
       if (!window.fullscreen) {
         window.top = (+options.top / heightWorkspace) * 100;
         window.left = (+options.left / widthWorkspace) * 100;
         //state.topPrevWindow -= state.stepShift
         //state.leftPrevWindow -= state.stepShift
       }
+      console.log("updateWindowCoords after window.top", window.top);
+      console.log("updateWindowCoords after window.left", window.left);
     },
 
     updateWindowSize(state, options) {
       console.log("updateWindowSize options", options);
-      //let window = state.windows[options.index];
       const id = options.id;
       let window = state.windows.find(window => {
         return window.id === id;
       });
       if (!window.fullscreen) {
-        console.log("updateWindowSize window.fullscreen", window.fullscreen);
         window.width = +options.width;
         window.height = +options.height;
       }
     },
 
     updateWindowTitle(state, options) {
-      //let window = state.windows[options.index];
       const id = options.id;
       let window = state.windows.find(window => {
         return window.id === id;
@@ -152,12 +148,8 @@ export default {
 
       for (let i = 0; i < state.windows.length; i++) {
         if (id === state.windows[i].id) {
-          //console.log('closeWindow state.topPrevWindow', state.topPrevWindow);
-          //console.log('closeWindow state.leftPrevWindow', state.leftPrevWindow);
           state.topPrevWindow = state.windows[i].top;
           state.leftPrevWindow = state.windows[i].left;
-          //console.log('closeWindow state.topPrevWindow', state.topPrevWindow);
-          //console.log('closeWindow state.leftPrevWindow', state.leftPrevWindow);
           state.windows.splice(i, 1);
         }
       }
@@ -167,7 +159,6 @@ export default {
     },
 
     minimizeWindow(state, id) {
-      //state.windows[index].minimize = true;
       const window = state.windows.find(window => {
         return window.id === id;
       });
@@ -176,7 +167,6 @@ export default {
     },
 
     toggleMinimizeWindow(state, id) {
-      //state.windows[index].minimize = !state.windows[index].minimize;
       const window = state.windows.find(window => {
         return window.id === id;
       });
@@ -185,7 +175,6 @@ export default {
     },
 
     toggleFullscreenWindow(state, id) {
-      //state.windows[index].fullscreen = !state.windows[index].fullscreen;
       const window = state.windows.find(window => {
         return window.id === id;
       });
@@ -194,7 +183,6 @@ export default {
     },
 
     fullscreenWindowOff(state, id) {
-      //state.windows[index].fullscreen = false;
       const window = state.windows.find(window => {
         return window.id === id;
       });
@@ -223,7 +211,6 @@ export default {
           state.activeWindow.active = true;
           state.idActiveWindow = id;
         } else {
-
           for (let i = 0; i < state.windows.length; i++) {
             if (state.windows[i].active) {
               state.activeWindow = state.windows[i];
@@ -237,15 +224,9 @@ export default {
             state.idActiveWindow = state.windows[0].id;
             state.activeWindow.active = true;
           }
-
-          /* for (let i = 0; i < state.windows.length; i++) {
-            state.windows[i].active = false;
-          } */
-
         }
 
-        state.activeWindow.minimize = false;
-        console.log('setActiveWindow state.activeWindow', state.activeWindow);
+        console.log("setActiveWindow state.activeWindow", state.activeWindow);
       } else {
         state.activeWindow = null;
         state.idActiveWindow = "";
@@ -271,7 +252,6 @@ export default {
           state.activeWindow = window;
           state.activeWindow.active = true;
           state.idActiveWindow = state.activeWindow.id;
-          //state.indexActiveWindow = index;
           return true;
         }
       });
@@ -298,26 +278,31 @@ export default {
     }
   },
   actions: {
-    actionCreateNewWindow({ state, commit, rootState }, object) {
-      const widthWorkspace = rootState.desktop.widthWorkspace;
-      const heightWorkspace = rootState.desktop.heightWorkspace;
-      console.log('actionCreateNewWindow object', object);
+    actionCreateNewWindow({ state, commit }, object) {
+      console.log("actionCreateNewWindow object", object);
       let window = null;
       window = state.windows.find(window => window.object.id === object.id);
       if (window) {
         commit("setActiveWindow", window.id);
       } else {
         commit("setNotActiveWindows");
-        commit("createNewWindow", { object, widthWorkspace, heightWorkspace });
+        commit("createNewWindow", object);
         commit("setActiveWindow");
       }
-
-
     },
 
-    actionCloseWindow({ commit }, id) {
+    actionCloseWindow({ state, commit }, id) {
       commit("closeWindow", id);
-      commit("setActiveWindow"); // устанавливаем первое окно активным
+
+      let idActiveWindow = "";
+      for (let i = 0; i < state.windows.length; i++) {
+        if (!state.windows[i].minimize) {
+          idActiveWindow = state.windows[i].id;
+          break;
+        }
+      }
+
+      commit("setActiveWindow", idActiveWindow); // устанавливаем первое не свернутое окно активным
     },
 
     actionSetActiveWindow({ commit }) {
@@ -340,7 +325,7 @@ export default {
       commit("updateWindow", options);
     },
 
-    actionUpdateWindowCoords({ commit, rootState }, options) {
+    actionUpdateWindowCoords({ commit, dispatch, rootState }, options) {
       const widthWorkspace = rootState.desktop.widthWorkspace;
       const heightWorkspace = rootState.desktop.heightWorkspace;
 
@@ -392,14 +377,14 @@ export default {
           options.height = 100;
         }
 
-        commit("updateWindowSize", options);
+        /* commit("updateWindowSize", options);
         commit("updateWindowCoords", {
           options,
           widthWorkspace,
           heightWorkspace
-        });
+        }); */
 
-        /* setTimeout(function () {
+        setTimeout(function () {
           commit("updateWindowSize", options);
           commit("updateWindowCoords", {
             options,
@@ -407,9 +392,9 @@ export default {
             heightWorkspace
           });
           dispatch("actionSaveSettingsDesktop");
-        }, 1); */
+        }, 1);
       } else {
-        //dispatch("actionSaveSettingsDesktop");
+        dispatch("actionSaveSettingsDesktop");
       }
     },
 
@@ -431,11 +416,9 @@ export default {
       });
       commit("updateWindowSize", options);
       if (rootState.desktop.modeGrid) {
-        //console.log('old left', options.left, 'old top', options.top)
         const countColumns = rootState.desktop.countColumns;
         const widthWorkspace = rootState.desktop.widthWorkspace;
         const widthOneColumn = widthWorkspace / countColumns;
-        //options.left = Math.floor(options.left / widthOneColumn) * widthOneColumn
 
         if (options.diffLeft) {
           options.left =
@@ -471,15 +454,15 @@ export default {
           options.height = 100;
         }
 
-        commit("updateWindowCoords", {
+        /* commit("updateWindowCoords", {
           options,
           widthWorkspace,
           heightWorkspace
         });
-        commit("updateWindowSize", options);
+        commit("updateWindowSize", options); */
 
         //console.log('actionUpdateWindowSize', options.width)
-        /* setTimeout(function () {
+        setTimeout(function () {
           commit("updateWindowCoords", {
             options,
             widthWorkspace,
@@ -487,9 +470,9 @@ export default {
           });
           commit("updateWindowSize", options);
           dispatch("actionSaveSettingsDesktop");
-        }, 1); */
+        }, 1);
       } else {
-        //dispatch("actionSaveSettingsDesktop");
+        dispatch("actionSaveSettingsDesktop");
       }
     }
   },

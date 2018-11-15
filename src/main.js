@@ -35,7 +35,7 @@ Vue.config.productionTip = false;
 //var dictonary = dictonaryfdfdf || [];
 //console.log('main.js dictonary 1', dictonary);
 //console.log('main.js dictonaryfdfdf 1', dictonaryfdfdf);
-jQuery(document).ready(function () {
+jQuery(document).ready(function() {
   //console.log('main.js dictonary 2', dictonary);
   //console.log('main.js dictonaryfdfdf 2', dictonaryfdfdf);
   new Vue({

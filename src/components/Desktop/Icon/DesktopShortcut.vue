@@ -1,6 +1,5 @@
 <template>
   <mainboard-base-shortcut
-    class="mainboard-desktop-shortcut"
     :id = "id"
     :options="options"
     :size="size"
@@ -8,6 +7,7 @@
       top: options.top * heightWorkspace / 100 + 'px',
       left: options.left * widthWorkspace / 100 + 'px'
     }"
+    class="mainboard-desktop-shortcut"
   />
 </template>
 

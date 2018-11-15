@@ -174,7 +174,6 @@ export default {
 
     deleteCurrentWorkspace(accept) {
       this.visibleDialogWindow = false;
-      console.log("this.countWorkspaces", this.countWorkspaces);
       if (this.countWorkspaces < 2) {
         this.showInfoDialogWindow();
         return;
@@ -197,14 +196,16 @@ export default {
     },
 
     setActiveWorkspace(index) {
-      this.$store.dispatch("actionSetActiveWorkspace", index);
-      //this.$store.dispatch("actionSetActiveWindow");
-      this.$store.dispatch("actionSaveSettingsDesktop");
+      this.$store.dispatch("actionSetActiveWorkspace", index).then(() => {
+        //this.$store.dispatch("actionSetActiveWindow");
+        this.$store.dispatch("actionSaveSettingsDesktop");
+      });
     },
 
     setNotActiveWindows() {
-      this.$store.dispatch("actionSetNotActiveWindows");
-      this.$store.dispatch("actionSaveSettingsDesktop");
+      this.$store.dispatch("actionSetNotActiveWindows").then(() => {
+        this.$store.dispatch("actionSaveSettingsDesktop");
+      });
     }
   }
 };

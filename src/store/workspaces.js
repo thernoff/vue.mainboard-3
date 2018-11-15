@@ -29,7 +29,6 @@ export default {
         shortcuts: []
       }
     ],
-    folders: [],
     widthShortcut: 100,
     heightShortcut: 110,
     folders: [],
@@ -112,10 +111,7 @@ export default {
     },
 
     /***** SHORTCUT *****/
-    createNewShortcut(
-      state,
-      { object, widthWorkspace, heightWorkspace }
-    ) {
+    createNewShortcut(state, { object, widthWorkspace, heightWorkspace }) {
       /* let top = 0;
       if (shortcuts.length > 0) {
         top = shortcuts[shortcuts.length - 1].top + 100;
@@ -125,6 +121,7 @@ export default {
       console.log("createNewShortcut from object", object);
       const newShortcut = {
         id: getRandomId(),
+        label: object.title || object.label,
         image: "image" in object ? object.image : "",
         top: (100 * top) / heightWorkspace,
         left: (100 * left) / widthWorkspace,
@@ -133,13 +130,13 @@ export default {
         type: "shortcut",
         object: {
           id: object.id,
-          title: object.title || object.label,
-          type: object.type || "frame",
+          //title: object.title || object.label,
+          type: object.type || "frame"
         },
         folderId: 0
       };
 
-      switch (object.type) {
+      /* switch (object.type) {
         case "folder":
           newShortcut.label = object.title;
           break;
@@ -147,7 +144,7 @@ export default {
           newShortcut.object.apiLink = object.apiLink || object.url;
           newShortcut.label = object.label;
           break;
-      }
+      } */
       state.activeWorkspace.shortcuts.push(newShortcut);
       console.log(
         "createNewShortcut state.activeWorkspace.shortcuts",
@@ -208,14 +205,8 @@ export default {
 
     updateShortcut(state, data) {
       console.log("updateShortcut", state.activeWorkspace.shortcuts);
-      //const index = data.index;
       const id = data.id;
       const options = data.options;
-      /* state.activeWorkspace.shortcuts[index] = Object.assign(
-        state.activeWorkspace.shortcuts[index],
-        options
-      ); */
-
       let shortcut = state.activeWorkspace.shortcuts.find(shortcut => {
         return shortcut.id === id;
       });
@@ -224,8 +215,7 @@ export default {
     },
 
     updateShortcutCoords(state, { options, widthWorkspace, heightWorkspace }) {
-      console.log("updateWindowCoords options", options);
-      //let window = state.windows[options.index];
+      console.log("updateShortcutCoords options", options);
       const id = options.id;
       const shortcut = state.activeWorkspace.shortcuts.find(shortcut => {
         return shortcut.id === id;
@@ -235,7 +225,6 @@ export default {
     },
 
     deleteShortcut(state, id) {
-      //state.activeWorkspace.shortcuts.splice(indexShortcut, 1);
       for (let i = 0; i < state.activeWorkspace.shortcuts.length; i++) {
         if (id === state.activeWorkspace.shortcuts[i].id) {
           state.activeWorkspace.shortcuts.splice(i, 1);
@@ -320,7 +309,8 @@ export default {
       commit("setActiveWorkspace");
       commit("setWindows", state.activeWorkspace.windows);
       axios
-        .get(window.location.href + "extusers/fpage/desktop/")
+        //.get(window.location.href + "extusers/fpage/desktop/")
+        .get("/extusers/fpage/desktop/")
         .then(response => {
           //console.log("response", response.data);
           // Массив данных для отображения стартового меню
@@ -347,6 +337,7 @@ export default {
           if (response.data.settingsDesktop) {
             const workspaces = response.data.settingsDesktop.workspaces;
             if (workspaces && workspaces.length > 0) {
+              console.log("TEST workspaces", workspaces);
               commit("setWorkspaces", workspaces);
               commit("setActiveWorkspace");
               if (state.activeWorkspace.windows) {
@@ -866,7 +857,7 @@ export default {
         });
     },
 
-    actionSaveSettingsDesktop({ state, rootState }) {
+    actionSaveSettingsDesktop({ state }) {
       const workspaces = state.workspaces;
       const folders = state.folders;
       console.log("actionSaveSettingsDesktop folders", folders);
@@ -874,7 +865,8 @@ export default {
         method: "post",
         headers: { "Content-Type": "application/form-data" },
         //url: 'http://esv.elxis.test/extusers/fpage/savedesktop/',
-        url: window.location.href + "extusers/fpage/savedesktop/",
+        //url: window.location.href + "extusers/fpage/savedesktop/",
+        url: "/extusers/fpage/savedesktop/",
         data: {
           settings: { workspaces, folders }
         }
@@ -914,10 +906,7 @@ export default {
       commit("restoreMinimizeWindows", arrIndexesWindowsRestore);
     },
 
-    actionCreateNewShortcut(
-      { commit, state, rootState },
-      { object, error }
-    ) {
+    actionCreateNewShortcut({ commit, state, rootState }, { object, error }) {
       const widthWorkspace = rootState.desktop.widthWorkspace;
       const heightWorkspace = rootState.desktop.heightWorkspace;
       const shortcuts = state.activeWorkspace.shortcuts;
@@ -949,19 +938,18 @@ export default {
     },
 
     actionDeleteShortcut({ state, commit }, id) {
-      const shortcut = state.activeWorkspace.shortcuts.find((shortcut) => {
+      const shortcut = state.activeWorkspace.shortcuts.find(shortcut => {
         return shortcut.id === id;
-      })
-      console.log("actionDeleteShortcut shortcut", shortcut);
+      });
+      // Если удаляемый ярлык относится к папке, то удаляем все ярлыки, которые лежат в данной папке
+      // (пока ярлык указывающий на папку и сама папка тождественно равны)
       if (shortcut.object.type === "folder") {
-        console.log('actionDeleteFolder before', state.activeWorkspace.shortcuts);
-        state.activeWorkspace.shortcuts.forEach((s) => {
+        state.activeWorkspace.shortcuts.forEach(s => {
           if (s.folderId === shortcut.object.id) {
-            console.log("YIES");
             commit("deleteShortcut", s.id);
           }
         });
-        console.log('actionDeleteFolder after', state.activeWorkspace.shortcuts);
+        // Удаляем саму папку на которую ссылается удаляемый ярлык
         commit("deleteFolder", shortcut.object.id);
       }
 
@@ -972,7 +960,7 @@ export default {
       commit("updateShortcut", data);
     },
 
-    actionUpdateShortcutCoords({ commit, dispatch, rootState }, options) {
+    actionUpdateShortcutCoords({ commit, rootState }, options) {
       const widthWorkspace = rootState.desktop.widthWorkspace;
       const heightWorkspace = rootState.desktop.heightWorkspace;
 
@@ -1057,12 +1045,10 @@ export default {
       });
     },
 
-    actionDeleteFolder({ state, commit }, id) {
-
-    },
+    actionDeleteFolder({ state, commit }, id) { },
 
     actionMoveElementToFolder({ commit }, data) {
-      console.log('actionMoveElementToFolder data', data);
+      console.log("actionMoveElementToFolder data", data);
       commit("moveElementToFolder", data);
     },
 
@@ -1120,11 +1106,7 @@ export default {
     },
 
     isActiveShortcut(state) {
-      const activeShortcuts = state.activeWorkspace.shortcuts.filter(function (
-        shortcut
-      ) {
-        return shortcut.active;
-      });
+      const activeShortcuts = state.activeWorkspace.shortcuts.filter(shortcut => shortcut.active);
       return activeShortcuts.length > 0 ? true : false;
     }
   }

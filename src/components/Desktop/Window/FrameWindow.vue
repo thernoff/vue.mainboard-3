@@ -1,6 +1,5 @@
 <template>
   <base-window
-    :index="index"
     :id="id"
     :options="options"
     class="mainboard-frame-window"
@@ -17,12 +16,6 @@
         @click="back">
         <v-icon color="white">fas fa-arrow-left</v-icon>
       </v-btn>
-      <!-- <v-btn icon small class="mainboard-window__btn" @click="toggleClassWindow('mainboard-window--fullheight')" title="Развернуть по высоте">
-        <v-icon color="white">fas fa-arrows-alt-v</v-icon>
-    </v-btn>
-    <v-btn icon small class="mainboard-window__btn" @click="toggleClassWindow('mainboard-window--fullwidth')" title="Развернуть по ширине">
-        <v-icon color="white">fas fa-arrows-alt-h</v-icon>
-    </v-btn> -->
       <v-btn
         :title=" $t('window.refresh') "
         icon
@@ -38,10 +31,10 @@
       class="mainboard-frame-window__body"
     >
       <div
-          v-if="!options.active"
-          class="mainboard-window__cover-window"
-          @click="setActiveWindow"
-        />
+        v-if="!options.active"
+        class="mainboard-window__cover-window"
+        @click="setActiveWindow"
+      />
       <base-mainboard-frame
         ref="baseMainboardFrame"
         :back-link="backLink"
@@ -60,10 +53,6 @@ export default {
     baseWindow: baseWindow
   },
   props: {
-    index: {
-      type: Number,
-      required: true
-    },
     id: {
       type: String,
       required: true
@@ -117,11 +106,11 @@ export default {
 
     updateWindow(data) {
       console.log("updateWindow data", data);
-      //this.updateHistory(data.apiLink);
       this.updateHistory(data.currentLink);
       let options = Object.assign({}, data, { id: this.id });
-      this.$store.dispatch("actionUpdateWindow", options);
-      this.$store.dispatch("actionSaveSettingsDesktop");
+      this.$store.dispatch("actionUpdateWindow", options).then(() => {
+        this.$store.dispatch("actionSaveSettingsDesktop");
+      });
     },
 
     updateWindowTitle(title) {
@@ -137,7 +126,7 @@ export default {
       this.pressBtnReload = false;
       this.pressBtnBack = false;
       this.backLink = "";
-      console.log("Window.history", this.history);
+      //console.log("Window.history", this.history);
     },
 
     back() {
