@@ -33,11 +33,13 @@
               xs12
               text-xs-center>
               <v-btn
-                class="error"
-                @click="onCancel">{{ $t('cancel') }}</v-btn>
-              <v-btn
                 class="info"
-                @click="onSave">{{ $t('save') }}</v-btn>
+                @click="onSave">{{ $t('save') }}
+              </v-btn>
+              <v-btn
+                class="error"
+                @click="onCancel">{{ $t('cancel') }}
+              </v-btn>
             </v-flex>
           </v-layout>
         </v-container>

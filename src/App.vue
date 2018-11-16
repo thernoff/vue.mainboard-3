@@ -1,5 +1,26 @@
 <template>
   <v-app class="mainboard">
+    <v-dialog
+      v-model="dialog"
+      hide-overlay
+      persistent
+      width="400"
+    >
+      <v-card
+        color="primary"
+        dark
+      >
+      <v-card-title ><span class="title">{{ $t("loading")}}</span></v-card-title>
+        <v-card-text class="text-md-center grey lighten-4">
+          <v-progress-circular
+            :size="70"
+            :width="5"
+            color="deep-orange"
+            indeterminate
+          ></v-progress-circular>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
     <!--Компонент диалогового окна для создания пользовательского ярлыка-->
     <mainboard-dialog-window-create-shortcut
       :visible="visibleDialogWindowCreateShortcut"
@@ -178,7 +199,8 @@ export default {
         visible: false,
         x: 0,
         y: 0
-      }
+      },
+      dialog: true
     };
   },
 
@@ -250,7 +272,12 @@ export default {
   },
 
   created() {
-    this.$store.dispatch("actionGetDashboard");
+    this.$store.dispatch("actionGetDashboard").then(() => {
+      const self = this;
+      setTimeout(() => {
+        self.dialog = false;
+      }, 600);
+    });
   },
 
   mounted() {
