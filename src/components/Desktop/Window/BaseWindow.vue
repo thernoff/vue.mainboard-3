@@ -213,7 +213,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .mainboard-window {
   position: absolute;
   /* border: 2px solid rgba(92, 107, 192, 0.8); */

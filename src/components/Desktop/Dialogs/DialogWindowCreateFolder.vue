@@ -72,7 +72,7 @@ export default {
       title: "",
       titleRules: [
         v => !!v || this.$t("folder.rules.title_required"),
-        v => !!v.trim() || this.$t("folder.rules.title_invalid")
+        v => (v && !!v.trim()) || this.$t("folder.rules.title_invalid")
       ]
     };
   },
@@ -86,6 +86,7 @@ export default {
       this.clearData();
       this.$emit("hideDialogWindow", null);
     },
+
     create() {
       if (this.$refs.form.validate()) {
         const folder = {
@@ -98,6 +99,10 @@ export default {
 
     clearData() {
       this.title = "";
+      this.valid = false;
+      this.modal = false;
+
+      this.$refs.form.reset();
     }
   }
 };

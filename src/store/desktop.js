@@ -26,6 +26,15 @@ export default {
       state.heightWorkspace = heightWorkspace;
     },
 
+    setCountRows(state, heightCell) {
+      state.countRows = Math.floor(state.heightWorkspace / heightCell);
+      //console.log("state.countRows", state.countRows);
+    },
+
+    setCountColumns(state, widthCell) {
+      state.countColumns = Math.floor(state.widthWorkspace / widthCell);
+    },
+
     toggleModeGrid(state) {
       state.modeGrid = !state.modeGrid;
     }

@@ -259,6 +259,8 @@ export default {
 
     this.$store.commit("setWidthWorkspace", this.$refs.workspace.clientWidth);
     this.$store.commit("setHeightWorkspace", this.$refs.workspace.clientHeight);
+    //this.$store.commit("setCountRows", 27.5);
+    //this.$store.commit("setCountColumns", 25);
 
     window.addEventListener("resize", function() {
       self.$store.commit("setWidthWorkspace", self.$refs.workspace.clientWidth);
@@ -266,6 +268,8 @@ export default {
         "setHeightWorkspace",
         self.$refs.workspace.clientHeight
       );
+      //self.$store.commit("setCountRows", 27.5);
+      //self.$store.commit("setCountColumns", 25);
     });
 
     $(".mainboard-workspace").droppable({
