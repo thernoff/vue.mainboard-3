@@ -33,7 +33,8 @@
     "create": "Create folder",
     "title": "Title folder",
     "rules": {
-      "title_required": "Название папки обязательно"
+      "title_required": "Folder name is required",
+      "title_invalid": "Invalid folder name"
     }
   },
   "page_refresh": "Refresh page",

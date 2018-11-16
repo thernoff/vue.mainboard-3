@@ -23,7 +23,7 @@
                 v-on:submit.prevent="''"
               >
                 <v-text-field
-                  v-model="title"
+                  v-model.trim="title"
                   :rules="titleRules"
                   :label=" $t('folder.title') "
                   name="title"
@@ -70,7 +70,10 @@ export default {
       modal: false,
       valid: false,
       title: "",
-      titleRules: [v => !!v || this.$t("folder.rules.title_required")]
+      titleRules: [
+        v => !!v || this.$t("folder.rules.title_required"),
+        v => !!v.trim() || this.$t("folder.rules.title_invalid")
+      ]
     };
   },
   watch: {
