@@ -126,12 +126,6 @@ export default {
         };
       }
     },
-    /* style: {
-      type: Object,
-      default: () => {
-        return {};
-      }
-    }, */
     position: {
       type: String,
       default: ""

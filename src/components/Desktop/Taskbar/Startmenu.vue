@@ -1,6 +1,14 @@
 <!--Компонент меню "Пуск"-->
 <template>
   <div class="mainboard-startmenu">
+    <mainboard-dialog-window
+      :options="{
+        title: $t('startmenu.messages.title_reset_settings_desktop'),
+        text: $t('startmenu.messages.text_reset_settings_desktop')
+      }"
+      :visible="visibleDialogWindow"
+      @hideDialogWindow="actionResetSettingsDesktop($event)"
+    />
     <mainboard-startmenu-settings
       :categories="categories"
       :visible="visibleStartmenuSettings"
@@ -160,9 +168,41 @@
               </v-list-tile>
             </div>
           </template>
+          <v-divider/>
+          <!--Вывод служебных утилит-->
+          <v-list-group
+              class="mainboard-startmenu__service-utils"
+            >
+              <v-list-tile slot="activator">
+                <i class="material-icons icon-folder">build</i>
+                <v-list-tile-content>
+                  <v-list-tile-title>
+                    {{ $t('service.utils') }}
+                  </v-list-tile-title>
+                </v-list-tile-content>
+              </v-list-tile>
+              <div
+                class="mainboard-startmenu__item"
+                :title= "$t('desktop.settings.reset')"
+                @click="showDialogWindow"
+                @contextmenu.prevent="''"
+              >
+                <v-list-tile
+                  tag="a"
+                >
+                  <i class="material-icons icon-folder">autorenew</i>
+                  <v-list-tile-content>
+                    <v-list-tile-title>
+                      {{ $t('desktop.settings.reset') }}
+                    </v-list-tile-title>
+                  </v-list-tile-content>
+
+                </v-list-tile>
+              </div>
+            </v-list-group>
         </v-list>
         <v-divider/>
-
+        <!--Поиск по меню-->
         <v-list>
           <v-list-tile>
             <v-list-tile-content>
@@ -200,14 +240,17 @@
 
 <script>
 import axios from "axios";
+import { axiosInstance } from "@/axios-instance.js";
 
 import UserForm from "@/components/Desktop/Taskbar/UserForm.vue";
 import StartmenuSettings from "@/components/Desktop/Taskbar/StartmenuSettings.vue";
+import DialogWindow from "@/components/Desktop/ModalWindows/DialogWindow.vue";
 
 export default {
   components: {
     mainboardUserForm: UserForm,
-    mainboardStartmenuSettings: StartmenuSettings
+    mainboardStartmenuSettings: StartmenuSettings,
+    mainboardDialogWindow: DialogWindow
   },
   props: {
     heightWorkspace: {
@@ -232,7 +275,8 @@ export default {
         x: 0,
         y: 0
       },
-      inputSearch: ""
+      inputSearch: "",
+      visibleDialogWindow: false
     };
   },
   computed: {
@@ -293,7 +337,6 @@ export default {
     },
 
     addDroppableToItemMenu() {
-      console.log("addDroppableToItemMenu");
       const self = this;
 
       $(this.$refs.menuitem).draggable({
@@ -371,7 +414,7 @@ export default {
       //this.addDroppableToItemMenu();
       //$(".mainboard-startmenu__categories").on("scroll", this.onScrollListCategories);
       //listCategories
-      console.log("onClickBtnStart", this.$refs.listCategories);
+      //console.log("onClickBtnStart", this.$refs.listCategories);
 
       this.inputSearch = "";
       this.$store.dispatch("actionSetNotActiveWindows");
@@ -437,7 +480,7 @@ export default {
       axios({
         method: "post",
         headers: { "Content-Type": "application/form-data" },
-        url: window.location.href + "inner.php/extusers/fpage/logout/"
+        url: "/inner.php/extusers/fpage/logout/"
       })
         .then(() => {
           window.location.href = "/";
@@ -445,6 +488,24 @@ export default {
         .catch(error => {
           console.log("error", error);
         });
+    },
+
+    showDialogWindow() {
+      this.visibleDialogWindow = true;
+    },
+
+    actionResetSettingsDesktop(accept) {
+      this.visibleDialogWindow = false;
+      if (accept) {
+        axios
+          .post("/extusers/fpage/resetdesktop/")
+          .then(() => {
+            window.location.href = "/";
+          })
+          .catch(error => {
+            console.log("error", error);
+          });
+      }
     }
   }
 };

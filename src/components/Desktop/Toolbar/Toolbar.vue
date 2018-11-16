@@ -174,7 +174,7 @@ export default {
 
     deleteCurrentWorkspace(accept) {
       this.visibleDialogWindow = false;
-      if (this.countWorkspaces < 2) {
+      if (this.countWorkspaces < 2 && accept) {
         this.showInfoDialogWindow();
         return;
       }

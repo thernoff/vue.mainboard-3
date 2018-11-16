@@ -21,6 +21,11 @@
     "new": "New category",
     "rename": "Rename category"
   },
+  "desktop": {
+    "settings": {
+      "reset": "Restore default system"
+    }
+  },
   "errors": {
     "shortcut_exist": "Shortcut already created."
   },
@@ -33,9 +38,8 @@
   },
   "page_refresh": "Refresh page",
   "signout": "Sign out",
-  "startmenu": {
-    "customize": "Customize startmenu",
-    "settings": "Settings"
+  "service": {
+    "utils": "Service utils"
   },
   "shortcut": {
     "add_to_desktop": "Add a shortcut to desktop",
@@ -51,6 +55,14 @@
   },
   "shortcuts": {
     "order": "Order shortcuts"
+  },
+  "startmenu": {
+    "customize": "Customize startmenu",
+    "settings": "Settings",
+    "messages": {
+      "title_reset_settings_desktop": "System restore",
+      "text_reset_settings_desktop": "Are you sure you want to reset the system?"
+    }
   },
   "toolbar": {
     "gridSwitcher": {

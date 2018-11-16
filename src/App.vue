@@ -73,20 +73,18 @@
 
       <!--Компонент ярлыка для таких сущностей как folder и frame-->
       <mainboard-desktop-shortcut
-        v-for="(shortcut, index) in shortcutsNotHaveFolder"
+        v-for="shortcut in shortcutsNotHaveFolder"
         :key="shortcut.id"
-        :index="index"
         :id="shortcut.id"
         :options="shortcut"
       />
 
       <!--Компонент окна для отображения такой сущности как frame-->
       <mainboard-frame-window
-        v-for="(window, index) in frameWindows"
+        v-for="window in frameWindows"
         v-show="!window.minimize"
         :key="window.id"
         :id="window.id"
-        :index="index"
         :options="window"
         @contextmenu.stop.prevent="''"
       />

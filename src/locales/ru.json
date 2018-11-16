@@ -21,6 +21,11 @@
     "new": "Новая категория",
     "rename": "Переименовать категорию"
   },
+  "desktop": {
+    "settings": {
+      "reset": "Восстановить систему по умолчанию"
+    }
+  },
   "errors": {
     "shortcut_exist": "Ярлык уже создан"
   },
@@ -33,9 +38,8 @@
   },
   "page_refresh": "Обновить страницу",
   "signout": "Выход из системы",
-  "startmenu": {
-    "customize": "Настройка меню 'Пуск'",
-    "settings": "Свойства"
+  "service": {
+    "utils": "Служебные утилиты"
   },
   "shortcut": {
     "add_to_desktop": "Добавить ярлык на рабочий стол",
@@ -51,6 +55,14 @@
   },
   "shortcuts": {
     "order": "Упорядочить ярлыки"
+  },
+  "startmenu": {
+    "customize": "Настройка меню 'Пуск'",
+    "settings": "Свойства",
+    "messages": {
+      "title_reset_settings_desktop": "Восстановление системы",
+      "text_reset_settings_desktop": "Вы действительно хотите сбросить настройки системы?"
+    }
   },
   "toolbar": {
     "gridSwitcher": {
