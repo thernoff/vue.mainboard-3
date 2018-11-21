@@ -386,6 +386,7 @@ export default {
               error: self.$t("errors.shortcut_exist")
             })
             .then(response => {
+              self.$store.dispatch("actionSaveSettingsDesktop");
               /* if (!folderId && response) {
                 var options = {
                   id: response.id,

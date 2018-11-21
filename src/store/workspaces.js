@@ -181,6 +181,18 @@ export default {
         folderId
       };
 
+      const shortcuts = state.activeWorkspace.shortcuts;
+      let countShortcuts = 0;
+      for (let i = 0; i < shortcuts.length; i++) {
+        if (object.id == shortcuts[i].object.id) {
+          countShortcuts++;
+        }
+      }
+
+      if (countShortcuts) {
+        newShortcut.label = newShortcut.label + ' (' + countShortcuts + ')';
+      }
+
       /* switch (object.type) {
         case "folder":
           newShortcut.label = object.title;
@@ -991,11 +1003,12 @@ export default {
       const widthWorkspace = rootState.desktop.widthWorkspace;
       const heightWorkspace = rootState.desktop.heightWorkspace;
       const shortcuts = state.activeWorkspace.shortcuts;
-      const existShortcut = shortcuts.some(shortcut => {
-        return object.id == shortcut.object.id;
-      });
+      /*  const existShortcut = shortcuts.some(shortcut => {
+         return object.id == shortcut.object.id;
+       });   */
 
-      if (!existShortcut) {
+      //if (!existShortcut) {
+      if (true) {
         commit("createNewShortcut", {
           object,
           folderId,
