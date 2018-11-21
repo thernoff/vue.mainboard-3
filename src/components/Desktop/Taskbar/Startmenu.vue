@@ -93,8 +93,8 @@
 
         <v-list
           ref="listCategories"
-          class="mainboard-startmenu__categories"
           :style="{height: heightWorkspace * 0.45 + 'px'}"
+          class="mainboard-startmenu__categories"
         >
           <!--Если строка поиска меню "Пуск" пуста, то отображаем шаблон для всех элементов -->
           <template
@@ -118,10 +118,10 @@
                 v-for="element in category.elements"
                 v-if="parseInt(element.visible)"
                 ref="menuitem"
-                class="mainboard-startmenu__item"
                 :key="element.id"
                 :data-id="element.id"
                 :title="element.label"
+                class="mainboard-startmenu__item"
                 @click="createNewWindow(element)"
                 @contextmenu.prevent="showContextMenuItem(element, $event)"
               >
@@ -143,13 +143,13 @@
             </v-list-group>
           </template>
           <!--Если строка поиска меню "Пуск" не пуста, то отображаем шаблон для найденных элементов -->
-          <template  v-else>
+          <template v-else>
             <div
               v-for="element in searchElements"
               ref="menuitem"
-              class="mainboard-startmenu__item"
               :key="element.id"
               :data-id="element.id"
+              class="mainboard-startmenu__item"
               @click="createNewWindow(element)"
               @contextmenu.prevent="showContextMenuItem(element, $event)"
             >
@@ -171,35 +171,35 @@
           <v-divider/>
           <!--Вывод служебных утилит-->
           <v-list-group
-              class="mainboard-startmenu__service-utils"
+            class="mainboard-startmenu__service-utils"
+          >
+            <v-list-tile slot="activator">
+              <i class="material-icons icon-folder">build</i>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  {{ $t('service.utils') }}
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <div
+              :title= "$t('desktop.settings.reset')"
+              class="mainboard-startmenu__item"
+              @click="showDialogWindow"
+              @contextmenu.prevent="''"
             >
-              <v-list-tile slot="activator">
-                <i class="material-icons icon-folder">build</i>
+              <v-list-tile
+                tag="a"
+              >
+                <i class="material-icons icon-folder">autorenew</i>
                 <v-list-tile-content>
                   <v-list-tile-title>
-                    {{ $t('service.utils') }}
+                    {{ $t('desktop.settings.reset') }}
                   </v-list-tile-title>
                 </v-list-tile-content>
-              </v-list-tile>
-              <div
-                class="mainboard-startmenu__item"
-                :title= "$t('desktop.settings.reset')"
-                @click="showDialogWindow"
-                @contextmenu.prevent="''"
-              >
-                <v-list-tile
-                  tag="a"
-                >
-                  <i class="material-icons icon-folder">autorenew</i>
-                  <v-list-tile-content>
-                    <v-list-tile-title>
-                      {{ $t('desktop.settings.reset') }}
-                    </v-list-tile-title>
-                  </v-list-tile-content>
 
-                </v-list-tile>
-              </div>
-            </v-list-group>
+              </v-list-tile>
+            </div>
+          </v-list-group>
         </v-list>
         <v-divider/>
         <!--Поиск по меню-->

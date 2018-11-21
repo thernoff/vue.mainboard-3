@@ -11,7 +11,7 @@
         dark
       >
         <v-card-title >
-          <span class="title">{{ $t("loading")}}</span>
+          <span class="title">{{ $t("loading") }}</span>
         </v-card-title>
         <v-card-text class="text-md-center grey lighten-4">
           <v-progress-circular
@@ -19,7 +19,7 @@
             :width="5"
             color="deep-orange"
             indeterminate
-          ></v-progress-circular>
+          />
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -256,6 +256,12 @@ export default {
     }
   },
 
+  watch: {
+    shortcuts() {
+      console.log("APP shortcuts", this.shortcuts);
+    }
+  },
+
   beforeCreate() {
     const dictonary = {};
     axios
@@ -275,12 +281,6 @@ export default {
       this.$i18n.setLocaleMessage("ru", response["ru"]);
       this.$i18n.locale = "ru";
     }); */
-  },
-
-  watch: {
-    shortcuts() {
-      console.log("APP shortcuts", this.shortcuts);
-    }
   },
 
   created() {

@@ -247,7 +247,7 @@ export default {
       if (state.activeWindow) {
         state.maxZIndex += 1;
         const zIndex = state.activeWindow.zIndex;
-        state.windows.forEach(function (window) {
+        state.windows.forEach(function(window) {
           if (window.zIndex > zIndex) {
             window.zIndex -= 1;
           }
@@ -271,7 +271,7 @@ export default {
       if (state.activeWindow) {
         state.maxZIndex += 1;
         const zIndex = state.activeWindow.zIndex;
-        state.windows.forEach(function (window) {
+        state.windows.forEach(function(window) {
           if (window.zIndex > zIndex) {
             window.zIndex -= 1;
           }
@@ -281,7 +281,7 @@ export default {
     },
 
     setNotActiveWindows(state) {
-      state.windows.forEach(function (window) {
+      state.windows.forEach(function(window) {
         window.active = false;
       });
       state.activeWindow = null;
@@ -363,7 +363,11 @@ export default {
             Math.round(options.left / widthOneColumn) * widthOneColumn;
         } */
 
-        options.left = recalcCoordLeftForGridMode(options.left, widthOneColumn, options.diffLeft);
+        options.left = recalcCoordLeftForGridMode(
+          options.left,
+          widthOneColumn,
+          options.diffLeft
+        );
 
         const heightWorkspace = rootState.desktop.heightWorkspace;
         //const heightOneRow = heightWorkspace / countRows;
@@ -378,7 +382,11 @@ export default {
         } */
 
         //options.top = Math.floor(options.top / heightOneRow) * heightOneRow;
-        options.top = recalcCoordTopForGridMode(options.top, heightOneRow, options.diffTop);
+        options.top = recalcCoordTopForGridMode(
+          options.top,
+          heightOneRow,
+          options.diffTop
+        );
 
         options.width = (100 * options.width) / widthWorkspace;
         options.height = (100 * options.height) / heightWorkspace;
@@ -406,7 +414,7 @@ export default {
           heightWorkspace
         }); */
 
-        setTimeout(function () {
+        setTimeout(function() {
           commit("updateWindowSize", options);
           commit("updateWindowCoords", {
             options,
@@ -488,7 +496,7 @@ export default {
         commit("updateWindowSize", options); */
 
         //console.log('actionUpdateWindowSize', options.width)
-        setTimeout(function () {
+        setTimeout(function() {
           commit("updateWindowCoords", {
             options,
             widthWorkspace,

@@ -32,23 +32,38 @@ function recalcCoordTopForGridMode(top, heightCell, diffTop = 0) {
 function findCoords(shortcuts, left, top, widthWorkspace, heightWorkspace) {
   console.log("START: top, left", top, left);
   let shortcut = null;
-  shortcut = shortcuts.find((shortcut) => {
-    return (Math.abs(left - Math.floor((widthWorkspace * shortcut.left) / 100)) < 100) && (Math.abs(top - (heightWorkspace * shortcut.top) / 100) < 100);
+  shortcut = shortcuts.find(shortcut => {
+    return (
+      Math.abs(left - Math.floor((widthWorkspace * shortcut.left) / 100)) <
+      100 && Math.abs(top - (heightWorkspace * shortcut.top) / 100) < 100
+    );
   });
-
-
 
   if (shortcut) {
     console.log("shortcut найден", shortcut);
     console.log("shortcut.left", (widthWorkspace * shortcut.left) / 100);
-    if (Math.abs(widthWorkspace - (widthWorkspace * shortcut.left) / 100 - 100) >= 100) {
+    if (
+      Math.abs(widthWorkspace - (widthWorkspace * shortcut.left) / 100 - 100) >=
+      100
+    ) {
       console.log("есть место справа");
-      return findCoords(shortcuts, (widthWorkspace * shortcut.left) / 100 + 100, top, widthWorkspace, heightWorkspace)
+      return findCoords(
+        shortcuts,
+        (widthWorkspace * shortcut.left) / 100 + 100,
+        top,
+        widthWorkspace,
+        heightWorkspace
+      );
     } else {
       console.log("места справа нет, сдвигаемся вниз");
-      return findCoords(shortcuts, 0, (heightWorkspace * shortcut.top) / 100 + 100, widthWorkspace, heightWorkspace)
+      return findCoords(
+        shortcuts,
+        0,
+        (heightWorkspace * shortcut.top) / 100 + 100,
+        widthWorkspace,
+        heightWorkspace
+      );
     }
-
   } else {
     console.log("shortcut не найден: top, left", top, left);
     return { left, top };
@@ -153,7 +168,10 @@ export default {
     },
 
     /***** SHORTCUT *****/
-    createNewShortcut(state, { object, folderId, widthWorkspace, heightWorkspace }) {
+    createNewShortcut(
+      state,
+      { object, folderId, widthWorkspace, heightWorkspace }
+    ) {
       /* let top = 0;
       if (shortcuts.length > 0) {
         top = shortcuts[shortcuts.length - 1].top + 100;
@@ -168,8 +186,8 @@ export default {
         id: getRandomId(),
         label: object.title || object.label,
         image: "image" in object ? object.image : "",
-        top: 100 * top / heightWorkspace,
-        left: 100 * left / widthWorkspace,
+        top: (100 * top) / heightWorkspace,
+        left: (100 * left) / widthWorkspace,
         zIndex: 5,
         active: false,
         type: "shortcut",
@@ -190,7 +208,7 @@ export default {
       }
 
       if (countShortcuts) {
-        newShortcut.label = newShortcut.label + ' (' + countShortcuts + ')';
+        newShortcut.label = newShortcut.label + " (" + countShortcuts + ")";
       }
 
       /* switch (object.type) {
@@ -282,12 +300,20 @@ export default {
     // Значение координат приходят в пикселях, а сохраняются в процентах
     updateShortcutCoords(state, { options, widthWorkspace, heightWorkspace }) {
       console.log("updateShortcutCoords options", options);
-      const filterShortcuts = state.activeWorkspace.shortcuts.filter((shortcut) => {
-        return options.id !== shortcut.id && !shortcut.folderId;
-      });
+      const filterShortcuts = state.activeWorkspace.shortcuts.filter(
+        shortcut => {
+          return options.id !== shortcut.id && !shortcut.folderId;
+        }
+      );
 
-      const data = findCoords(filterShortcuts, options.left, options.top, widthWorkspace, heightWorkspace);
-      console.log('data', data);
+      const data = findCoords(
+        filterShortcuts,
+        options.left,
+        options.top,
+        widthWorkspace,
+        heightWorkspace
+      );
+      console.log("data", data);
       options.left = data.left;
       options.top = data.top;
       /* const shortcuts = state.activeWorkspace.shortcuts;
@@ -999,7 +1025,10 @@ export default {
       commit("restoreMinimizeWindows", arrIndexesWindowsRestore);
     },
 
-    actionCreateNewShortcut({ commit, state, rootState }, { object, folderId, error }) {
+    actionCreateNewShortcut(
+      { commit, state, rootState },
+      { object, folderId, error }
+    ) {
       const widthWorkspace = rootState.desktop.widthWorkspace;
       const heightWorkspace = rootState.desktop.heightWorkspace;
       const shortcuts = state.activeWorkspace.shortcuts;
@@ -1017,7 +1046,7 @@ export default {
         });
 
         if (rootState.desktop.modeGrid) {
-          const shortcut = state.activeWorkspace.shortcuts[state.activeWorkspace.shortcuts.length - 1];
+          const shortcut = shortcuts[shortcuts.length - 1];
           let options = { id: shortcut.id };
 
           const widthCell = rootState.desktop.widthCell;
@@ -1038,7 +1067,7 @@ export default {
         commit("setError", error);
         return null;
       }
-      return state.activeWorkspace.shortcuts[state.activeWorkspace.shortcuts.length - 1];
+      return shortcuts[shortcuts.length - 1];
     },
 
     actionSetActiveShortcut({ commit }, id) {
@@ -1080,7 +1109,6 @@ export default {
       const widthWorkspace = rootState.desktop.widthWorkspace;
       const heightWorkspace = rootState.desktop.heightWorkspace;
 
-
       commit("updateShortcutCoords", {
         options,
         widthWorkspace,
@@ -1099,7 +1127,11 @@ export default {
             Math.round(options.left / widthOneColumn) * widthOneColumn;
         } */
 
-        options.left = recalcCoordLeftForGridMode(options.left, widthOneColumn, options.diffLeft);
+        options.left = recalcCoordLeftForGridMode(
+          options.left,
+          widthOneColumn,
+          options.diffLeft
+        );
 
         //const heightOneRow = heightWorkspace / countRows;
         const heightOneRow = rootState.desktop.heightCell;
@@ -1112,7 +1144,11 @@ export default {
 
         //options.top = Math.floor(options.top / heightOneRow) * heightOneRow;
 
-        options.top = recalcCoordTopForGridMode(options.top, heightOneRow, options.diffTop);
+        options.top = recalcCoordTopForGridMode(
+          options.top,
+          heightOneRow,
+          options.diffTop
+        );
 
         commit("updateShortcutCoords", {
           options,
@@ -1148,7 +1184,10 @@ export default {
       });
 
       if (rootState.desktop.modeGrid) {
-        const shortcut = state.activeWorkspace.shortcuts[state.activeWorkspace.shortcuts.length - 1];
+        const shortcut =
+          state.activeWorkspace.shortcuts[
+          state.activeWorkspace.shortcuts.length - 1
+          ];
         let options = { id: shortcut.id };
 
         const widthCell = rootState.desktop.widthCell;
@@ -1156,7 +1195,7 @@ export default {
         options.left = recalcCoordLeftForGridMode(left, widthCell, 0);
 
         const heightCell = rootState.desktop.heightCell;
-        const top = (shortcut.top / 100) * heightWorkspace;;
+        const top = (shortcut.top / 100) * heightWorkspace;
         options.top = recalcCoordTopForGridMode(top, heightCell, 0);
         commit("updateShortcutCoords", {
           options,
@@ -1166,7 +1205,7 @@ export default {
       }
     },
 
-    actionDeleteFolder({ state, commit }, id) { },
+    //actionDeleteFolder({ state, commit }, id) {},
 
     actionMoveElementToFolder({ commit }, data) {
       console.log("actionMoveElementToFolder data", data);
@@ -1227,7 +1266,9 @@ export default {
     },
 
     isActiveShortcut(state) {
-      const activeShortcuts = state.activeWorkspace.shortcuts.filter(shortcut => shortcut.active);
+      const activeShortcuts = state.activeWorkspace.shortcuts.filter(
+        shortcut => shortcut.active
+      );
       return activeShortcuts.length > 0 ? true : false;
     },
 

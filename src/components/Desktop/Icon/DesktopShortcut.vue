@@ -6,8 +6,8 @@
       top: options.top * heightWorkspace / 100 + 'px',
       left: options.left * widthWorkspace / 100 + 'px'
     }"
-    class="mainboard-desktop-shortcut"
     :title="(options.object.type === 'folder') ? 'Папка содержит: ' + shortcutsHasFolder + ' элементов': options.label"
+    class="mainboard-desktop-shortcut"
   />
 </template>
 

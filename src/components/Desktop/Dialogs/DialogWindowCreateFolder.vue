@@ -20,15 +20,15 @@
                 ref="form"
                 v-model="valid"
                 lazy-validation
-                v-on:submit.prevent="''"
+                @submit.prevent="''"
               >
                 <v-text-field
                   v-model.trim="title"
                   :rules="titleRules"
                   :label=" $t('folder.title') "
                   name="title"
-                  @keyup.prevent.enter="create"
                   required
+                  @keyup.prevent.enter="create"
                 />
                 <v-layout align-center>
                   <v-flex text-xs-center>

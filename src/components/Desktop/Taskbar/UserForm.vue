@@ -31,7 +31,7 @@
                   ref="form"
                   v-model="valid"
                   lazy-validation
-                  v-on:submit.prevent="''"
+                  @submit.prevent="''"
                 >
                   <v-text-field
                     :value="user.firstname"
