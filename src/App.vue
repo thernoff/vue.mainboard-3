@@ -1,12 +1,14 @@
 <template>
   <v-app class="mainboard">
     <v-dialog
+      class="mainboard-loading"
       v-model="dialog"
+      fullscreen
       hide-overlay
       persistent
-      width="400"
     >
-      <v-card
+      <!-- <v-card
+        class="text-md-center"
         color="primary"
         dark
       >
@@ -21,7 +23,33 @@
             indeterminate
           />
         </v-card-text>
-      </v-card>
+
+      </v-card> -->
+      <div class="mainboard-loading__container text-md-center">
+        <v-layout align-center justify-center column fill-height>
+          <div class="mainboard-loading__progress">
+            <!-- <v-progress-circular
+              :size="70"
+              :width="5"
+              color="deep-orange"
+              indeterminate
+            /> -->
+            <img
+              src="@/assets/logo-incom-loading.png"
+            />
+            <v-progress-linear
+              color="deep-orange"
+              :indeterminate="true"
+
+            ></v-progress-linear>
+          </div>
+          <div class="mainboard-loading__title">
+            <span >{{ $t("loading") }}</span>
+          </div>
+        </v-layout>
+      </div>
+
+
     </v-dialog>
     <!--Компонент диалогового окна для создания пользовательского ярлыка-->
     <mainboard-dialog-window-create-shortcut
@@ -250,17 +278,7 @@ export default {
     }
   },
 
-  watch: {
-    shortcuts() {
-      //console.log("watch shortcuts", this.shortcuts);
-    }
-  },
-
-  watch: {
-    shortcuts() {
-      console.log("APP shortcuts", this.shortcuts);
-    }
-  },
+  watch: {},
 
   beforeCreate() {
     const dictonary = {};
@@ -288,7 +306,7 @@ export default {
       const self = this;
       setTimeout(() => {
         self.dialog = false;
-      }, 600);
+      }, 800);
     });
   },
 
@@ -424,5 +442,20 @@ export default {
   width: 100%;
   height: 100%;
   overflow: hidden;
+}
+
+.mainboard-loading__container {
+  height: 100%;
+  background-color: rgb(51, 60, 68);
+  border-color: rgb(51, 60, 68);
+}
+
+.mainboard-loading__progress {
+  width: 150px;
+}
+
+.mainboard-loading__title {
+  font-size: 16px;
+  color: #fff;
 }
 </style>
