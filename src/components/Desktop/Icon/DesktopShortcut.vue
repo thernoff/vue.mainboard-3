@@ -2,12 +2,12 @@
   <mainboard-base-shortcut
     :id = "id"
     :options="options"
-    :size="size"
     :style="{
       top: options.top * heightWorkspace / 100 + 'px',
       left: options.left * widthWorkspace / 100 + 'px'
     }"
     class="mainboard-desktop-shortcut"
+    :title="(options.object.type === 'folder') ? 'Папка содержит: ' + shortcutsHasFolder + ' элементов': options.label"
   />
 </template>
 
@@ -25,15 +25,6 @@ export default {
     options: {
       type: Object,
       required: true
-    },
-    size: {
-      type: Object,
-      default: () => {
-        return {
-          width: 100,
-          height: 110
-        };
-      }
     }
   },
   data() {
@@ -46,6 +37,16 @@ export default {
 
     heightWorkspace() {
       return this.$store.state.desktop.heightWorkspace;
+    },
+
+    shortcutsHasFolder() {
+      console.log("this.options", this.options);
+      return this.$store.state.workspaces.activeWorkspace.shortcuts.filter(
+        shortcut => {
+          console.log("shortcut", shortcut);
+          return this.options.object.id === shortcut.folderId;
+        }
+      ).length;
     }
   },
   methods: {}

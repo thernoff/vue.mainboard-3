@@ -375,8 +375,10 @@ export default {
           var folderId = 0;
           if ($elemOverDrag.closest(".mainboard-window").length > 0) {
             var $window = $elemOverDrag.closest(".mainboard-window");
-            var folderId = $window.data("object-id") || 0;
+            folderId = $window.data("object-id");
           }
+          object.top = ui.position.top < 0 ? 0 : ui.position.top;
+          object.left = ui.position.left < 0 ? 0 : ui.position.left;
           self.$store
             .dispatch("actionCreateNewShortcut", {
               object,
@@ -384,8 +386,7 @@ export default {
               error: self.$t("errors.shortcut_exist")
             })
             .then(response => {
-              if (!folderId && response) {
-                //object = this.$store.getters.itemStartmenuById(id);
+              /* if (!folderId && response) {
                 var options = {
                   id: response.id,
                   top: ui.position.top < 0 ? 0 : ui.position.top,
@@ -401,7 +402,7 @@ export default {
                   });
               } else {
                 self.$store.dispatch("actionSaveSettingsDesktop");
-              }
+              } */
             })
             .catch(error => {
               console.log("error", error);
@@ -452,7 +453,7 @@ export default {
     showStartmenuSettings() {
       this.visibleStartmenuSettings = true;
     },
-
+    // Создаем ярлык из контекстного меню
     addShortcutToDesktop() {
       //const object = this.contextMenuItem.element;
       const object = this.$store.getters.itemStartmenuById(
@@ -466,7 +467,7 @@ export default {
             folderId: 0,
             error: this.$t("errors.shortcut_exist")
           })
-          .then(() => {
+          .then(response => {
             this.$store.dispatch("actionSaveSettingsDesktop");
           });
       }

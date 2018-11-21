@@ -7,7 +7,9 @@ export default {
     widthGrid: 0,
     heightGrid: 0,
     widthWorkspace: 0,
-    heightWorkspace: 0
+    heightWorkspace: 0,
+    widthCell: 25,
+    heightCell: 25
   },
   mutations: {
     setWidthGrid(state, widthGrid) {

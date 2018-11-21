@@ -11,6 +11,22 @@ function getRandomId() {
   return id;
 }
 
+function recalcCoordLeftForGridMode(left, widthCell, diffLeft = 0) {
+  if (diffLeft) {
+    return Math.floor(left / widthCell) * widthCell;
+  } else {
+    return Math.round(left / widthCell) * widthCell;
+  }
+}
+
+function recalcCoordTopForGridMode(top, heightCell, diffTop = 0) {
+  if (diffTop) {
+    return Math.floor(top / heightCell) * heightCell;
+  } else {
+    return Math.round(top / heightCell) * heightCell;
+  }
+}
+
 export default {
   state: {
     maxZIndex: 0,
@@ -91,16 +107,12 @@ export default {
       let window = state.windows.find(window => {
         return window.id === id;
       });
-      console.log("updateWindowCoords before window.top", window.top);
-      console.log("updateWindowCoords before window.left", window.left);
       if (!window.fullscreen) {
         window.top = (+options.top / heightWorkspace) * 100;
         window.left = (+options.left / widthWorkspace) * 100;
         //state.topPrevWindow -= state.stepShift
         //state.leftPrevWindow -= state.stepShift
       }
-      console.log("updateWindowCoords after window.top", window.top);
-      console.log("updateWindowCoords after window.left", window.left);
     },
 
     updateWindowSize(state, options) {
@@ -278,7 +290,7 @@ export default {
     }
   },
   actions: {
-    actionCreateNewWindow({ state, commit }, object) {
+    actionCreateNewWindow({ state, commit, rootState }, object) {
       console.log("actionCreateNewWindow object", object);
       let window = null;
       window = state.windows.find(window => window.object.id === object.id);
@@ -289,6 +301,7 @@ export default {
         commit("createNewWindow", object);
         commit("setActiveWindow");
       }
+      return state.windows[state.windows.length - 1];
     },
 
     actionCloseWindow({ state, commit }, id) {
@@ -334,30 +347,39 @@ export default {
         widthWorkspace,
         heightWorkspace
       });
-      if (rootState.desktop.modeGrid) {
-        const countColumns = rootState.desktop.countColumns;
-        const widthWorkspace = rootState.desktop.widthWorkspace;
-        const widthOneColumn = widthWorkspace / countColumns;
 
-        if (options.diffLeft) {
+      if (rootState.desktop.modeGrid) {
+        const widthWorkspace = rootState.desktop.widthWorkspace;
+        //const widthOneColumn = widthWorkspace / countColumns;
+        const widthOneColumn = rootState.desktop.widthCell;
+        //const countColumns = rootState.desktop.countColumns;
+        const countColumns = widthWorkspace / widthOneColumn;
+
+        /* if (options.diffLeft) {
           options.left =
             Math.floor(options.left / widthOneColumn) * widthOneColumn;
         } else {
           options.left =
             Math.round(options.left / widthOneColumn) * widthOneColumn;
-        }
+        } */
 
-        const countRows = rootState.desktop.countRows;
+        options.left = recalcCoordLeftForGridMode(options.left, widthOneColumn, options.diffLeft);
+
         const heightWorkspace = rootState.desktop.heightWorkspace;
-        const heightOneRow = heightWorkspace / countRows;
+        //const heightOneRow = heightWorkspace / countRows;
+        const heightOneRow = rootState.desktop.heightCell;
+        //const countRows = rootState.desktop.countRows;
+        const countRows = heightWorkspace / heightOneRow;
 
-        if (options.diffTop) {
+        /* if (options.diffTop) {
           options.top = Math.floor(options.top / heightOneRow) * heightOneRow;
         } else {
           options.top = Math.round(options.top / heightOneRow) * heightOneRow;
-        }
+        } */
 
-        options.top = Math.floor(options.top / heightOneRow) * heightOneRow;
+        //options.top = Math.floor(options.top / heightOneRow) * heightOneRow;
+        options.top = recalcCoordTopForGridMode(options.top, heightOneRow, options.diffTop);
+
         options.width = (100 * options.width) / widthWorkspace;
         options.height = (100 * options.height) / heightWorkspace;
 
@@ -416,9 +438,11 @@ export default {
       });
       commit("updateWindowSize", options);
       if (rootState.desktop.modeGrid) {
-        const countColumns = rootState.desktop.countColumns;
         const widthWorkspace = rootState.desktop.widthWorkspace;
-        const widthOneColumn = widthWorkspace / countColumns;
+        //const widthOneColumn = widthWorkspace / countColumns;
+        const widthOneColumn = rootState.desktop.widthCell;
+        //const countColumns = rootState.desktop.countColumns;
+        const countColumns = widthWorkspace / widthOneColumn;
 
         if (options.diffLeft) {
           options.left =
@@ -428,9 +452,11 @@ export default {
             Math.round(options.left / widthOneColumn) * widthOneColumn;
         }
 
-        const countRows = rootState.desktop.countRows;
         const heightWorkspace = rootState.desktop.heightWorkspace;
-        const heightOneRow = heightWorkspace / countRows;
+        //const heightOneRow = heightWorkspace / countRows;
+        const heightOneRow = rootState.desktop.heightCell;
+        //const countRows = rootState.desktop.countRows;
+        const countRows = heightWorkspace / heightOneRow;
 
         if (options.diffTop) {
           options.top = Math.floor(options.top / heightOneRow) * heightOneRow;

@@ -259,7 +259,7 @@ export default {
   font-size: 16px;
   color: #fff;
   cursor: move;
-  padding: 0 5px;
+  padding: 0 5px !important;
   height: 30px;
   border-top-left-radius: 0px !important;
   border-top-right-radius: 0px !important;
@@ -277,7 +277,7 @@ export default {
 }
 
 .mainboard-window__btn {
-  margin: 0;
+  margin: 0 !important;
 }
 
 .mainboard-window__body {

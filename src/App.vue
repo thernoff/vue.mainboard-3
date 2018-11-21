@@ -10,7 +10,9 @@
         color="primary"
         dark
       >
-      <v-card-title ><span class="title">{{ $t("loading")}}</span></v-card-title>
+        <v-card-title >
+          <span class="title">{{ $t("loading")}}</span>
+        </v-card-title>
         <v-card-text class="text-md-center grey lighten-4">
           <v-progress-circular
             :size="70"
@@ -92,6 +94,8 @@
       <!-- <v-layout row wrap> -->
       <!-- <mainboard-shortcut-list :shortcuts="shortcuts" /> -->
 
+      <!-- <mainboard-demo-info-widget/> -->
+
       <!--Компонент ярлыка для таких сущностей как folder и frame-->
       <mainboard-desktop-shortcut
         v-for="shortcut in shortcutsNotHaveFolder"
@@ -170,6 +174,7 @@ import ShortcutList from "@/components/Desktop/Icon/ShortcutList.vue";
 import ResizableBlock from "@/components/Desktop/ResizableBlock.vue";
 import DialogWindowCreateShortcut from "@/components/Desktop/Dialogs/DialogWindowCreateShortcut.vue";
 import DialogWindowCreateFolder from "@/components/Desktop/Dialogs/DialogWindowCreateFolder.vue";
+import DemoInfoWidget from "@/components/Desktop/Widgets/DemoInfoWidget.vue";
 
 import axios from "axios";
 
@@ -189,7 +194,8 @@ export default {
     mainboardShortcutList: ShortcutList,
     mainboardResizableBlock: ResizableBlock,
     mainboardDialogWindowCreateShortcut: DialogWindowCreateShortcut,
-    mainboardDialogWindowCreateFolder: DialogWindowCreateFolder
+    mainboardDialogWindowCreateFolder: DialogWindowCreateFolder,
+    mainboardDemoInfoWidget: DemoInfoWidget
   },
   data() {
     return {
@@ -269,6 +275,12 @@ export default {
       this.$i18n.setLocaleMessage("ru", response["ru"]);
       this.$i18n.locale = "ru";
     }); */
+  },
+
+  watch: {
+    shortcuts() {
+      console.log("APP shortcuts", this.shortcuts);
+    }
   },
 
   created() {

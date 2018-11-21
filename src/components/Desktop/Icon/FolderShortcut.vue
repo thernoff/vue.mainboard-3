@@ -2,7 +2,6 @@
   <mainboard-base-shortcut
     :id = "id"
     :options="options"
-    :size="size"
     class="mainboard-folder-shortcut"
   />
 </template>
@@ -21,15 +20,6 @@ export default {
     options: {
       type: Object,
       required: true
-    },
-    size: {
-      type: Object,
-      default: () => {
-        return {
-          width: 100,
-          height: 110
-        };
-      }
     }
   },
   data() {

@@ -8,7 +8,7 @@
       v-if="isModeGrid"
       class="mainboard-workspace__grid-container">
       <div
-        :style="{backgroundSize: widthGridCell + '%' + ' ' + heightGridRow +'%'}"
+        :style="{backgroundSize: widthGridCell + 'px' + ' ' + heightGridRow +'px'}"
         class="mainboard-workspace__grid-gradient"
 
       />
@@ -60,9 +60,10 @@ export default {
         this.$store.state.desktop.countColumns
       );
       //return Math.ceil(10000000 / this.$store.getters.getCountColumns) / 100000;
-      return (
+      /* return (
         Math.ceil(10000000 / this.$store.state.desktop.countColumns) / 100000
-      );
+      ); */
+      return this.$store.state.desktop.widthCell;
     },
 
     heightGridRow() {
@@ -71,9 +72,10 @@ export default {
         this.$store.state.desktop.countRows
       );
       //return Math.ceil(100000000 / this.$store.getters.getCountRows) / 1000000;
-      return (
+      /* return (
         Math.ceil(100000000 / this.$store.state.desktop.countRows) / 1000000
-      );
+      ); */
+      return this.$store.state.desktop.heightCell;
     }
   },
   methods: {
@@ -129,16 +131,16 @@ export default {
   box-sizing: border-box;
   /* background-size: 15px 15px; */
   /* background-position: center center; */
-  background: -moz-linear-gradient(rgb(226, 238, 255, 0.3), transparent 1px),
-    -moz-linear-gradient(90deg, rgb(226, 238, 255, 0.3), transparent 1px);
-  background: -webkit-linear-gradient(rgb(226, 238, 255, 0.3), transparent 1px),
-    -webkit-linear-gradient(90deg, rgb(226, 238, 255, 0.3), transparent 1px);
-  background: -o-linear-gradient(rgb(226, 238, 255, 0.3), transparent 1px),
-    -o-linear-gradient(90deg, rgb(226, 238, 255, 0.3), transparent 1px);
-  background: -ms-linear-gradient(rgb(226, 238, 255, 0.3), transparent 1px),
-    -ms-linear-gradient(90deg, rgb(226, 238, 255, 0.3), transparent 1px);
-  background: linear-gradient(rgb(226, 238, 255, 0.3), transparent 1px),
-    linear-gradient(90deg, rgb(226, 238, 255, 0.3), transparent 1px);
+  background: -moz-linear-gradient(rgb(226, 238, 255, 0.2), transparent 1px),
+    -moz-linear-gradient(90deg, rgb(226, 238, 255, 0.2), transparent 1px);
+  background: -webkit-linear-gradient(rgb(226, 238, 255, 0.2), transparent 1px),
+    -webkit-linear-gradient(90deg, rgb(226, 238, 255, 0.2), transparent 1px);
+  background: -o-linear-gradient(rgb(226, 238, 255, 0.2), transparent 1px),
+    -o-linear-gradient(90deg, rgb(226, 238, 255, 0.2), transparent 1px);
+  background: -ms-linear-gradient(rgb(226, 238, 255, 0.2), transparent 1px),
+    -ms-linear-gradient(90deg, rgb(226, 238, 255, 0.2), transparent 1px);
+  background: linear-gradient(rgb(226, 238, 255, 0.2), transparent 1px),
+    linear-gradient(90deg, rgb(226, 238, 255, 0.2), transparent 1px);
   /* linear-gradient(90deg, mediumvioletred, transparent 1px); */
 
   /* background-position: center center; */

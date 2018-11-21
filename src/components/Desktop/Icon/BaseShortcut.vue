@@ -5,9 +5,8 @@
     :date-type = "options.object.type"
     :style="{
       display: 'inline-block',
-      position: position,
-      width: size.width + 'px',
-      height: size.height + 'px',
+      width: widthShortcut + 'px',
+      height: heightShortcut + 'px',
     }"
     :class = "{'mainboard-shortcut--active': options.active, 'mainboard-shortcut--noimage': !options.image}"
     :data-id=" id "
@@ -116,19 +115,6 @@ export default {
     options: {
       type: Object,
       required: true
-    },
-    size: {
-      type: Object,
-      default: () => {
-        return {
-          width: 100,
-          height: 110
-        };
-      }
-    },
-    position: {
-      type: String,
-      default: ""
     }
   },
   data() {
@@ -159,6 +145,14 @@ export default {
 
     heightWorkspace() {
       return this.$store.state.desktop.heightWorkspace;
+    },
+
+    widthShortcut() {
+      return this.$store.state.workspaces.widthShortcut;
+    },
+
+    heightShortcut() {
+      return this.$store.state.workspaces.heightShortcut;
     }
   },
   mounted() {
