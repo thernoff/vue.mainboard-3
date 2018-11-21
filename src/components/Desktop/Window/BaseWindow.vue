@@ -18,7 +18,7 @@
       class="mainboard-window__card"
     >
       <v-card-title
-        :class = "{'titleWindow': options.active, 'indigo lighten-4': !options.active}"
+        :class = "{'mainboard-window__header--active': options.active}"
         :title="options.title"
         class="mainboard-window__header"
         primary-title
@@ -257,12 +257,19 @@ export default {
 
 .mainboard-window__header {
   font-size: 16px;
+  background-color: #c5cae9;
+  border-color: #c5cae9;
   color: #fff;
   cursor: move;
   padding: 0 5px !important;
   height: 30px;
   border-top-left-radius: 0px !important;
   border-top-right-radius: 0px !important;
+}
+
+.mainboard-window__header--active {
+  background-color: #4a6588 !important;
+  border-color: #4a6588 !important;
 }
 
 .mainboard-window__title {
