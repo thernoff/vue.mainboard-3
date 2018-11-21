@@ -290,12 +290,14 @@ export default {
       let top = 0;
       let left = 0;
       shortcuts.map(shortcut => {
-        shortcut.left = 100 * left / widthWorkspace;
-        shortcut.top = 100 * top / heightWorkspace;
-        left += widthShortcut;
-        if (widthWorkspace - left < widthShortcut) {
-          left = 0;
-          top += heightShortcut;
+        if (!shortcut.folderId) {
+          shortcut.left = 100 * left / widthWorkspace;
+          shortcut.top = 100 * top / heightWorkspace;
+          left += widthShortcut;
+          if (widthWorkspace - left < widthShortcut) {
+            left = 0;
+            top += heightShortcut;
+          }
         }
       });
     },

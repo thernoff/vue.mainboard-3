@@ -344,6 +344,7 @@ export default {
         appendTo: ".mainboard-workspace",
         containment: ".mainboard-workspace",
         helper: "clone",
+        distance: 5,
         zIndex: 1000,
         drag: function(event, ui) {
           var helper = ui.helper;

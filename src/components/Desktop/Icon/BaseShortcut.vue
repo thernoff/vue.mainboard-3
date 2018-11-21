@@ -162,6 +162,7 @@ export default {
       containment: ".mainboard-workspace",
       helper: "clone",
       zIndex: 1000,
+      distance: 5,
       drag: function(event, ui) {
         var helper = ui.helper;
         helper.hide();
