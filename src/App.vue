@@ -50,17 +50,17 @@
           >
             {{ $t('shortcut.create') }}
           </v-list-tile-title>
-        </v-list-tile>
+        </v-list-tile> -->
 
         <v-list-tile
-          @click="''"
+          @click="sortShortcuts"
         >
           <v-list-tile-title
             @click="''"
           >
-            {{ $t('shortcuts.order') }}
+            {{ $t('shortcuts.sort') }}
           </v-list-tile-title>
-        </v-list-tile> -->
+        </v-list-tile>
 
         <v-list-tile
           @click="showDialogWindowCreateFolder"
@@ -362,6 +362,10 @@ export default {
 
     showDialogWindowCreateShortcut() {
       this.visibleDialogWindowCreateShortcut = true;
+    },
+
+    sortShortcuts() {
+      this.$store.dispatch("actionSortShortcuts");
     },
 
     showDialogWindowCreateFolder() {

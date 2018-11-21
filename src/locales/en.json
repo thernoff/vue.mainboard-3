@@ -56,7 +56,8 @@
     }
   },
   "shortcuts": {
-    "order": "Order shortcuts"
+    "order": "Order shortcuts",
+    "sort": "Order shortcuts"
   },
   "startmenu": {
     "customize": "Customize startmenu",

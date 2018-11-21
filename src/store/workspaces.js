@@ -285,6 +285,21 @@ export default {
       //console.log('state.activeWorkspace.shortcuts', state.activeWorkspace.shortcuts)
     },
 
+    sortShortcuts(state, { widthShortcut, heightShortcut, widthWorkspace, heightWorkspace }) {
+      const shortcuts = state.activeWorkspace.shortcuts;
+      let top = 0;
+      let left = 0;
+      shortcuts.map(shortcut => {
+        shortcut.left = 100 * left / widthWorkspace;
+        shortcut.top = 100 * top / heightWorkspace;
+        left += widthShortcut;
+        if (widthWorkspace - left < widthShortcut) {
+          left = 0;
+          top += heightShortcut;
+        }
+      });
+    },
+
     updateShortcut(state, data) {
       console.log("updateShortcut", state.activeWorkspace.shortcuts);
       const id = data.id;
@@ -1080,6 +1095,14 @@ export default {
 
     actionUpdateOrderShortcuts({ commit }, data) {
       commit("updateOrderShortcuts", data);
+    },
+
+    actionSortShortcuts({ state, commit, rootState }) {
+      const widthShortcut = state.widthShortcut;
+      const heightShortcut = state.heightShortcut;
+      const widthWorkspace = rootState.desktop.widthWorkspace;
+      const heightWorkspace = rootState.desktop.heightWorkspace;
+      commit("sortShortcuts", { widthShortcut, heightShortcut, widthWorkspace, heightWorkspace });
     },
 
     actionDeleteShortcut({ state, commit }, id) {
