@@ -19,5 +19,6 @@ export default new Vuex.Store({
     desktop,
     user,
     interfaces
-  }
+  },
+  strict: process.env.NODE_ENV !== "production"
 });

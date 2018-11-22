@@ -251,6 +251,11 @@ export default {
         this.$store.dispatch("actionCreateNewWindow", object).then(() => {
           this.$store.dispatch("actionSaveSettingsDesktop");
         });
+      } else {
+        this.$store.commit(
+          "setError",
+          this.$t("shortcut.errors.object_not_found")
+        );
       }
     },
 
@@ -375,6 +380,8 @@ export default {
   width: 90%;
   height: 2em;
   text-align: center;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
 }
 
 .context-menu__tile {

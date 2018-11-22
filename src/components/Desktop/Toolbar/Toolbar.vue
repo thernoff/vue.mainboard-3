@@ -86,6 +86,9 @@
           color="warning"
           @click.stop="toggleModeGrid"
         />
+        <!-- <v-btn fab dark small size="14" class="mainboard-toolbar__btn-about">
+          <v-icon>?</v-icon>
+        </v-btn> -->
       </v-toolbar-items>
     </v-toolbar>
   </div>
@@ -214,5 +217,12 @@ export default {
 <style scoped>
 .mainboard-toolbar {
   height: 40px;
+}
+
+.mainboard-toolbar__btn-about {
+  width: 30px !important;
+  height: 30px !important;
+  background-color: #7e456d !important;
+  border-color: #7e456d !important;
 }
 </style>

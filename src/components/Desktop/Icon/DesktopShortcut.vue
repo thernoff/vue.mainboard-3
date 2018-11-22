@@ -40,10 +40,8 @@ export default {
     },
 
     shortcutsHasFolder() {
-      console.log("this.options", this.options);
       return this.$store.state.workspaces.activeWorkspace.shortcuts.filter(
         shortcut => {
-          console.log("shortcut", shortcut);
           return this.options.object.id === shortcut.folderId;
         }
       ).length;

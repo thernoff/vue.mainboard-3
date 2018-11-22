@@ -49,6 +49,9 @@
     "create_folder": "Create folder",
     "name": "Name shortcut",
     "url": "Resource url",
+    "errors": {
+      "object_not_found": "The object referenced by this link was not found."
+    },
     "rules": {
       "name_required": "Shortcut name is required to create a shortcut",
       "url_required": "Resource url is required to create a shortcut",

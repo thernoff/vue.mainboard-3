@@ -35,7 +35,7 @@ function findCoords(shortcuts, left, top, widthWorkspace, heightWorkspace) {
   shortcut = shortcuts.find(shortcut => {
     return (
       Math.abs(left - Math.floor((widthWorkspace * shortcut.left) / 100)) <
-      100 && Math.abs(top - (heightWorkspace * shortcut.top) / 100) < 100
+        100 && Math.abs(top - (heightWorkspace * shortcut.top) / 100) < 100
     );
   });
 
@@ -156,7 +156,7 @@ export default {
 
     /***** WINDOWS *****/
     minimizeWindows(state) {
-      state.activeWorkspace.windows.forEach(function (window) {
+      state.activeWorkspace.windows.forEach(function(window) {
         window.minimize = true;
       });
     },
@@ -285,14 +285,17 @@ export default {
       //console.log('state.activeWorkspace.shortcuts', state.activeWorkspace.shortcuts)
     },
 
-    sortShortcuts(state, { widthShortcut, heightShortcut, widthWorkspace, heightWorkspace }) {
+    sortShortcuts(
+      state,
+      { widthShortcut, heightShortcut, widthWorkspace, heightWorkspace }
+    ) {
       const shortcuts = state.activeWorkspace.shortcuts;
       let top = 0;
       let left = 0;
       shortcuts.map(shortcut => {
         if (!shortcut.folderId) {
-          shortcut.left = 100 * left / widthWorkspace;
-          shortcut.top = 100 * top / heightWorkspace;
+          shortcut.left = (100 * left) / widthWorkspace;
+          shortcut.top = (100 * top) / heightWorkspace;
           left += widthShortcut;
           if (widthWorkspace - left < widthShortcut) {
             left = 0;
@@ -1104,7 +1107,12 @@ export default {
       const heightShortcut = state.heightShortcut;
       const widthWorkspace = rootState.desktop.widthWorkspace;
       const heightWorkspace = rootState.desktop.heightWorkspace;
-      commit("sortShortcuts", { widthShortcut, heightShortcut, widthWorkspace, heightWorkspace });
+      commit("sortShortcuts", {
+        widthShortcut,
+        heightShortcut,
+        widthWorkspace,
+        heightWorkspace
+      });
     },
 
     actionDeleteShortcut({ state, commit }, id) {
@@ -1211,7 +1219,7 @@ export default {
       if (rootState.desktop.modeGrid) {
         const shortcut =
           state.activeWorkspace.shortcuts[
-          state.activeWorkspace.shortcuts.length - 1
+            state.activeWorkspace.shortcuts.length - 1
           ];
         let options = { id: shortcut.id };
 

@@ -1,8 +1,8 @@
 <template>
   <v-app class="mainboard">
     <v-dialog
-      class="mainboard-loading"
       v-model="dialog"
+      class="mainboard-loading"
       fullscreen
       hide-overlay
       persistent
@@ -26,7 +26,11 @@
 
       </v-card> -->
       <div class="mainboard-loading__container text-md-center">
-        <v-layout align-center justify-center column fill-height>
+        <v-layout 
+          align-center 
+          justify-center 
+          column 
+          fill-height>
           <div class="mainboard-loading__progress">
             <!-- <v-progress-circular
               :size="70"
@@ -36,12 +40,12 @@
             /> -->
             <img
               src="@/assets/logo-incom-loading.png"
-            />
+            >
             <v-progress-linear
-              color="deep-orange"
               :indeterminate="true"
+              color="deep-orange"
 
-            ></v-progress-linear>
+            />
           </div>
           <div class="mainboard-loading__title">
             <span >{{ $t("loading") }}</span>
@@ -383,7 +387,9 @@ export default {
     },
 
     sortShortcuts() {
-      this.$store.dispatch("actionSortShortcuts");
+      this.$store.dispatch("actionSortShortcuts").then(() => {
+        this.$store.dispatch("actionSaveSettingsDesktop");
+      });
     },
 
     showDialogWindowCreateFolder() {
@@ -406,11 +412,14 @@ export default {
     createFolder(folder) {
       this.visibleDialogWindowCreateFolder = false;
       if (folder) {
-        this.$store.dispatch("actionCreateNewFolder", {
-          folder,
-          error: ""
-        });
-        this.$store.dispatch("actionSaveSettingsDesktop");
+        this.$store
+          .dispatch("actionCreateNewFolder", {
+            folder,
+            error: ""
+          })
+          .then(() => {
+            this.$store.dispatch("actionSaveSettingsDesktop");
+          });
       }
     },
 

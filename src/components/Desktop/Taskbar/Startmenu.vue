@@ -66,12 +66,17 @@
     >
       <v-btn
         slot="activator"
+        class="mainboard-starmenu__btn-start"
         color="btnTaskbar"
         dark
         @click="onClickBtnStart"
         @contextmenu.prevent.stop="showContextMenuStartbutton($event)"
       >
-        <v-icon>home</v-icon>
+        <!-- <v-icon>home</v-icon> -->
+        <img
+          class="mainboard-starmenu__image-btn-start"
+          src="@/assets/logo-incom-loading.png"
+        >
       </v-btn>
       <v-card class="mainboard-startmenu">
         <v-toolbar
@@ -522,6 +527,17 @@ export default {
   left: 5px;
   bottom: 20px;
   z-index: 100; */
+}
+
+.mainboard-starmenu__btn-start {
+  width: 65px !important;
+  min-width: 65px !important;
+  margin: 0 0 0 5px !important;
+  padding: 0 !important;
+}
+
+.mainboard-starmenu__image-btn-start {
+  width: 20px;
 }
 
 .mainboard-startmenu__categories {
