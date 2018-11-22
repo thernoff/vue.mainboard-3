@@ -111,7 +111,9 @@
               :key="category.id"
               class="mainboard-startmenu__category"
             >
-              <v-list-tile slot="activator">
+              <v-list-tile
+                slot="activator"
+              >
                 <i class="material-icons icon-folder">folder</i>
                 <v-list-tile-content>
                   <v-list-tile-title>
@@ -336,9 +338,13 @@ export default {
     createNewWindow(element) {
       console.log("createNewWindow from element", element);
       this.startMenu = false;
-      this.$store.dispatch("actionCreateNewWindow", element);
-      this.$store.dispatch("actionToggleVisibleStartMenu");
-      this.$store.dispatch("actionSaveSettingsDesktop");
+      this.$store.dispatch("actionCreateNewWindow", element).then(response => {
+        if (response.minimize) {
+          this.$store.commit("toggleMinimizeWindow", response.id);
+        }
+        this.$store.commit("toggleVisibleStartMenu");
+        this.$store.dispatch("actionSaveSettingsDesktop");
+      });
     },
 
     addDroppableToItemMenu() {
@@ -530,8 +536,8 @@ export default {
 }
 
 .mainboard-starmenu__btn-start {
-  width: 65px !important;
-  min-width: 65px !important;
+  width: 55px !important;
+  min-width: 55px !important;
   margin: 0 0 0 5px !important;
   padding: 0 !important;
 }

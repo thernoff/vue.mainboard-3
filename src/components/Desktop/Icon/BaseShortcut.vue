@@ -274,7 +274,7 @@ export default {
   methods: {
     setActive() {
       this.$store.dispatch("actionSetActiveShortcut", this.id).then(() => {
-        this.$store.dispatch("actionSaveSettingsDesktop");
+        //this.$store.dispatch("actionSaveSettingsDesktop");
       });
     },
 
@@ -291,11 +291,15 @@ export default {
           break;
         }
       }
-      console.log("createNewWindow this.shortcut", this.options.object);
-      console.log("createNewWindow from object", object);
+      /* console.log("createNewWindow this.shortcut", this.options.object);
+      console.log("createNewWindow from object", object); */
 
       if (object) {
-        this.$store.dispatch("actionCreateNewWindow", object).then(() => {
+        this.$store.dispatch("actionCreateNewWindow", object).then(response => {
+          //this.$store.commit("setActiveWindow", response.id);
+          if (response.minimize) {
+            this.$store.commit("toggleMinimizeWindow", response.id);
+          }
           this.$store.dispatch("actionSaveSettingsDesktop");
         });
       } else {

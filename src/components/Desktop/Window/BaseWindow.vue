@@ -35,7 +35,9 @@
             icon
             small
             class="mainboard-window__btn"
-            @click.stop="minimizeWindow">
+            @click.stop="minimizeWindow"
+            @mousedown="''"
+          >
             <v-icon color="white">minimize</v-icon>
           </v-btn>
           <v-btn
@@ -205,7 +207,7 @@ export default {
 
     closeWindow() {
       this.$store.dispatch("actionCloseWindow", this.id).then(() => {
-        //this.$store.commit("setActiveWindow");
+        this.$store.commit("setActiveWindow");
         this.$store.dispatch("actionSaveSettingsDesktop");
       });
     }

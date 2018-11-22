@@ -48,7 +48,6 @@ export default {
 
     createNewWindow(state, object) {
       console.log("createNewWindow object", object);
-      console.log("createNewWindow windows", state.windows);
       const title = object.title || object.label;
       const top = state.topPrevWindow > 0 ? state.topPrevWindow : 1;
       const left = state.leftPrevWindow > 0 ? state.leftPrevWindow : 1;
@@ -84,8 +83,7 @@ export default {
       }
 
       const length = state.windows.push(newWindow);
-      console.log("newWindow", newWindow);
-      state.activeWindow = state.windows[length - 1];
+      //state.activeWindow = state.windows[length - 1];
       state.indexActiveWindow = length - 1;
 
       state.topPrevWindow += state.stepShift;
@@ -205,11 +203,12 @@ export default {
     setActiveWindow(state, id = "") {
       if (state.windows.length > 0) {
         if (
+          id &&
           state.activeWindow &&
           id === state.idActiveWindow &&
           state.activeWindow.active
         ) {
-          state.activeWindow.minimize = false;
+          //state.activeWindow.minimize = false;
           return;
         }
 
@@ -217,11 +216,11 @@ export default {
           if (state.activeWindow !== null) {
             state.activeWindow.active = false;
           }
+
           state.activeWindow = state.windows.find(window => {
             return window.id === id;
           });
-          state.activeWindow.active = true;
-          state.idActiveWindow = id;
+          state.idActiveWindow = state.activeWindow.id;
         } else {
           for (let i = 0; i < state.windows.length; i++) {
             if (state.windows[i].active) {
@@ -234,10 +233,10 @@ export default {
           if (!state.activeWindow || !state.idActiveWindow) {
             state.activeWindow = state.windows[0];
             state.idActiveWindow = state.windows[0].id;
-            state.activeWindow.active = true;
           }
         }
-
+        //state.activeWindow.minimize = false;
+        state.activeWindow.active = true;
         console.log("setActiveWindow state.activeWindow", state.activeWindow);
       } else {
         state.activeWindow = null;
@@ -247,7 +246,7 @@ export default {
       if (state.activeWindow) {
         state.maxZIndex += 1;
         const zIndex = state.activeWindow.zIndex;
-        state.windows.forEach(function(window) {
+        state.windows.forEach(function (window) {
           if (window.zIndex > zIndex) {
             window.zIndex -= 1;
           }
@@ -271,7 +270,7 @@ export default {
       if (state.activeWindow) {
         state.maxZIndex += 1;
         const zIndex = state.activeWindow.zIndex;
-        state.windows.forEach(function(window) {
+        state.windows.forEach(function (window) {
           if (window.zIndex > zIndex) {
             window.zIndex -= 1;
           }
@@ -281,7 +280,7 @@ export default {
     },
 
     setNotActiveWindows(state) {
-      state.windows.forEach(function(window) {
+      state.windows.forEach(function (window) {
         window.active = false;
       });
       state.activeWindow = null;
@@ -295,13 +294,16 @@ export default {
       let window = null;
       window = state.windows.find(window => window.object.id === object.id);
       if (window) {
+        console.log('actionCreateNewWindow old window', window);
         commit("setActiveWindow", window.id);
       } else {
         commit("setNotActiveWindows");
         commit("createNewWindow", object);
-        commit("setActiveWindow");
+        console.log('actionCreateNewWindow new window from object', object);
+        window = state.windows[state.windows.length - 1].id;
+        commit("setActiveWindow", window.id);
       }
-      return state.windows[state.windows.length - 1];
+      return window;
     },
 
     actionCloseWindow({ state, commit }, id) {
@@ -414,7 +416,7 @@ export default {
           heightWorkspace
         }); */
 
-        setTimeout(function() {
+        setTimeout(function () {
           commit("updateWindowSize", options);
           commit("updateWindowCoords", {
             options,
@@ -496,7 +498,7 @@ export default {
         commit("updateWindowSize", options); */
 
         //console.log('actionUpdateWindowSize', options.width)
-        setTimeout(function() {
+        setTimeout(function () {
           commit("updateWindowCoords", {
             options,
             widthWorkspace,
