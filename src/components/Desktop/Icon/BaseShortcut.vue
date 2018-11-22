@@ -2,7 +2,8 @@
   <div
     ref="shortcut"
     :id = "id"
-    :date-type = "options.object.type"
+    :data-type = "options.object.type"
+    :data-object-id="options.object.id"
     :style="{
       display: 'inline-block',
       width: widthShortcut + 'px',
@@ -178,19 +179,63 @@ export default {
             self.$store.commit("setActiveWindow", id);
           }
         }
+
+        var $shortcuts = $(".mainboard-shortcut");
+        $shortcuts.removeClass("mainboard-shortcut--over-drag");
+
+        if ($elemOverDrag.closest(".mainboard-shortcut").not(this).length > 0) {
+          var $shortcut = $elemOverDrag.closest(".mainboard-shortcut");
+          if ($shortcut.data("type") === "folder") {
+            /* var id = $shortcut.data("id");
+            console.log("FOLDER id", id); */
+
+            $shortcut.addClass("mainboard-shortcut--over-drag");
+          }
+        }
+
         helper.show();
       },
       stop: function(event, ui) {
+        var helper = ui.helper;
+        helper.hide();
         var $shortcut = $(this);
+
+        var $shortcuts = $(".mainboard-shortcut");
+        $shortcuts.removeClass("mainboard-shortcut--over-drag");
+
         var elemOverDrag = document.elementFromPoint(
           event.clientX,
           event.clientY
         );
         var $elemOverDrag = $(elemOverDrag);
+        var $shortcutOverDrag = $elemOverDrag
+          .closest(".mainboard-shortcut")
+          .not(this);
         var elementId = $shortcut.data("id");
+
         if ($elemOverDrag.closest(".mainboard-window").length > 0) {
           var $window = $elemOverDrag.closest(".mainboard-window");
           var folderId = $window.data("object-id");
+          if (elementId && folderId && $shortcut.data("type") !== "folder") {
+            self.$store
+              .dispatch("actionMoveElementToFolder", {
+                elementId,
+                folderId
+              })
+              .then(() => {
+                self.$store.dispatch("actionSaveSettingsDesktop");
+              })
+              .catch(error => {
+                console.log("error", error);
+              });
+          }
+        } else if (
+          $shortcut.data("type") !== "folder" &&
+          $shortcutOverDrag.length > 0 &&
+          $shortcutOverDrag.data("type") === "folder"
+        ) {
+          console.log("DROP ON FOLDER");
+          var folderId = $shortcutOverDrag.data("object-id");
           if (elementId && folderId) {
             self.$store
               .dispatch("actionMoveElementToFolder", {
@@ -219,6 +264,8 @@ export default {
               self.$store.dispatch("actionSaveSettingsDesktop");
             });
         }
+
+        helper.show();
       }
     });
 
@@ -323,6 +370,11 @@ export default {
   border: 1px solid #b1a0a0;
   /* -webkit-box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
   box-shadow: 1px 2px 8px rgba(0, 0, 0, 0.2); */
+}
+
+.mainboard-shortcut--over-drag {
+  background-color: rgba(142, 178, 255, 0.603);
+  border: 1px solid rgba(90, 133, 226, 0.5);
 }
 
 .mainboard-shortcut--noimage {
