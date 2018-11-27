@@ -78,7 +78,9 @@
           src="@/assets/logo-incom-loading.png"
         >
       </v-btn>
-      <v-card class="mainboard-startmenu">
+      <v-card
+        class="mainboard-startmenu"
+      >
         <v-toolbar
           color="primary"
           dark
@@ -117,6 +119,9 @@
                 <i class="material-icons icon-folder">folder</i>
                 <v-list-tile-content>
                   <v-list-tile-title>
+                    <!-- <span
+                      :class="[{'mainboard-startmenu__item--xs': $vuetify.breakpoint.xsOnly}]"
+                    > -->
                     {{ category.label }}
                   </v-list-tile-title>
                 </v-list-tile-content>
@@ -536,8 +541,8 @@ export default {
 }
 
 .mainboard-starmenu__btn-start {
-  width: 55px !important;
-  min-width: 55px !important;
+  width: 45px !important;
+  min-width: 45px !important;
   margin: 0 0 0 5px !important;
   padding: 0 !important;
 }
@@ -560,6 +565,10 @@ export default {
   width: 320px;
 }
 
+/* .mainboard-startmenu__item--xs {
+  font-size: 12px;
+} */
+
 .mainboard-startmenu__item:hover {
   background-color: rgba(208, 225, 245, 0.5);
 }
@@ -576,4 +585,20 @@ export default {
 .contextmenu-item {
   height: 32px;
 }
+
+/* @media screen and (max-width: 700px) {
+  .mainboard-startmenu__item {
+    font-size: 10px;
+  }
+
+  .mainboard-startmenu__categories {
+    overflow-y: auto;
+    overflow-x: hidden;
+    width: 220px;
+  }
+
+  .mainboard-startmenu__category {
+    width: 220px;
+  }
+} */
 </style>

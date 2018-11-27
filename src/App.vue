@@ -1,5 +1,10 @@
 <template>
-  <v-app class="mainboard">
+  <v-app class="mainboard" >
+    <!-- <mainboard-side-bar
+      v-if = "$vuetify.breakpoint.smAndDown"
+      :visible="visibleSideBar"
+      @input="hideShowDrawer($event)"
+    ></mainboard-side-bar> -->
     <v-dialog
       v-model="dialog"
       class="mainboard-loading"
@@ -26,10 +31,10 @@
 
       </v-card> -->
       <div class="mainboard-loading__container text-md-center">
-        <v-layout 
-          align-center 
-          justify-center 
-          column 
+        <v-layout
+          align-center
+          justify-center
+          column
           fill-height>
           <div class="mainboard-loading__progress">
             <!-- <v-progress-circular
@@ -106,10 +111,11 @@
       </v-list>
     </v-menu>
 
-    <!-- <v-navigation-drawer app temporary></v-navigation-drawer> -->
-
     <!--Компонент верхнего тулбара-->
-    <mainboard-toolbar class="mainboard-toolbar"/>
+    <mainboard-toolbar
+      class="mainboard-toolbar"
+      @showDrawer="handlerShowDrawer"
+    />
 
     <!--Компонент рабочей области (используется для отображения остальных компонентов)-->
     <div
@@ -207,6 +213,7 @@ import ResizableBlock from "@/components/Desktop/ResizableBlock.vue";
 import DialogWindowCreateShortcut from "@/components/Desktop/Dialogs/DialogWindowCreateShortcut.vue";
 import DialogWindowCreateFolder from "@/components/Desktop/Dialogs/DialogWindowCreateFolder.vue";
 import DemoInfoWidget from "@/components/Desktop/Widgets/DemoInfoWidget.vue";
+import SideBar from "@/components/Desktop/SideBar/BaseSideBar.vue";
 
 import axios from "axios";
 
@@ -227,12 +234,14 @@ export default {
     mainboardResizableBlock: ResizableBlock,
     mainboardDialogWindowCreateShortcut: DialogWindowCreateShortcut,
     mainboardDialogWindowCreateFolder: DialogWindowCreateFolder,
-    mainboardDemoInfoWidget: DemoInfoWidget
+    mainboardDemoInfoWidget: DemoInfoWidget,
+    mainboardSideBar: SideBar
   },
   data() {
     return {
       visibleDialogWindowCreateShortcut: false,
       visibleDialogWindowCreateFolder: false,
+      visibleSideBar: false,
       contextMenu: {
         visible: false,
         x: 0,
@@ -434,6 +443,18 @@ export default {
       }
 
       return dictonary;
+    },
+
+    handlerShowDrawer() {
+      this.visibleSideBar = true;
+      console.log("handlerShowDrawer this.visibleSideBar", this.visibleSideBar);
+    },
+
+    hideShowDrawer(visibleSideBar) {
+      if (!visibleSideBar) {
+        this.visibleSideBar = visibleSideBar;
+        console.log("hideShowDrawer visibleSideBar", visibleSideBar);
+      }
     }
   }
 };
@@ -461,6 +482,7 @@ export default {
 
 .mainboard-loading__progress {
   width: 150px;
+  text-align: center;
 }
 
 .mainboard-loading__title {

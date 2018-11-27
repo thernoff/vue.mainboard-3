@@ -1,9 +1,5 @@
 <template>
-  <v-footer
-    class="mainboard-taskbar"
-    dark
-    color="primary"
-  >
+  <v-footer class="mainboard-taskbar" dark color="primary">
     <v-menu
       v-model="contextMenuMinimizeButton.visible"
       :position-x="contextMenuMinimizeButton.x"
@@ -14,15 +10,8 @@
       light
     >
       <v-list dense>
-        <v-list-tile
-          class="context-menu__tile"
-          @click="closeWindow"
-        >
-          <v-list-tile-title
-            @click="''"
-          >
-            {{ $t('window.close') }}
-          </v-list-tile-title>
+        <v-list-tile class="context-menu__tile" @click="closeWindow">
+          <v-list-tile-title @click="''">{{ $t('window.close') }}</v-list-tile-title>
         </v-list-tile>
       </v-list>
     </v-menu>
@@ -32,7 +21,7 @@
           @click="toggleVisibleStartMenu"
         >
           <v-icon>home</v-icon>
-      </v-btn> -->
+    </v-btn>-->
     <mainboard-startmenu :height-workspace="heightWorkspace"/>
 
     <div class="mainboard-taskbar__minimize-windows">
@@ -46,21 +35,14 @@
         @click="toggleMinimizedWindow(window)"
         @contextmenu.prevent.stop="showContextMenuMinimizeButton(window.id, $event)"
       >
-        <i
-          v-if="window.minimize"
-          class="material-icons"
-          small>
-          expand_less
-        </i>
+        <i v-if="window.minimize" class="material-icons" small>expand_less</i>
         <span
           :title="window.title"
           :style="{
             maxWidth: maxWidthTitle
           }"
           class="mainboard-taskbar__minimize-window-title"
-        >
-          {{ titleMinimizeWindow(window.title) }}
-        </span>
+        >{{ titleMinimizeWindow(window.title) }}</span>
       </v-btn>
     </div>
 

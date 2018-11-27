@@ -27,13 +27,15 @@ function recalcCoordTopForGridMode(top, heightCell, diffTop = 0) {
   }
 }
 
+import { CONST_STORE_WINDOW } from "@/const.js";
+
 export default {
   state: {
     maxZIndex: 0,
     //topPrevWindow: 5, // значение координаты top окна в пикселях
     //leftPrevWindow: 5, // значение координаты left окна в пикселях
-    topPrevWindow: 1, // значение координаты top окна в процентах
-    leftPrevWindow: 1, // значение координаты left окна в процентах
+    topPrevWindow: CONST_STORE_WINDOW.TOP_PREV_WINDOW, // значение координаты top окна в процентах
+    leftPrevWindow: CONST_STORE_WINDOW.LEFT_PREV_WINDOW, // значение координаты left окна в процентах
     //stepShift: 10, // сдвиг в пикселях
     stepShift: 1, // сдвиг в процентах
     indexActiveWindow: null,
@@ -168,6 +170,17 @@ export default {
       state.leftPrevWindow -= state.stepShift;
     },
 
+    closeAllWindows(state) {
+      state.activeWindow = null;
+      state.indexActiveWindow = null;
+      state.idActiveWindow = "";
+
+      state.windows = [];
+
+      state.topPrevWindow = CONST_STORE_WINDOW.TOP_PREV_WINDOW;
+      state.leftPrevWindow = CONST_STORE_WINDOW.LEFT_PREV_WINDOW;
+    },
+
     minimizeWindow(state, id) {
       const window = state.windows.find(window => {
         return window.id === id;
@@ -190,6 +203,15 @@ export default {
       });
 
       window.fullscreen = !window.fullscreen;
+    },
+
+    expandFullscreenWindow(state, id) {
+      console.log("expandFullscreenWindow id", id)
+      const window = state.windows.find(window => {
+        return window.id === id;
+      });
+
+      window.fullscreen = true;
     },
 
     fullscreenWindowOff(state, id) {
@@ -290,7 +312,7 @@ export default {
   },
   actions: {
     actionCreateNewWindow({ state, commit, rootState }, object) {
-      console.log("actionCreateNewWindow object", object);
+
       let window = null;
       window = state.windows.find(window => window.object.id === object.id);
       if (window) {
@@ -300,7 +322,7 @@ export default {
         commit("setNotActiveWindows");
         commit("createNewWindow", object);
         console.log('actionCreateNewWindow new window from object', object);
-        window = state.windows[state.windows.length - 1].id;
+        window = state.windows[state.windows.length - 1];
         commit("setActiveWindow", window.id);
       }
       return window;

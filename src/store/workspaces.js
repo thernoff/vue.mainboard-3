@@ -35,7 +35,7 @@ function findCoords(shortcuts, left, top, widthWorkspace, heightWorkspace) {
   shortcut = shortcuts.find(shortcut => {
     return (
       Math.abs(left - Math.floor((widthWorkspace * shortcut.left) / 100)) <
-        100 && Math.abs(top - (heightWorkspace * shortcut.top) / 100) < 100
+      100 && Math.abs(top - (heightWorkspace * shortcut.top) / 100) < 100
     );
   });
 
@@ -70,13 +70,16 @@ function findCoords(shortcuts, left, top, widthWorkspace, heightWorkspace) {
   }
 }
 
+
+import { CONST_STORE_WORKSPACE } from "@/const.js";
+
 export default {
   state: {
     indexActiveWorkspace: 0,
     activeWorkspace: null,
-    topPrevShortcut: 5,
-    leftPrevShortcut: 5,
-    stepShift: 120,
+    topPrevShortcut: CONST_STORE_WORKSPACE.TOP_PREV_SHORTCUT,
+    leftPrevShortcut: CONST_STORE_WORKSPACE.LEFT_PREV_SHORTCUT,
+    stepShift: CONST_STORE_WORKSPACE.STEP_SHIFT,
     workspaces: [
       {
         title: "Рабочий стол пользователя",
@@ -156,7 +159,7 @@ export default {
 
     /***** WINDOWS *****/
     minimizeWindows(state) {
-      state.activeWorkspace.windows.forEach(function(window) {
+      state.activeWorkspace.windows.forEach(function (window) {
         window.minimize = true;
       });
     },
@@ -843,71 +846,6 @@ export default {
                   ]
                 }
               ],
-              settingsDashboard: {
-                workspaces: [
-                  {
-                    title:
-                      "\u0421\u0442\u0430\u043d\u0434\u0430\u0440\u0442 (2 x 2)",
-                    active: false,
-                    rows: [
-                      {
-                        title: "\u0421\u0442\u0440\u043e\u043a\u0430 1",
-                        height: 50,
-                        minimize: false,
-                        fullscreen: false,
-                        cells: [
-                          {
-                            title:
-                              "\u041e\u0431\u043b\u0430\u0441\u0442\u044c 1",
-                            apiLink: "",
-                            content: "<div>Cell 1</div>",
-                            width: 50,
-                            minimize: false,
-                            fullscreen: false
-                          },
-                          {
-                            title:
-                              "\u041e\u0431\u043b\u0430\u0441\u0442\u044c 2",
-                            apiLink: "",
-                            content: "<div>Cell 2</div>",
-                            width: 50,
-                            minimize: false,
-                            fullscreen: false
-                          }
-                        ]
-                      },
-                      {
-                        title: "\u0421\u0442\u0440\u043e\u043a\u0430 2",
-                        height: 50,
-                        minimize: false,
-                        fullscreen: false,
-                        cells: [
-                          {
-                            title:
-                              "\u041e\u0431\u043b\u0430\u0441\u0442\u044c 3",
-                            apiLink: "",
-                            content: "Cell 3",
-                            width: 50,
-                            minimize: false,
-                            fullscreen: false
-                          },
-                          {
-                            title:
-                              "\u041e\u0431\u043b\u0430\u0441\u0442\u044c 4",
-                            apiLink: "",
-                            content: "Cell 4",
-                            width: 50,
-                            minimize: false,
-                            fullscreen: false
-                          }
-                        ]
-                      }
-                    ],
-                    savedWorkspace: []
-                  }
-                ],
-                sidebar: { visible: true }
-              },
               user: {
                 firstname: "\u0412\u043b\u0430\u0434\u0438\u043c\u0438\u0440",
                 lastname: "\u0414\u0443\u0434\u0438\u043a\u043e\u0432",
@@ -926,50 +864,6 @@ export default {
                 descripton: "",
                 active: true,
                 windows: [],
-                shortcuts: []
-              },
-              {
-                title: "Тесты",
-                descripton: "",
-                active: false,
-                windows: [
-                  {
-                    id: "5YDfqtnqzx1537796630",
-                    title: "Сервис Авто-Инфо",
-                    link:
-                      "http://system.elxis.test/inner.php/speedcams/carinfo/",
-                    apiLink:
-                      "http://system.elxis.test/inner.php/apiusers/api/login?uname=test2&pword=d58371c110100d4f9ff6d32aebdf6dc3d94c76c7&redirurl=aHR0cDovL3N5c3RlbS5lbHhpcy50ZXN0L2lubmVyLnBocC9zcGVlZGNhbXMvY2FyaW5mby8,",
-                    top: 0,
-                    left: 1080,
-                    width: 41.66666666666667,
-                    height: 50,
-                    zIndex: 2,
-                    minimize: false,
-                    fullscreen: false,
-                    closed: false,
-                    active: false,
-                    classesCss: []
-                  },
-                  {
-                    id: "p6RipvAjOe1537796642",
-                    title: "Аналитика платежей от ЦАФАП",
-                    link:
-                      "http://system.elxis.test/inner.php/speedcams/violpayments/analitics.html",
-                    apiLink:
-                      "http://system.elxis.test/inner.php/apiusers/api/login?uname=test2&pword=d58371c110100d4f9ff6d32aebdf6dc3d94c76c7&redirurl=aHR0cDovL3N5c3RlbS5lbHhpcy50ZXN0L2lubmVyLnBocC9zcGVlZGNhbXMvdmlvbHBheW1lbnRzL2FuYWxpdGljcy5odG1s",
-                    top: 431,
-                    left: 0,
-                    width: 100,
-                    height: 50,
-                    zIndex: 1,
-                    minimize: false,
-                    fullscreen: false,
-                    closed: false,
-                    active: false,
-                    classesCss: []
-                  }
-                ],
                 shortcuts: []
               }
             ];
@@ -999,12 +893,9 @@ export default {
     actionSaveSettingsDesktop({ state }) {
       const workspaces = state.workspaces;
       const folders = state.folders;
-      console.log("actionSaveSettingsDesktop folders", folders);
       axios({
         method: "post",
         headers: { "Content-Type": "application/form-data" },
-        //url: 'http://esv.elxis.test/extusers/fpage/savedesktop/',
-        //url: window.location.href + "extusers/fpage/savedesktop/",
         url: "/extusers/fpage/savedesktop/",
         data: {
           settings: { workspaces, folders }
@@ -1219,7 +1110,7 @@ export default {
       if (rootState.desktop.modeGrid) {
         const shortcut =
           state.activeWorkspace.shortcuts[
-            state.activeWorkspace.shortcuts.length - 1
+          state.activeWorkspace.shortcuts.length - 1
           ];
         let options = { id: shortcut.id };
 

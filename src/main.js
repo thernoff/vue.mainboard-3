@@ -10,9 +10,12 @@ import router from "@/router";
 import store from "@/store";
 import Vuetify from "vuetify";
 import "vuetify/dist/vuetify.min.css";
-import "@/main.css";
 import colors from "vuetify/es5/util/colors";
 import i18n from "./i18n";
+
+//import "@/stylus/main.styl"
+import "@/main.css";
+
 //console.log('main.js i18n', i18n);
 Vue.use(Vuetify, {
   theme: {
@@ -35,7 +38,7 @@ Vue.config.productionTip = false;
 //var dictonary = dictonaryfdfdf || [];
 //console.log('main.js dictonary 1', dictonary);
 //console.log('main.js dictonaryfdfdf 1', dictonaryfdfdf);
-jQuery(document).ready(function() {
+jQuery(document).ready(function () {
   //console.log('main.js dictonary 2', dictonary);
   //console.log('main.js dictonaryfdfdf 2', dictonaryfdfdf);
   new Vue({

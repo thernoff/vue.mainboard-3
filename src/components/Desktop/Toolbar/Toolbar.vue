@@ -27,46 +27,29 @@
       :visible="visibleDialogWindow"
       @hideDialogWindow="deleteCurrentWorkspace($event)"
     />
-    <mainboard-cover
-      v-if="visibleCover"
-      @click.native="hideCover"
-    />
-    <v-toolbar
-      dark
-      color="primary"
-      height="40"
-    >
-      <!-- <v-toolbar-side-icon></v-toolbar-side-icon> -->
+    <mainboard-cover v-if="visibleCover" @click.native="hideCover"/>
+    <v-toolbar dark color="primary" height="40">
+      <!-- <v-toolbar-side-icon
+        v-if = "$vuetify.breakpoint.smAndDown"
+        @click="showDrawer"
+      ></v-toolbar-side-icon>-->
       <v-toolbar-title>
         <!-- <v-img src="@/assets/hawk.png"></v-img> -->
         Incom
         <!-- <img src="@/assets/hawk.png" alt=""> -->
       </v-toolbar-title>
       <v-spacer/>
-      <v-menu
-        offset-y
-        light
-        z-index="9999">
+      <v-menu offset-y light z-index="9999">
         <v-btn
           slot="activator"
           color="primary"
           dark
           @click="setNotActiveWindows"
-        >
-          {{ titleActiveWorkspace }}
-        </v-btn>
+        >{{ titleActiveWorkspace }}</v-btn>
         <v-list>
-          <v-list-tile
-            @click="showInputDialogWindow"
-          >
-            {{ $t('toolbar_workspaces.create') }}
-          </v-list-tile>
+          <v-list-tile @click="showInputDialogWindow">{{ $t('toolbar_workspaces.create') }}</v-list-tile>
 
-          <v-list-tile
-            @click="showDialogWindow"
-          >
-            {{ $t('toolbar_workspaces.delete') }}
-          </v-list-tile>
+          <v-list-tile @click="showDialogWindow">{{ $t('toolbar_workspaces.delete') }}</v-list-tile>
           <v-divider/>
 
           <v-list-tile
@@ -88,7 +71,7 @@
         />
         <!-- <v-btn fab dark small size="14" class="mainboard-toolbar__btn-about">
           <v-icon>?</v-icon>
-        </v-btn> -->
+        </v-btn>-->
       </v-toolbar-items>
     </v-toolbar>
   </div>
@@ -209,6 +192,11 @@ export default {
       this.$store.dispatch("actionSetNotActiveWindows").then(() => {
         this.$store.dispatch("actionSaveSettingsDesktop");
       });
+    },
+
+    showDrawer() {
+      this.$emit("showDrawer");
+      //this.$store.commit("toggleShowLeftSidebar");
     }
   }
 };

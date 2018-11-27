@@ -9,7 +9,8 @@ export default {
     widthWorkspace: 0,
     heightWorkspace: 0,
     widthCell: 25,
-    heightCell: 25
+    heightCell: 25,
+    showLeftSidebar: false
   },
   mutations: {
     setWidthGrid(state, widthGrid) {
@@ -39,6 +40,10 @@ export default {
 
     toggleModeGrid(state) {
       state.modeGrid = !state.modeGrid;
+    },
+
+    toggleShowLeftSidebar(state) {
+      state.showLeftSidebar = !state.showLeftSidebar;
     }
   },
 

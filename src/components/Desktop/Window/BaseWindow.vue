@@ -13,23 +13,19 @@
     class="mainboard-window"
     @contextmenu.stop.prevent="''"
   >
-    <v-card
-      tile
-      class="mainboard-window__card"
-    >
+    <v-card tile class="mainboard-window__card">
       <v-card-title
-        :class = "{'mainboard-window__header--active': options.active}"
+        :class="{'mainboard-window__header--active': options.active}"
         :title="options.title"
         class="mainboard-window__header"
         primary-title
         @mousedown="setActiveWindow"
-        @dblclick="toggleFullscreenWindow"
+        @dblclick.stop="toggleFullscreenWindow"
       >
         <div class="mainboard-window__title">{{ options.title }}</div>
         <v-spacer/>
         <slot name="buttons"/>
-        <div
-          class="mainboard-window__group-buttons">
+        <div class="mainboard-window__group-buttons">
           <v-btn
             :title=" $t('minimize') "
             icon
@@ -45,27 +41,23 @@
             icon
             small
             class="mainboard-window__btn"
-            @click.stop="toggleFullscreenWindow">
-            <v-icon
-              v-if="!options.fullscreen"
-              color="white">fullscreen</v-icon>
-            <v-icon
-              v-if="options.fullscreen"
-              color="white">fullscreen_exit</v-icon>
+            @click.stop="toggleFullscreenWindow"
+          >
+            <v-icon v-if="!options.fullscreen" color="white">fullscreen</v-icon>
+            <v-icon v-if="options.fullscreen" color="white">fullscreen_exit</v-icon>
           </v-btn>
           <v-btn
             :title=" $t('window.close') "
             icon
             small
             class="mainboard-window__btn"
-            @click.stop="closeWindow">
+            @click.stop="closeWindow"
+          >
             <v-icon color="white">close</v-icon>
           </v-btn>
         </div>
       </v-card-title>
-      <div
-        ref="windowBody"
-        class="mainboard-window__body">
+      <div ref="windowBody" class="mainboard-window__body" @mousedown="''">
         <slot name="body"/>
       </div>
       <v-divider/>
