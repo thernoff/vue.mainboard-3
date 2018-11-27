@@ -1,15 +1,15 @@
 <template>
   <div
     ref="shortcut"
-    :id = "id"
-    :data-type = "options.object.type"
+    :id="id"
+    :data-type="options.object.type"
     :data-object-id="options.object.id"
     :style="{
       display: 'inline-block',
       width: widthShortcut + 'px',
       height: heightShortcut + 'px',
     }"
-    :class = "{'mainboard-shortcut--active': options.active, 'mainboard-shortcut--noimage': !options.image}"
+    :class="{'mainboard-shortcut--active': options.active, 'mainboard-shortcut--noimage': !options.image}"
     :data-id=" id "
     class="mainboard-shortcut"
     @dblclick="createNewWindow"
@@ -27,36 +27,17 @@
       offset-y
     >
       <v-list dense>
-        <v-list-tile
-          @click="''"
-        >
-          <v-list-tile-title
-            @click="createNewWindow"
-          >
-            {{ $t('openInNewWindow') }}
-          </v-list-tile-title>
+        <v-list-tile @click="''">
+          <v-list-tile-title @click="createNewWindow">{{ $t('openInNewWindow') }}</v-list-tile-title>
         </v-list-tile>
 
-        <v-list-tile
-          @click="''"
-        >
-          <v-list-tile-title
-            @click="renameShortcut"
-          >
-            {{ $t('rename') }}
-          </v-list-tile-title>
+        <v-list-tile @click="''">
+          <v-list-tile-title @click="renameShortcut">{{ $t('rename') }}</v-list-tile-title>
         </v-list-tile>
 
-        <v-list-tile
-          @click="''"
-        >
-          <v-list-tile-title
-            @click="deleteShortcut"
-          >
-            {{ $t('delete') }}
-          </v-list-tile-title>
+        <v-list-tile @click="''">
+          <v-list-tile-title @click="deleteShortcut">{{ $t('delete') }}</v-list-tile-title>
         </v-list-tile>
-
       </v-list>
     </v-menu>
 
@@ -64,31 +45,25 @@
       <i class="material-icons">
         link
       </i>
-    </div> -->
-
-    <div
-      v-if="options.image"
-      class="mainboard-shortcut__img"
-    >
-      <img
-        :src="options.image"
-        :alt="options.label"
-      >
+    </div>-->
+    <div 
+      v-if="options.image" 
+      class="mainboard-shortcut__img">
+      <img 
+        :src="options.image" 
+        :alt="options.label">
     </div>
     <div
       v-else-if="options.object.type === 'folder'"
       class="mainboard-shortcut__icon-folder shortcut-folder"
     >
       <span>
-        <i class="material-icons icon-folder">
-          folder
-        </i>
+        <i class="material-icons icon-folder">folder</i>
       </span>
     </div>
-    <div
-      v-else
-      class="mainboard-shortcut__icon-firstletter"
-    >
+    <div 
+      v-else 
+      class="mainboard-shortcut__icon-firstletter">
       <span>{{ firstLetterLabel }}</span>
     </div>
 
@@ -273,9 +248,9 @@ export default {
   },
   methods: {
     setActive() {
-      this.$store.dispatch("actionSetActiveShortcut", this.id).then(() => {
-        //this.$store.dispatch("actionSaveSettingsDesktop");
-      });
+      this.$store.commit("setNotActiveShortcuts");
+      this.$store.commit("setActiveShortcut", this.id);
+      //this.$store.dispatch("actionSaveSettingsDesktop");
     },
 
     createNewWindow() {

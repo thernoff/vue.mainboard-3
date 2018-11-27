@@ -25,12 +25,8 @@
       z-index="1000"
     >
       <v-list dense>
-        <v-list-tile
-          @click="''"
-        >
-          <v-list-tile-title @click="addShortcutToDesktop">
-            {{ $t('shortcut.add_to_desktop') }}
-          </v-list-tile-title>
+        <v-list-tile @click="''">
+          <v-list-tile-title @click="addShortcutToDesktop">{{ $t('shortcut.add_to_desktop') }}</v-list-tile-title>
         </v-list-tile>
       </v-list>
     </v-menu>
@@ -45,12 +41,8 @@
       z-index="1000"
     >
       <v-list dense>
-        <v-list-tile
-          @click="''"
-        >
-          <v-list-tile-title @click="showStartmenuSettings">
-            {{ $t('startmenu.settings') }}
-          </v-list-tile-title>
+        <v-list-tile @click="''">
+          <v-list-tile-title @click="showStartmenuSettings">{{ $t('startmenu.settings') }}</v-list-tile-title>
         </v-list-tile>
       </v-list>
     </v-menu>
@@ -73,29 +65,14 @@
         @contextmenu.prevent.stop="showContextMenuStartbutton($event)"
       >
         <!-- <v-icon>home</v-icon> -->
-        <img
-          class="mainboard-starmenu__image-btn-start"
-          src="@/assets/logo-incom-loading.png"
-        >
+        <img class="mainboard-starmenu__image-btn-start" src="@/assets/logo-incom-loading.png">
       </v-btn>
-      <v-card
-        class="mainboard-startmenu"
-      >
-        <v-toolbar
-          color="primary"
-          dark
-          depressed
-        >
+      <v-card class="mainboard-startmenu">
+        <v-toolbar color="primary" dark depressed>
           <!-- <v-toolbar-side-icon></v-toolbar-side-icon> -->
-
-          <v-toolbar-title>
-            {{ user.lastname + ' ' + user.firstname }}
-          </v-toolbar-title>
+          <v-toolbar-title>{{ user.lastname + ' ' + user.firstname }}</v-toolbar-title>
           <v-spacer/>
-          <mainboard-user-form
-            :user="user"
-            @click.native="onClickBtnSettingsUser"
-          />
+          <mainboard-user-form :user="user" @click.native="onClickBtnSettingsUser"/>
         </v-toolbar>
 
         <v-list
@@ -104,24 +81,20 @@
           class="mainboard-startmenu__categories"
         >
           <!--Если строка поиска меню "Пуск" пуста, то отображаем шаблон для всех элементов -->
-          <template
-            v-if="!countSearchElements"
-          >
+          <template v-if="!countSearchElements">
             <v-list-group
               v-for="category in categories"
               v-if="parseInt(category.visible)"
               :key="category.id"
               class="mainboard-startmenu__category"
             >
-              <v-list-tile
-                slot="activator"
-              >
+              <v-list-tile slot="activator">
                 <i class="material-icons icon-folder">folder</i>
                 <v-list-tile-content>
                   <v-list-tile-title>
                     <!-- <span
                       :class="[{'mainboard-startmenu__item--xs': $vuetify.breakpoint.xsOnly}]"
-                    > -->
+                    >-->
                     {{ category.label }}
                   </v-list-tile-title>
                 </v-list-tile-content>
@@ -137,19 +110,11 @@
                 @click="createNewWindow(element)"
                 @contextmenu.prevent="showContextMenuItem(element, $event)"
               >
-                <v-list-tile
-                  tag="a"
-                >
-                  <img
-                    :src="element.image"
-                    :style="{width: '25px', marginRight: '5px'}"
-                  >
+                <v-list-tile tag="a">
+                  <img :src="element.image" :style="{width: '25px', marginRight: '5px'}">
                   <v-list-tile-content>
-                    <v-list-tile-title>
-                      {{ element.label }}
-                    </v-list-tile-title>
+                    <v-list-tile-title>{{ element.label }}</v-list-tile-title>
                   </v-list-tile-content>
-
                 </v-list-tile>
               </div>
             </v-list-group>
@@ -165,50 +130,34 @@
               @click="createNewWindow(element)"
               @contextmenu.prevent="showContextMenuItem(element, $event)"
             >
-              <v-list-tile
-                tag="a"
-              >
-                <img
-                  :src="element.image"
-                  :style="{width: '25px', marginRight: '5px'}"
-                >
+              <v-list-tile tag="a">
+                <img :src="element.image" :style="{width: '25px', marginRight: '5px'}">
                 <v-list-tile-content>
-                  <v-list-tile-title>
-                    {{ element.label }}
-                  </v-list-tile-title>
+                  <v-list-tile-title>{{ element.label }}</v-list-tile-title>
                 </v-list-tile-content>
               </v-list-tile>
             </div>
           </template>
           <v-divider/>
           <!--Вывод служебных утилит-->
-          <v-list-group
-            class="mainboard-startmenu__service-utils"
-          >
+          <v-list-group class="mainboard-startmenu__service-utils">
             <v-list-tile slot="activator">
               <i class="material-icons icon-folder">build</i>
               <v-list-tile-content>
-                <v-list-tile-title>
-                  {{ $t('service.utils') }}
-                </v-list-tile-title>
+                <v-list-tile-title>{{ $t('service.utils') }}</v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
             <div
-              :title= "$t('desktop.settings.reset')"
+              :title="$t('desktop.settings.reset')"
               class="mainboard-startmenu__item"
               @click="showDialogWindow"
               @contextmenu.prevent="''"
             >
-              <v-list-tile
-                tag="a"
-              >
+              <v-list-tile tag="a">
                 <i class="material-icons icon-folder">autorenew</i>
                 <v-list-tile-content>
-                  <v-list-tile-title>
-                    {{ $t('desktop.settings.reset') }}
-                  </v-list-tile-title>
+                  <v-list-tile-title>{{ $t('desktop.settings.reset') }}</v-list-tile-title>
                 </v-list-tile-content>
-
               </v-list-tile>
             </div>
           </v-list-group>
@@ -228,20 +177,10 @@
           </v-list-tile>
         </v-list>
         <div class="text-md-center">
-          <v-btn
-            :title=" $t('page_refresh') "
-            color="btnReload"
-            dark
-            @click="reloadApp"
-          >
+          <v-btn :title=" $t('page_refresh') " color="btnReload" dark @click="reloadApp">
             <i class="material-icons">cached</i>
           </v-btn>
-          <v-btn
-            :title=" $t('signout') "
-            color="btnLogout"
-            dark
-            @click="signoutApp"
-          >
+          <v-btn :title=" $t('signout') " color="btnLogout" dark @click="signoutApp">
             <i class="material-icons">power_settings_new</i>
           </v-btn>
         </div>
@@ -436,7 +375,7 @@ export default {
       //console.log("onClickBtnStart", this.$refs.listCategories);
 
       this.inputSearch = "";
-      this.$store.dispatch("actionSetNotActiveWindows");
+      this.$store.commit("setNotActiveWindows");
       this.$store.dispatch("actionSaveSettingsDesktop");
     },
 
@@ -543,7 +482,6 @@ export default {
 .mainboard-starmenu__btn-start {
   width: 45px !important;
   min-width: 45px !important;
-  margin: 0 0 0 5px !important;
   padding: 0 !important;
 }
 

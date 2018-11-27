@@ -14,12 +14,11 @@
     class="mainboard-window"
     @contextmenu.stop.prevent="''"
   >
-    <v-card
-      tile
-      class="mainboard-window__card"
-    >
+    <v-card 
+      tile 
+      class="mainboard-window__card">
       <v-card-title
-        :class = "{'titleWindow': options.active, 'indigo lighten-4': !options.active}"
+        :class="{'titleWindow': options.active, 'indigo lighten-4': !options.active}"
         :title="options.title"
         class="mainboard-window__header"
         primary-title
@@ -29,14 +28,14 @@
         <div class="mainboard-window__title">{{ options.title }}</div>
         <v-spacer/>
         <slot name="buttons"/>
-        <div
-          class="mainboard-window__group-buttons">
+        <div class="mainboard-window__group-buttons">
           <v-btn
             :title=" $t('minimize') "
             icon
             small
             class="mainboard-window__btn"
-            @click.stop="minimizeWindow">
+            @click.stop="minimizeWindow"
+          >
             <v-icon color="white">minimize</v-icon>
           </v-btn>
           <v-btn
@@ -44,12 +43,13 @@
             icon
             small
             class="mainboard-window__btn"
-            @click.stop="toggleFullscreenWindow">
-            <v-icon
-              v-if="!options.fullscreen"
+            @click.stop="toggleFullscreenWindow"
+          >
+            <v-icon 
+              v-if="!options.fullscreen" 
               color="white">fullscreen</v-icon>
-            <v-icon
-              v-if="options.fullscreen"
+            <v-icon 
+              v-if="options.fullscreen" 
               color="white">fullscreen_exit</v-icon>
           </v-btn>
           <v-btn
@@ -57,13 +57,14 @@
             icon
             small
             class="mainboard-window__btn"
-            @click.stop="closeWindow">
+            @click.stop="closeWindow"
+          >
             <v-icon color="white">close</v-icon>
           </v-btn>
         </div>
       </v-card-title>
-      <div
-        ref="windowBody"
+      <div 
+        ref="windowBody" 
         class="mainboard-window__body">
         <slot name="body"/>
       </div>
@@ -72,7 +73,7 @@
           v-if="!options.active"
           class="mainboard-window__cover-window"
           @click="setActiveWindow"
-        /> -->
+      />-->
       <!-- <slot name="body"/> -->
       <!--  </v-card-text> -->
       <v-divider/>
@@ -155,8 +156,9 @@ export default {
 
           //$window.removeClass("half-height");
 
-          self.$store.dispatch("actionUpdateWindowCoords", options);
-          self.$store.dispatch("actionSaveSettingsDesktop");
+          self.$store.dispatch("actionUpdateWindowCoords", options).then(() => {
+            self.$store.dispatch("actionSaveSettingsDesktop");
+          });
         }
       })
       .resizable({
@@ -196,8 +198,9 @@ export default {
             diffLeft: ui.position.left - ui.originalPosition.left
           };
           //self.$store.dispatch("actionUpdateWindowCoords", options);
-          self.$store.dispatch("actionUpdateWindowSize", options);
-          self.$store.dispatch("actionSaveSettingsDesktop");
+          self.$store.dispatch("actionUpdateWindowSize", options).then(() => {
+            self.$store.dispatch("actionSaveSettingsDesktop");
+          });
         }
       });
 
@@ -429,9 +432,6 @@ export default {
 
     minimizeWindow() {
       this.$store.commit("toggleMinimizeWindow", this.id);
-      if (this.options.active) {
-        //this.$store.commit("unsetActiveWindow");
-      }
       this.$store.dispatch("actionSaveSettingsDesktop");
     },
 

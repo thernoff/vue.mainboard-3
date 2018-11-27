@@ -24,25 +24,23 @@
     </v-btn>-->
     <mainboard-startmenu :height-workspace="heightWorkspace"/>
 
-    <div class="mainboard-taskbar__minimize-windows">
+    <div class="mainboard-taskbar__minimize-windows" ref="container">
       <v-btn
         v-for="window in windows"
-        v-if="!window.closed"
         :key="window.id"
         :color="(!window.minimize) ? 'primary' : 'minimizeWindowTaskbar'"
-        :style="{minWidth: widthBtnMinimizeWindows + '%', width: widthBtnMinimizeWindows + '%'}"
         class="mainboard-taskbar__btn-minimize-window"
+        :style="{'minWidth': widthBtnMinimizeWindows + '%', 'width': widthBtnMinimizeWindows + '%'}"
         @click="toggleMinimizedWindow(window)"
         @contextmenu.prevent.stop="showContextMenuMinimizeButton(window.id, $event)"
       >
+        <!-- <div class="btn-minimize-window__container"> -->
         <i v-if="window.minimize" class="material-icons" small>expand_less</i>
         <span
           :title="window.title"
-          :style="{
-            maxWidth: maxWidthTitle
-          }"
           class="mainboard-taskbar__minimize-window-title"
-        >{{ titleMinimizeWindow(window.title) }}</span>
+        >{{ window.title }}</span>
+        <!-- </div> -->
       </v-btn>
     </div>
 
@@ -101,12 +99,26 @@ export default {
     },
 
     widthBtnMinimizeWindows() {
-      const countWindows = this.windows.length + 3;
-      const widthGrid = this.$store.getters.widthGrid;
-      const widthBtnMinimizeWindows = widthGrid / countWindows;
-      return widthBtnMinimizeWindows > 120
-        ? Math.floor((1000 * 120) / widthGrid) / 10
-        : Math.floor((1000 * widthBtnMinimizeWindows) / widthGrid) / 10;
+      const countWindows = this.windows.length + 1;
+      const widthContainer = this.$refs.container.clientWidth;
+      const widthBtnMinimizeWindows =
+        Math.floor(widthContainer / countWindows) - 10;
+
+      if (widthBtnMinimizeWindows > 100) {
+        console.log("widthBtnMinimizeWindows 1", widthBtnMinimizeWindows);
+        console.log(
+          "widthBtnMinimizeWindows 1 return",
+          (100 * 100) / widthContainer
+        );
+        return (100 * 100) / widthContainer;
+      } else {
+        console.log("widthBtnMinimizeWindows 2", widthBtnMinimizeWindows);
+        console.log(
+          "widthBtnMinimizeWindows 2 return",
+          (100 * widthBtnMinimizeWindows) / widthContainer
+        );
+        return (100 * widthBtnMinimizeWindows) / widthContainer;
+      }
     },
 
     heightWorkspace() {
@@ -146,13 +158,15 @@ export default {
           this.arrIndexesWindowsRestore.push(index);
         }
       });
-      this.$store.dispatch("actionMinimizeWindows");
+      this.$store.commit("minimizeWindows");
     },
 
     restoreMinimizeWindows() {
-      this.$store
-        .dispatch("actionRestoreMinimizeWindows", this.arrIndexesWindowsRestore)
-        .then((this.arrIndexesWindowsRestore = []));
+      this.$store.commit(
+        "restoreMinimizeWindows",
+        this.arrIndexesWindowsRestore
+      );
+      this.arrIndexesWindowsRestore = [];
     },
 
     showContextMenuMinimizeButton(id, event) {
@@ -178,18 +192,24 @@ export default {
 
 <style scoped>
 .mainboard-taskbar__minimize-windows {
+  width: 100%;
   height: 100%;
 }
 .mainboard-taskbar__minimize-window-title {
   /* max-width: 85px; */
+  /*   display: block;
+  width: 100%; */
+  font-size: 11px;
   overflow: hidden;
-  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .mainboard-taskbar__btn-minimize-window {
-  max-width: 120px;
+  /* width: 100px;
+  max-width: 100px; */
   margin: 2px 3px;
-  padding: 5px;
+  padding: 1px;
 }
 
 .btn-minimize-windows,

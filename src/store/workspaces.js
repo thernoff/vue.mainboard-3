@@ -13,6 +13,10 @@ function getRandomId() {
   return id;
 }
 
+// Данная функция пересчитывает значение координаты left объекта в режиме сетки
+// left - текущее значение координаты left
+// widthCell - ширина ячейки сетки
+// diffLeft - изменение по горизонтальной оси
 function recalcCoordLeftForGridMode(left, widthCell, diffLeft = 0) {
   if (diffLeft) {
     return Math.floor(left / widthCell) * widthCell;
@@ -21,6 +25,10 @@ function recalcCoordLeftForGridMode(left, widthCell, diffLeft = 0) {
   }
 }
 
+// Данная функция пересчитывает значение координаты top объекта в режиме сетки
+// top - текущее значение координаты top
+// heightCell - высота ячейки сетки
+// diffTop - изменение по вертикальной оси
 function recalcCoordTopForGridMode(top, heightCell, diffTop = 0) {
   if (diffTop) {
     return Math.floor(top / heightCell) * heightCell;
@@ -29,8 +37,8 @@ function recalcCoordTopForGridMode(top, heightCell, diffTop = 0) {
   }
 }
 
+// Данная функция ищет рекурсивно координаты свободного места на рабочем столе для перемещаемого ярлыка
 function findCoords(shortcuts, left, top, widthWorkspace, heightWorkspace) {
-  console.log("START: top, left", top, left);
   let shortcut = null;
   shortcut = shortcuts.find(shortcut => {
     return (
@@ -41,6 +49,7 @@ function findCoords(shortcuts, left, top, widthWorkspace, heightWorkspace) {
 
   if (shortcut) {
     console.log("shortcut найден", shortcut);
+    console.log("ищем дальше");
     console.log("shortcut.left", (widthWorkspace * shortcut.left) / 100);
     if (
       Math.abs(widthWorkspace - (widthWorkspace * shortcut.left) / 100 - 100) >=
@@ -70,7 +79,6 @@ function findCoords(shortcuts, left, top, widthWorkspace, heightWorkspace) {
   }
 }
 
-
 import { CONST_STORE_WORKSPACE } from "@/const.js";
 
 export default {
@@ -89,14 +97,15 @@ export default {
         shortcuts: []
       }
     ],
-    widthShortcut: 100,
-    heightShortcut: 100,
+    widthShortcut: CONST_STORE_WORKSPACE.WIDTH_SHORTCUT,
+    heightShortcut: CONST_STORE_WORKSPACE.HEIGHT_SHORTCUT,
     folders: [],
     dashboard: null
   },
 
   mutations: {
     /***** WORKSPACE *****/
+    // Данная мутация создает новую рабочую область
     createNewWorkspace(state, nameWorkspace) {
       const newWorkspace = {
         title: nameWorkspace,
@@ -109,18 +118,20 @@ export default {
       if (state.activeWorkspace) {
         state.activeWorkspace.active = false;
       }
-      //state.windows = state.activeWorkspace.windows
+
       const length = state.workspaces.push(newWorkspace);
       state.activeWorkspace = state.workspaces[length - 1];
       state.indexActiveWorkspace = length - 1;
     },
 
+    // Данная мутация удаляет текущую рабочую область
     deleteCurrentWorkspace(state) {
       state.workspaces.splice(state.indexActiveWorkspace, 1);
     },
 
+    // Данная мутация устанавливает рабочую область активной
     setActiveWorkspace(state, index = undefined) {
-      if (index != undefined) {
+      if (index != undefined && state.workspaces[index] != undefined) {
         state.activeWorkspace.active = false;
         state.activeWorkspace = state.workspaces[index];
         state.activeWorkspace.active = true;
@@ -134,6 +145,11 @@ export default {
           }
         }
       }
+
+      if (!state.activeWorkspace) {
+        state.activeWorkspace = state.workspaces[0];
+        state.indexActiveWorkspace = 0;
+      }
     },
 
     setWorkspaces(state, workspaces) {
@@ -146,24 +162,15 @@ export default {
       state.dashboard = dashboard;
     },
 
-    /* recalcWindowsCoords(state, { options, widthWorkspace, heightWorkspace }) {
-      console.log('recalcWindowsCoords', widthWorkspace, heightWorkspace)
-      state.workspaces.forEach(function (workspace) {
-        workspace.windows.forEach(function (window) {
-          console.log('window', window)
-          window.top = window.top * options.coefTop
-          window.left = window.left * options.coefLeft
-        })
-      })
-    }, */
-
     /***** WINDOWS *****/
+    // Данная мутация делает все окна свернутыми
     minimizeWindows(state) {
       state.activeWorkspace.windows.forEach(function (window) {
         window.minimize = true;
       });
     },
 
+    // Данная мутация разворачивает окна по указанным индексам
     restoreMinimizeWindows(state, arrIndexesWindowsRestore) {
       arrIndexesWindowsRestore.forEach(
         index => (state.activeWorkspace.windows[index].minimize = false)
@@ -171,16 +178,16 @@ export default {
     },
 
     /***** SHORTCUT *****/
+
+    // Данная мутация создает новый ярлык
+    // object - объект на который будет ссылаться ярлык
+    // folderId - идентификатор папки, которой принадлежит ярлык
+    // widthWorkspace и heightWorkspace - ширина и высота рабочей области соответственно
     createNewShortcut(
       state,
       { object, folderId, widthWorkspace, heightWorkspace }
     ) {
-      /* let top = 0;
-      if (shortcuts.length > 0) {
-        top = shortcuts[shortcuts.length - 1].top + 100;
-      } */
-      /* const top = state.topPrevShortcut > 0 ? state.topPrevShortcut : 5;
-      const left = state.leftPrevShortcut > 0 ? state.leftPrevShortcut : 5; */
+      // значения top и left приходят в пикселях
       const top = object.top || state.topPrevShortcut;
       const left = object.left || state.leftPrevShortcut;
 
@@ -189,19 +196,19 @@ export default {
         id: getRandomId(),
         label: object.title || object.label,
         image: "image" in object ? object.image : "",
-        top: (100 * top) / heightWorkspace,
-        left: (100 * left) / widthWorkspace,
+        top: (100 * top) / heightWorkspace, // переводим значение top в проценты
+        left: (100 * left) / widthWorkspace, // переводим значение left в проценты
         zIndex: 5,
         active: false,
         type: "shortcut",
         object: {
           id: object.id,
-          //title: object.title || object.label,
           type: object.type || "frame"
         },
         folderId
       };
 
+      // Найдем количество уже существующих ярлыков countShortcuts, которые также ссылаются на данный объект
       const shortcuts = state.activeWorkspace.shortcuts;
       let countShortcuts = 0;
       for (let i = 0; i < shortcuts.length; i++) {
@@ -209,55 +216,16 @@ export default {
           countShortcuts++;
         }
       }
-
+      // Если countShortcuts > 0, то к названию ярлыка добавляем "(n)"
       if (countShortcuts) {
         newShortcut.label = newShortcut.label + " (" + countShortcuts + ")";
       }
 
-      /* switch (object.type) {
-        case "folder":
-          newShortcut.label = object.title;
-          break;
-        default:
-          newShortcut.object.apiLink = object.apiLink || object.url;
-          newShortcut.label = object.label;
-          break;
-      } */
-
       state.activeWorkspace.shortcuts.push(newShortcut);
-
-      /* if (
-        heightWorkspace - (state.topPrevShortcut + state.heightShortcut) <
-        state.stepShift
-      ) {
-        state.topPrevShortcut = 5;
-        state.leftPrevShortcut += state.stepShift;
-      } else {
-        state.topPrevShortcut += state.stepShift;
-      } */
-
-      /* if (
-        widthWorkspace - (state.leftPrevShortcut + state.widthShortcut) <
-        state.stepShift
-      ) {
-        state.leftPrevShortcut = 5;
-        state.topPrevShortcut += state.stepShift;
-      } else {
-        state.leftPrevShortcut += state.stepShift;
-      }
-
-      if (state.leftPrevShortcut >= widthWorkspace + state.widthShortcut) {
-        state.topPrevShortcut = 5;
-        state.leftPrevShortcut = 5;
-      } */
     },
 
+    // Данная мутация устанавливает активным ярлык по переданному идентификатору
     setActiveShortcut(state, id) {
-      console.log("setActiveShortcut id", id);
-      state.activeWorkspace.shortcuts.forEach(shortcut => {
-        shortcut.active = false;
-      });
-      //state.activeWorkspace.shortcuts[index].active = true;
       const shortcut = state.activeWorkspace.shortcuts.find(shortcut => {
         return shortcut.id === id;
       });
@@ -265,29 +233,23 @@ export default {
       shortcut.active = true;
     },
 
+    // Данная мутация делает все ярлыки рабочей области не активными
     setNotActiveShortcuts(state) {
       state.activeWorkspace.shortcuts.forEach(shortcut => {
         shortcut.active = false;
       });
     },
 
-    updateOrderShortcuts(state, { startIndex, stopIndex }) {
-      //console.log('updateOrderShortcuts')
-      //console.log('startIndex', startIndex)
-      //console.log('stopIndex', stopIndex)
-      //let shortcutStart = state.activeWorkspace.shortcuts[startIndex];
-      //let shortcutStop = state.activeWorkspace.shortcuts[stopIndex];
+    /* updateOrderShortcuts(state, { startIndex, stopIndex }) {
       let arr = state.activeWorkspace.shortcuts.slice();
       let shortcutStart = arr[startIndex];
       let shortcutStop = arr[stopIndex];
-      //state.activeWorkspace.shortcuts[startIndex] = shortcutStop
-      //state.activeWorkspace.shortcuts[stopIndex] = shortcutStart
       arr[startIndex] = shortcutStop;
       arr[stopIndex] = shortcutStart;
       state.activeWorkspace.shortcuts = arr;
-      //console.log('state.activeWorkspace.shortcuts', state.activeWorkspace.shortcuts)
-    },
+    },*/
 
+    // Данная мутация упорядочивает ярлыки на рабочем столе по порядку их добавления
     sortShortcuts(
       state,
       { widthShortcut, heightShortcut, widthWorkspace, heightWorkspace }
@@ -308,8 +270,8 @@ export default {
       });
     },
 
+    // Данная мутация изменяет свойства ярлыка
     updateShortcut(state, data) {
-      console.log("updateShortcut", state.activeWorkspace.shortcuts);
       const id = data.id;
       const options = data.options;
       let shortcut = state.activeWorkspace.shortcuts.find(shortcut => {
@@ -319,26 +281,26 @@ export default {
       shortcut = Object.assign(shortcut, options);
     },
 
-    // Данная мутация обновляет координаты расположения ссылки на рабочем столе
+    // Данная мутация обновляет координаты расположения ярлыка на рабочем столе
     // Значение координат приходят в пикселях, а сохраняются в процентах
     updateShortcutCoords(state, { options, widthWorkspace, heightWorkspace }) {
-      console.log("updateShortcutCoords options", options);
       const filterShortcuts = state.activeWorkspace.shortcuts.filter(
         shortcut => {
           return options.id !== shortcut.id && !shortcut.folderId;
         }
       );
 
+      // Находим координаты свободного места на рабочем столе
       const data = findCoords(
-        filterShortcuts,
-        options.left,
-        options.top,
-        widthWorkspace,
-        heightWorkspace
+        filterShortcuts, // массив ярлыков, лежащих на рабочем столе
+        options.left, // значение координаты left, полученной при перетаскивании ярлыка
+        options.top, // значение координаты top, полученной при перетаскивании ярлыка
+        widthWorkspace, // ширина рабочей области
+        heightWorkspace // высота рабочей области
       );
-      console.log("data", data);
-      options.left = data.left;
-      options.top = data.top;
+
+      //options.left = data.left;
+      //options.top = data.top;
       /* const shortcuts = state.activeWorkspace.shortcuts;
       for (let i = 0; i < shortcuts.length; i++) {
         if () {
@@ -363,10 +325,11 @@ export default {
       const shortcut = state.activeWorkspace.shortcuts.find(shortcut => {
         return shortcut.id === id;
       });
-      shortcut.top = (+options.top / heightWorkspace) * 100; // переводим пиксели в проценты
-      shortcut.left = (+options.left / widthWorkspace) * 100; // переводим пиксели в проценты
+      shortcut.top = (data.top / heightWorkspace) * 100; // переводим пиксели в проценты
+      shortcut.left = (data.left / widthWorkspace) * 100; // переводим пиксели в проценты
     },
 
+    // Данная мутация удаляет ярлык по переданному идентификатору
     deleteShortcut(state, id) {
       for (let i = 0; i < state.activeWorkspace.shortcuts.length; i++) {
         if (id === state.activeWorkspace.shortcuts[i].id) {
@@ -376,6 +339,8 @@ export default {
     },
 
     /***** FOLDERS *****/
+
+    // Данная мутация создает новую папку
     createNewFolder(state, data) {
       const newFolder = {
         id: getRandomId(),
@@ -385,13 +350,14 @@ export default {
       };
 
       state.folders.push(newFolder);
-      console.log("createNewFolder state.folders", state.folders);
     },
 
+    // Данная мутация устанавливает массив папок
     setFolders(state, data) {
       state.folders = data;
     },
 
+    // Данная мутация удаляет папку по переданному идентификатору
     deleteFolder(state, id) {
       for (let i = 0; i < state.folders.length; i++) {
         if (id === state.folders[i].id) {
@@ -400,6 +366,7 @@ export default {
       }
     },
 
+    // Данная мутация перемещает элемент в папку, путем присваивания свойству folderId объекта значение folderId (object.folderId = folderId)
     moveElementToFolder(state, { elementId, folderId }) {
       let shortcut = null;
       shortcut = state.activeWorkspace.shortcuts.find(shortcut => {
@@ -410,6 +377,8 @@ export default {
       }
     },
 
+    // Данная мутация перемещает элемент из папки на рабочий стол,
+    // путем присваивания свойству folderId объекта значения 0 (object.folderId = 0)
     moveElementFromFolderToDesktop(state, { elementId }) {
       let shortcut = null;
       shortcut = state.activeWorkspace.shortcuts.find(shortcut => {
@@ -422,6 +391,7 @@ export default {
   },
 
   actions: {
+    // Данный экшен инициализирует значения хранилища тестовыми данными в случае ошибки при получении данных с удаленного сервера
     actionInitWorkspaces({ state, commit }, workspaces) {
       if (workspaces && workspaces.length > 0) {
         commit("setWorkspaces", workspaces);
@@ -448,25 +418,29 @@ export default {
       commit("setActiveWindow");
     },
 
+    // Данный экшен получает данные с удаленного сервера и инициализирует с их помощью хранилище
+    // Запускается в хуке жизненного цикла created в App.vue
     actionGetDashboard({ commit, state, dispatch }) {
       commit("setActiveWorkspace");
       commit("setWindows", state.activeWorkspace.windows);
       axios
-        //.get(window.location.href + "extusers/fpage/desktop/")
         .get("/extusers/fpage/desktop/")
         .then(response => {
           //console.log("response", response.data);
+
           // Массив данных для отображения стартового меню
-          const dashboard = response.data.dashboard;
-          if (dashboard && dashboard.length > 0) {
-            commit("setStartmenuItems", dashboard);
+          const startMenuItems = response.data.dashboard;
+          if (startMenuItems && startMenuItems.length > 0) {
+            commit("setStartmenuItems", startMenuItems);
           }
 
+          // Установка данных текущего пользователя
           const user = response.data.user;
           if (user) {
             commit("setUser", user);
           }
 
+          // Установка данных интерфейса
           const interfaces = response.data.interfaces;
           if (interfaces && interfaces.length > 0) {
             commit("setInterfaces", interfaces);
@@ -496,6 +470,7 @@ export default {
         })
         .catch(error => {
           console.log("error", error);
+          // В режиме разработки заполняем хранилище тестовыми данными
           if (process.env.NODE_ENV === "development") {
             const data = {
               status: 1,
@@ -846,16 +821,9 @@ export default {
                   ]
                 }
               ],
-              user: {
-                firstname: "\u0412\u043b\u0430\u0434\u0438\u043c\u0438\u0440",
-                lastname: "\u0414\u0443\u0434\u0438\u043a\u043e\u0432",
-                uname: "test2",
-                email: "test2@test.com",
-                phone: "555-33-44",
-                gid: 5
-              },
               lang: "ru"
             };
+
             commit("setStartmenuItems", data.dashboard);
 
             const workspaces = [
@@ -868,7 +836,6 @@ export default {
               }
             ];
             dispatch("actionInitWorkspaces", workspaces);
-            console.log("workspaces", state.workspaces);
 
             const user = {
               firstname: "Владимир",
@@ -890,13 +857,14 @@ export default {
         });
     },
 
+    // Данный экшен отправляет запрос на сохранение данных на удаленный сервер
     actionSaveSettingsDesktop({ state }) {
       const workspaces = state.workspaces;
       const folders = state.folders;
       axios({
         method: "post",
         headers: { "Content-Type": "application/form-data" },
-        url: "/extusers/fpage/savedesktop/",
+        url: CONST_STORE_WORKSPACE.URL_SAVE_SETTINGS_DESKTOP,
         data: {
           settings: { workspaces, folders }
         }
@@ -909,6 +877,7 @@ export default {
         });
     },
 
+    // Данный экшен удаляет текущую рабочую область, делает активной первую из оставшихся рабочую область
     actionDeleteCurrentWorkspace({ commit, state }) {
       if (state.workspaces.length > 1) {
         commit("deleteCurrentWorkspace");
@@ -918,7 +887,7 @@ export default {
       }
     },
 
-    actionRecalcWindowsCoords({ commit, rootState }, options) {
+    /* actionRecalcWindowsCoords({ commit, rootState }, options) {
       const widthWorkspace = rootState.desktop.widthWorkspace;
       const heightWorkspace = rootState.desktop.heightWorkspace;
       commit("recalcWindowsCoords", {
@@ -926,16 +895,17 @@ export default {
         widthWorkspace,
         heightWorkspace
       });
-    },
+    }, */
 
-    actionMinimizeWindows({ commit }) {
+    /* actionMinimizeWindows({ commit }) {
       commit("minimizeWindows");
-    },
+    }, */
 
-    actionRestoreMinimizeWindows({ commit }, arrIndexesWindowsRestore) {
+    /* actionRestoreMinimizeWindows({ commit }, arrIndexesWindowsRestore) {
       commit("restoreMinimizeWindows", arrIndexesWindowsRestore);
-    },
+    }, */
 
+    // Данный экшен создает новый ярлык. Если включен режим сетки, то координаты (left и top) будут преобразованы в соответствии с ней.
     actionCreateNewShortcut(
       { commit, state, rootState },
       { object, folderId, error }
@@ -943,55 +913,48 @@ export default {
       const widthWorkspace = rootState.desktop.widthWorkspace;
       const heightWorkspace = rootState.desktop.heightWorkspace;
       const shortcuts = state.activeWorkspace.shortcuts;
-      /*  const existShortcut = shortcuts.some(shortcut => {
-         return object.id == shortcut.object.id;
-       });   */
 
-      //if (!existShortcut) {
-      if (true) {
-        commit("createNewShortcut", {
-          object,
-          folderId,
+      commit("createNewShortcut", {
+        object,
+        folderId,
+        widthWorkspace,
+        heightWorkspace
+      });
+
+      if (rootState.desktop.modeGrid) {
+        const shortcut = shortcuts[shortcuts.length - 1];
+        let options = { id: shortcut.id };
+
+        const widthCell = rootState.desktop.widthCell;
+        const left = (shortcut.left / 100) * widthWorkspace;
+        options.left = recalcCoordLeftForGridMode(left, widthCell, 0);
+
+        const heightCell = rootState.desktop.heightCell;
+        const top = (shortcut.top / 100) * heightWorkspace;
+        console.log("actionCreateNewShortcut top", top);
+        options.top = recalcCoordTopForGridMode(top, heightCell, 0);
+        commit("updateShortcutCoords", {
+          options,
           widthWorkspace,
           heightWorkspace
         });
-
-        if (rootState.desktop.modeGrid) {
-          const shortcut = shortcuts[shortcuts.length - 1];
-          let options = { id: shortcut.id };
-
-          const widthCell = rootState.desktop.widthCell;
-          const left = (shortcut.left / 100) * widthWorkspace;
-          options.left = recalcCoordLeftForGridMode(left, widthCell, 0);
-
-          const heightCell = rootState.desktop.heightCell;
-          const top = (shortcut.top / 100) * heightWorkspace;
-          console.log("actionCreateNewShortcut top", top);
-          options.top = recalcCoordTopForGridMode(top, heightCell, 0);
-          commit("updateShortcutCoords", {
-            options,
-            widthWorkspace,
-            heightWorkspace
-          });
-        }
-      } else {
-        commit("setError", error);
-        return null;
       }
+
       return shortcuts[shortcuts.length - 1];
     },
 
-    actionSetActiveShortcut({ commit }, id) {
-      commit("setActiveShortcut", id);
-    },
+    /* actionSetActiveShortcut({ commit }, id) {
+      commit("setNotActiveShortcuts"); // Делаем все ярлыки не активными
+      commit("setActiveShortcut", id); // Устанавливаем активным ярлык по переданному идентификатору
+    }, */
 
-    actionSetNotActiveShortcuts({ commit }) {
+    /* actionSetNotActiveShortcuts({ commit }) {
       commit("setNotActiveShortcuts");
     },
 
     actionUpdateOrderShortcuts({ commit }, data) {
       commit("updateOrderShortcuts", data);
-    },
+    }, */
 
     actionSortShortcuts({ state, commit, rootState }) {
       const widthShortcut = state.widthShortcut;
@@ -1006,6 +969,8 @@ export default {
       });
     },
 
+    // Данный экшен удаляет ярлык по переданному идентификатору. Если ярлык ссылается на папку, то она также будет удалена вместе с содержимым.
+    // !!! На данный момент ярлык ссылающийся на папку и объект типа folder тождественно взаимосвязаны.
     actionDeleteShortcut({ state, commit }, id) {
       const shortcut = state.activeWorkspace.shortcuts.find(shortcut => {
         return shortcut.id === id;
@@ -1029,6 +994,7 @@ export default {
       commit("updateShortcut", data);
     },
 
+    // Данный экшен изменяет координаты ярлыка
     actionUpdateShortcutCoords({ state, commit, rootState }, options) {
       const widthWorkspace = rootState.desktop.widthWorkspace;
       const heightWorkspace = rootState.desktop.heightWorkspace;
@@ -1040,37 +1006,19 @@ export default {
       });
 
       if (rootState.desktop.modeGrid) {
-        //const widthOneColumn = widthWorkspace / countColumns;
-        const widthOneColumn = rootState.desktop.widthCell;
-
-        /* if (options.diffLeft) {
-          options.left =
-            Math.floor(options.left / widthOneColumn) * widthOneColumn;
-        } else {
-          options.left =
-            Math.round(options.left / widthOneColumn) * widthOneColumn;
-        } */
+        const widthCell = rootState.desktop.widthCell;
 
         options.left = recalcCoordLeftForGridMode(
           options.left,
-          widthOneColumn,
+          widthCell,
           options.diffLeft
         );
 
-        //const heightOneRow = heightWorkspace / countRows;
-        const heightOneRow = rootState.desktop.heightCell;
-
-        /* if (options.diffTop) {
-          options.top = Math.floor(options.top / heightOneRow) * heightOneRow;
-        } else {
-          options.top = Math.round(options.top / heightOneRow) * heightOneRow;
-        } */
-
-        //options.top = Math.floor(options.top / heightOneRow) * heightOneRow;
+        const heightCell = rootState.desktop.heightCell;
 
         options.top = recalcCoordTopForGridMode(
           options.top,
-          heightOneRow,
+          heightCell,
           options.diffTop
         );
 
@@ -1088,13 +1036,10 @@ export default {
           });
           dispatch("actionSaveSettingsDesktop");
         }, 1); */
-      } else {
-        //dispatch("actionSaveSettingsDesktop");
       }
-
-      //dispatch("actionSaveSettingsDesktop");
     },
 
+    // Данный экшен создает новую папку и ярлык, ссылающийся на неё
     actionCreateNewFolder({ state, commit, rootState }, options) {
       const widthWorkspace = rootState.desktop.widthWorkspace;
       const heightWorkspace = rootState.desktop.heightWorkspace;
@@ -1129,10 +1074,7 @@ export default {
       }
     },
 
-    //actionDeleteFolder({ state, commit }, id) {},
-
     actionMoveElementToFolder({ commit }, data) {
-      console.log("actionMoveElementToFolder data", data);
       commit("moveElementToFolder", data);
     },
 
@@ -1150,26 +1092,10 @@ export default {
     },
 
     getActiveWorkspace(state) {
-      /* let activeWorkspace;
-      for (let i = 0; i < state.workspaces.length; i++ ) {
-        if ( state.workspaces[i].active ) {
-          activeWorkspace = state.workspaces[i]
-          break;
-        }
-      } */
-
       return state.activeWorkspace;
     },
 
     getWindowsActiveWorkspace(state) {
-      /* let activeWorkspace;
-      for (let i = 0; i < state.workspaces.length; i++ ) {
-        if ( state.workspaces[i].active ) {
-          activeWorkspace = state.workspaces[i]
-          break;
-        }
-      } */
-
       return state.activeWorkspace.windows;
     },
 

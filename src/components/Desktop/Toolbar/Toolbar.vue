@@ -27,7 +27,6 @@
       :visible="visibleDialogWindow"
       @hideDialogWindow="deleteCurrentWorkspace($event)"
     />
-    <mainboard-cover v-if="visibleCover" @click.native="hideCover"/>
     <v-toolbar dark color="primary" height="40">
       <!-- <v-toolbar-side-icon
         v-if = "$vuetify.breakpoint.smAndDown"
@@ -61,8 +60,7 @@
           </v-list-tile>
         </v-list>
       </v-menu>
-      <v-toolbar-items class="hidden-sm-and-down">
-        <!-- <v-btn flat>Link One</v-btn> -->
+      <v-toolbar-items>
         <v-switch
           :label="(isModeGrid) ? $t('toolbar.gridSwitcher.modeOn') : $t('toolbar.gridSwitcher.modeOff')"
           v-model="isModeGrid"
@@ -81,21 +79,18 @@
 import InputDialogWindow from "@/components/Desktop/Toolbar/InputDialogWindow.vue";
 import DialogWindow from "@/components/Desktop/Toolbar/DialogWindow.vue";
 import InfoDialogWindow from "@/components/Desktop/Toolbar/InfoDialogWindow.vue";
-import Cover from "@/components/Desktop/Cover.vue";
 export default {
   components: {
     mainboardInputDialogWindow: InputDialogWindow,
     mainboardDialogWindow: DialogWindow,
-    mainboardInfoDialogWindow: InfoDialogWindow,
-    mainboardCover: Cover
+    mainboardInfoDialogWindow: InfoDialogWindow
   },
   data() {
     return {
       modeGrid: true,
       visibleDialogWindow: false,
       visibleInfoDialogWindow: false,
-      visibleInputDialogWindow: false,
-      visibleCover: false
+      visibleInputDialogWindow: false
     };
   },
 
@@ -118,16 +113,7 @@ export default {
   },
 
   methods: {
-    showCover() {
-      this.visibleCover = true;
-    },
-
-    hideCover() {
-      this.visibleCover = false;
-    },
-
     showDialogWindow() {
-      this.hideCover();
       this.visibleDialogWindow = true;
     },
 
@@ -136,7 +122,6 @@ export default {
     },
 
     showInfoDialogWindow() {
-      this.hideCover();
       this.visibleInfoDialogWindow = true;
     },
 
@@ -145,7 +130,6 @@ export default {
     },
 
     showInputDialogWindow() {
-      this.hideCover();
       this.visibleInputDialogWindow = true;
     },
 
@@ -154,8 +138,11 @@ export default {
     },
 
     createNewWorkspace(nameWorkspace) {
-      this.$store.dispatch("actionCreateNewWorkspace", nameWorkspace);
-      this.$store.dispatch("actionSaveSettingsDesktop");
+      this.$store
+        .dispatch("actionCreateNewWorkspace", nameWorkspace)
+        .then(() => {
+          this.$store.dispatch("actionSaveSettingsDesktop");
+        });
     },
 
     deleteCurrentWorkspace(accept) {
@@ -166,13 +153,13 @@ export default {
       }
 
       if (accept) {
-        this.$store.dispatch("actionDeleteCurrentWorkspace");
-        this.$store.dispatch("actionSaveSettingsDesktop");
+        this.$store.dispatch("actionDeleteCurrentWorkspace").then(() => {
+          this.$store.dispatch("actionSaveSettingsDesktop");
+        });
       }
     },
 
     toggleModeGrid() {
-      console.log("toggleModeGrid");
       this.$store.commit("toggleModeGrid");
       if (this.isModeGrid) {
         $(".mainboard-window").draggable("option", "snap", false);
@@ -183,15 +170,13 @@ export default {
 
     setActiveWorkspace(index) {
       this.$store.dispatch("actionSetActiveWorkspace", index).then(() => {
-        //this.$store.dispatch("actionSetActiveWindow");
         this.$store.dispatch("actionSaveSettingsDesktop");
       });
     },
 
     setNotActiveWindows() {
-      this.$store.dispatch("actionSetNotActiveWindows").then(() => {
-        this.$store.dispatch("actionSaveSettingsDesktop");
-      });
+      this.$store.commit("setNotActiveWindows");
+      this.$store.dispatch("actionSaveSettingsDesktop");
     },
 
     showDrawer() {

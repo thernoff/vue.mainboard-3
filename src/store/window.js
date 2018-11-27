@@ -27,19 +27,24 @@ function recalcCoordTopForGridMode(top, heightCell, diffTop = 0) {
   }
 }
 
+function findWindowById(state, windowId) {
+  const window = state.windows.find(window => {
+    return window.id === windowId;
+  });
+
+  return window ? window : null;
+}
+
 import { CONST_STORE_WINDOW } from "@/const.js";
 
 export default {
   state: {
     maxZIndex: 0,
-    //topPrevWindow: 5, // значение координаты top окна в пикселях
-    //leftPrevWindow: 5, // значение координаты left окна в пикселях
     topPrevWindow: CONST_STORE_WINDOW.TOP_PREV_WINDOW, // значение координаты top окна в процентах
     leftPrevWindow: CONST_STORE_WINDOW.LEFT_PREV_WINDOW, // значение координаты left окна в процентах
-    //stepShift: 10, // сдвиг в пикселях
+    widthWindow: CONST_STORE_WINDOW.WIDTH_WINDOW,
+    heightWindow: CONST_STORE_WINDOW.HEIGHT_WINDOW,
     stepShift: 1, // сдвиг в процентах
-    indexActiveWindow: null,
-    idActiveWindow: "",
     activeWindow: null,
     windows: [] // хранится ссылка на массив activeWorkspace.windows
   },
@@ -48,9 +53,10 @@ export default {
       state.windows = windows;
     },
 
+    // Данная мутация создает новое окно
     createNewWindow(state, object) {
-      console.log("createNewWindow object", object);
-      const title = object.title || object.label;
+      console.log("createNewWindow from object", object);
+      const title = object.title || object.label || "";
       const top = state.topPrevWindow > 0 ? state.topPrevWindow : 1;
       const left = state.leftPrevWindow > 0 ? state.leftPrevWindow : 1;
       const newWindow = {
@@ -58,12 +64,11 @@ export default {
         title,
         top,
         left,
-        width: 40,
-        height: 45,
+        width: state.widthWindow,
+        height: state.heightWindow,
         zIndex: state.windows.length + 2,
         minimize: false,
         fullscreen: false,
-        closed: false,
         active: true,
         classesCss: [],
         type: "window",
@@ -84,66 +89,51 @@ export default {
           break;
       }
 
-      const length = state.windows.push(newWindow);
-      //state.activeWindow = state.windows[length - 1];
-      state.indexActiveWindow = length - 1;
+      state.windows.push(newWindow);
 
       state.topPrevWindow += state.stepShift;
       state.leftPrevWindow += state.stepShift;
     },
 
+    // Данная мутация обновляет свойства окна
     updateWindow(state, options) {
       console.log("updateWindow options", options);
-      const id = options.id;
-      let window = state.windows.find(window => {
-        return window.id === id;
-      });
+      let window = findWindowById(state, options.id);
       window = Object.assign(window, options);
     },
 
+    // Данная мутация обновляет координаты left и top окна
     updateWindowCoords(state, { options, widthWorkspace, heightWorkspace }) {
-      console.log("updateWindowCoords options", options);
-      const id = options.id;
-      let window = state.windows.find(window => {
-        return window.id === id;
-      });
-      if (!window.fullscreen) {
-        window.top = (+options.top / heightWorkspace) * 100;
-        window.left = (+options.left / widthWorkspace) * 100;
-        //state.topPrevWindow -= state.stepShift
-        //state.leftPrevWindow -= state.stepShift
+      let window = findWindowById(state, options.id);
+      if (window && !window.fullscreen) {
+        // options.top и options.left - значения в пикселях
+        window.top = (options.top / heightWorkspace) * 100;
+        window.left = (options.left / widthWorkspace) * 100;
       }
     },
 
+    // Данная мутация обновляет размеры окна
     updateWindowSize(state, options) {
       console.log("updateWindowSize options", options);
-      const id = options.id;
-      let window = state.windows.find(window => {
-        return window.id === id;
-      });
-      if (!window.fullscreen) {
+      let window = findWindowById(state, options.id);
+
+      if (window && !window.fullscreen) {
         window.width = +options.width;
         window.height = +options.height;
       }
     },
 
+    // Данная мутация изменяет заголовок окна
     updateWindowTitle(state, options) {
-      const id = options.id;
-      let window = state.windows.find(window => {
-        return window.id === id;
-      });
-      window.title = options.title;
+      let window = findWindowById(state, options.id);
+      if (window) {
+        window.title = options.title;
+      }
     },
 
-    /* updateWindowApiLink(state, options) {
-      let window = state.windows[options.index];
-      window.apiLink = options.apiLink;
-    }, */
-
+    // Данная мутация добавляет или удаляет css-класс у окна
     toggleClassWindow(state, { id, classCss }) {
-      const window = state.windows.find(window => {
-        return window.id === id;
-      });
+      let window = findWindowById(state, id);
       let classesCss = window.classesCss;
       let i = classesCss.indexOf(classCss);
       if (i > -1) {
@@ -153,10 +143,9 @@ export default {
       }
     },
 
+    // Данная мутация закрывает окно по переданному идентификатору
     closeWindow(state, id) {
       state.activeWindow = null;
-      state.indexActiveWindow = null;
-      state.idActiveWindow = "";
 
       for (let i = 0; i < state.windows.length; i++) {
         if (id === state.windows[i].id) {
@@ -170,67 +159,53 @@ export default {
       state.leftPrevWindow -= state.stepShift;
     },
 
+    // Данная мутация закрывает все окна
     closeAllWindows(state) {
       state.activeWindow = null;
-      state.indexActiveWindow = null;
-      state.idActiveWindow = "";
-
       state.windows = [];
 
       state.topPrevWindow = CONST_STORE_WINDOW.TOP_PREV_WINDOW;
       state.leftPrevWindow = CONST_STORE_WINDOW.LEFT_PREV_WINDOW;
     },
 
+    // Данная мутация сворачивает окно по переданному идентификатору
     minimizeWindow(state, id) {
-      const window = state.windows.find(window => {
-        return window.id === id;
-      });
-
+      let window = findWindowById(state, id);
       window.minimize = true;
     },
 
     toggleMinimizeWindow(state, id) {
-      const window = state.windows.find(window => {
-        return window.id === id;
-      });
-
+      let window = findWindowById(state, id);
       window.minimize = !window.minimize;
     },
 
+    // Данная мутация переключает полноэкранное отображение окна
     toggleFullscreenWindow(state, id) {
-      const window = state.windows.find(window => {
-        return window.id === id;
-      });
-
+      let window = findWindowById(state, id);
       window.fullscreen = !window.fullscreen;
     },
 
+    // Данная мутация раскрывает окно на весь экран
     expandFullscreenWindow(state, id) {
-      console.log("expandFullscreenWindow id", id)
-      const window = state.windows.find(window => {
-        return window.id === id;
-      });
-
+      let window = findWindowById(state, id);
       window.fullscreen = true;
     },
 
+    // Данная мутация переводит раскрытое окно в обычный вид
     fullscreenWindowOff(state, id) {
-      const window = state.windows.find(window => {
-        return window.id === id;
-      });
-
+      let window = findWindowById(state, id);
       window.fullscreen == false;
     },
 
+    // Данная мутация устанавливает окно активным в зависимости от того передан идентификатор или нет
     setActiveWindow(state, id = "") {
       if (state.windows.length > 0) {
         if (
           id &&
           state.activeWindow &&
-          id === state.idActiveWindow &&
+          id === state.activeWindow.id &&
           state.activeWindow.active
         ) {
-          //state.activeWindow.minimize = false;
           return;
         }
 
@@ -238,37 +213,28 @@ export default {
           if (state.activeWindow !== null) {
             state.activeWindow.active = false;
           }
-
-          state.activeWindow = state.windows.find(window => {
-            return window.id === id;
-          });
-          state.idActiveWindow = state.activeWindow.id;
+          state.activeWindow = findWindowById(state, id);
         } else {
           for (let i = 0; i < state.windows.length; i++) {
             if (state.windows[i].active) {
               state.activeWindow = state.windows[i];
-              state.idActiveWindow = state.windows[i].id;
               break;
             }
           }
 
-          if (!state.activeWindow || !state.idActiveWindow) {
+          if (state.windows.length && !state.activeWindow) {
             state.activeWindow = state.windows[0];
-            state.idActiveWindow = state.windows[0].id;
           }
         }
-        //state.activeWindow.minimize = false;
         state.activeWindow.active = true;
-        console.log("setActiveWindow state.activeWindow", state.activeWindow);
       } else {
         state.activeWindow = null;
-        state.idActiveWindow = "";
       }
 
       if (state.activeWindow) {
         state.maxZIndex += 1;
         const zIndex = state.activeWindow.zIndex;
-        state.windows.forEach(function (window) {
+        state.windows.forEach(function(window) {
           if (window.zIndex > zIndex) {
             window.zIndex -= 1;
           }
@@ -277,14 +243,12 @@ export default {
       }
     },
 
-    unsetActiveWindow(state) {
+    /* unsetActiveWindow(state) {
       state.activeWindow.active = false;
-      state.windows.some((window, index) => {
+      state.windows.some((window) => {
         if (!window.minimize) {
-          console.log("index", index);
           state.activeWindow = window;
           state.activeWindow.active = true;
-          state.idActiveWindow = state.activeWindow.id;
           return true;
         }
       });
@@ -299,38 +263,40 @@ export default {
         });
         state.activeWindow.zIndex = state.windows.length;
       }
-    },
+    }, */
 
+    // Данная мутация делает все окна не активными
     setNotActiveWindows(state) {
-      state.windows.forEach(function (window) {
+      state.windows.forEach(function(window) {
         window.active = false;
       });
       state.activeWindow = null;
-      state.indexActiveWindow = null;
-      state.idActiveWindow = "";
     }
   },
-  actions: {
-    actionCreateNewWindow({ state, commit, rootState }, object) {
 
+  actions: {
+    // Данный экшен создает новое окно
+    actionCreateNewWindow({ state, commit, rootState }, object) {
       let window = null;
       window = state.windows.find(window => window.object.id === object.id);
+      // Если существует окно, которое отображает переданный объект (фрейм или папка), то делаем его активным
+      // иначе создаем новое окно для отображения переданного объекта (object)
       if (window) {
-        console.log('actionCreateNewWindow old window', window);
         commit("setActiveWindow", window.id);
       } else {
         commit("setNotActiveWindows");
         commit("createNewWindow", object);
-        console.log('actionCreateNewWindow new window from object', object);
         window = state.windows[state.windows.length - 1];
         commit("setActiveWindow", window.id);
       }
       return window;
     },
 
+    // Данный экшен закрывает окно по переданному идентификатору и устанавливает активным первое не свернутое окно
     actionCloseWindow({ state, commit }, id) {
       commit("closeWindow", id);
 
+      // Найдем идентификатор первого не свернутого окна
       let idActiveWindow = "";
       for (let i = 0; i < state.windows.length; i++) {
         if (!state.windows[i].minimize) {
@@ -339,29 +305,33 @@ export default {
         }
       }
 
-      commit("setActiveWindow", idActiveWindow); // устанавливаем первое не свернутое окно активным
+      if (idActiveWindow) {
+        commit("setActiveWindow", idActiveWindow); // устанавливаем первое не свернутое окно активным
+      }
     },
 
-    actionSetActiveWindow({ commit }) {
+    /* actionSetActiveWindow({ commit }) {
       commit("setActiveWindow"); // устанавливаем первое окно активным
-    },
+    }, */
 
-    actionSetNotActiveWindows({ commit }) {
+    /* actionSetNotActiveWindows({ commit }) {
       commit("setNotActiveWindows");
-    },
+    }, */
 
-    actionSetWindows({ commit }, windows) {
+    /* actionSetWindows({ commit }, windows) {
       commit("setWindows", windows);
-    },
+    }, */
 
-    actionToggleWindows({ commit }, windows) {
+    /* actionToggleWindows({ commit }, windows) {
       commit("toggleWindows", windows);
-    },
+    }, */
 
+    // Данный экшен изменяет свойства окна
     actionUpdateWindow({ commit }, options) {
       commit("updateWindow", options);
     },
 
+    // Данный экшен изменяет координаты (left и top) окна
     actionUpdateWindowCoords({ commit, dispatch, rootState }, options) {
       const widthWorkspace = rootState.desktop.widthWorkspace;
       const heightWorkspace = rootState.desktop.heightWorkspace;
@@ -374,41 +344,22 @@ export default {
 
       if (rootState.desktop.modeGrid) {
         const widthWorkspace = rootState.desktop.widthWorkspace;
-        //const widthOneColumn = widthWorkspace / countColumns;
-        const widthOneColumn = rootState.desktop.widthCell;
-        //const countColumns = rootState.desktop.countColumns;
-        const countColumns = widthWorkspace / widthOneColumn;
-
-        /* if (options.diffLeft) {
-          options.left =
-            Math.floor(options.left / widthOneColumn) * widthOneColumn;
-        } else {
-          options.left =
-            Math.round(options.left / widthOneColumn) * widthOneColumn;
-        } */
+        const widthCell = rootState.desktop.widthCell;
+        const countColumns = widthWorkspace / widthCell;
 
         options.left = recalcCoordLeftForGridMode(
           options.left,
-          widthOneColumn,
+          widthCell,
           options.diffLeft
         );
 
         const heightWorkspace = rootState.desktop.heightWorkspace;
-        //const heightOneRow = heightWorkspace / countRows;
-        const heightOneRow = rootState.desktop.heightCell;
-        //const countRows = rootState.desktop.countRows;
-        const countRows = heightWorkspace / heightOneRow;
+        const heightCell = rootState.desktop.heightCell;
+        const countRows = heightWorkspace / heightCell;
 
-        /* if (options.diffTop) {
-          options.top = Math.floor(options.top / heightOneRow) * heightOneRow;
-        } else {
-          options.top = Math.round(options.top / heightOneRow) * heightOneRow;
-        } */
-
-        //options.top = Math.floor(options.top / heightOneRow) * heightOneRow;
         options.top = recalcCoordTopForGridMode(
           options.top,
-          heightOneRow,
+          heightCell,
           options.diffTop
         );
 
@@ -438,17 +389,14 @@ export default {
           heightWorkspace
         }); */
 
-        setTimeout(function () {
+        setTimeout(function() {
           commit("updateWindowSize", options);
           commit("updateWindowCoords", {
             options,
             widthWorkspace,
             heightWorkspace
           });
-          dispatch("actionSaveSettingsDesktop");
         }, 1);
-      } else {
-        dispatch("actionSaveSettingsDesktop");
       }
     },
 
@@ -469,32 +417,27 @@ export default {
         heightWorkspace
       });
       commit("updateWindowSize", options);
+
       if (rootState.desktop.modeGrid) {
         const widthWorkspace = rootState.desktop.widthWorkspace;
-        //const widthOneColumn = widthWorkspace / countColumns;
-        const widthOneColumn = rootState.desktop.widthCell;
-        //const countColumns = rootState.desktop.countColumns;
-        const countColumns = widthWorkspace / widthOneColumn;
+        const widthCell = rootState.desktop.widthCell;
+        const countColumns = widthWorkspace / widthCell;
 
-        if (options.diffLeft) {
-          options.left =
-            Math.floor(options.left / widthOneColumn) * widthOneColumn;
-        } else {
-          options.left =
-            Math.round(options.left / widthOneColumn) * widthOneColumn;
-        }
+        options.left = recalcCoordLeftForGridMode(
+          options.left,
+          widthCell,
+          options.diffLeft
+        );
 
         const heightWorkspace = rootState.desktop.heightWorkspace;
-        //const heightOneRow = heightWorkspace / countRows;
-        const heightOneRow = rootState.desktop.heightCell;
-        //const countRows = rootState.desktop.countRows;
-        const countRows = heightWorkspace / heightOneRow;
+        const heightCell = rootState.desktop.heightCell;
+        const countRows = heightWorkspace / heightCell;
 
-        if (options.diffTop) {
-          options.top = Math.floor(options.top / heightOneRow) * heightOneRow;
-        } else {
-          options.top = Math.round(options.top / heightOneRow) * heightOneRow;
-        }
+        options.top = recalcCoordTopForGridMode(
+          options.top,
+          heightCell,
+          options.diffTop
+        );
 
         const widthColumnPercent = 100 / countColumns;
         options.width =
@@ -519,28 +462,19 @@ export default {
         });
         commit("updateWindowSize", options); */
 
-        //console.log('actionUpdateWindowSize', options.width)
-        setTimeout(function () {
+        setTimeout(function() {
           commit("updateWindowCoords", {
             options,
             widthWorkspace,
             heightWorkspace
           });
           commit("updateWindowSize", options);
-          dispatch("actionSaveSettingsDesktop");
         }, 1);
-      } else {
-        dispatch("actionSaveSettingsDesktop");
       }
     }
   },
   getters: {
-    indexActiveWindow(state) {
-      return state.indexActiveWindow;
-    },
-
     windows(state) {
-      console.log("state.windows", state.windows);
       return state.windows;
     },
 
@@ -563,7 +497,7 @@ export default {
     },
 
     isActiveWindow(state) {
-      return state.indexActiveWindow !== null ? true : false;
+      return state.activeWindow !== null ? true : false;
     }
   }
 };

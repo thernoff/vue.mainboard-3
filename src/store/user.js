@@ -26,8 +26,6 @@ export default {
       axios({
         method: "post",
         headers: { "Content-Type": "application/form-data" },
-        //url: 'http://esv.elxis.test/extusers/fpage/saveuser/',
-        //url: window.location.href + "extusers/fpage/saveuser/",
         url: "/extusers/fpage/saveuser/",
         data: user
       })

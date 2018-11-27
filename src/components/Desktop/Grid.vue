@@ -4,13 +4,12 @@
     class="mainboard-workspace__grid"
     @click="setNotActive"
   >
-    <div
-      v-if="isModeGrid"
+    <div 
+      v-if="isModeGrid" 
       class="mainboard-workspace__grid-container">
       <div
         :style="{backgroundSize: widthGridCell + 'px' + ' ' + heightGridRow +'px'}"
         class="mainboard-workspace__grid-gradient"
-
       />
       <!-- <div v-for="y of countRows"
         :key=y
@@ -30,7 +29,7 @@
         >
 
         </div>
-    </div> -->
+      </div>-->
     </div>
   </div>
 </template>
@@ -85,8 +84,8 @@ export default {
         this.$store.getters.isActiveShortcut;
 
       if (isActive) {
-        this.$store.dispatch("actionSetNotActiveWindows");
-        this.$store.dispatch("actionSetNotActiveShortcuts");
+        this.$store.commit("setNotActiveWindows");
+        this.$store.commit("setNotActiveShortcuts");
         this.$store.dispatch("actionSaveSettingsDesktop");
       }
     }
