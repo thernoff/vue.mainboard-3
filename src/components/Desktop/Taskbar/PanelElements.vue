@@ -5,14 +5,8 @@
     }"
     class="mainboard-panel"
   >
-    <div
-      class="mainboard-panel-elements"
-    >
-      <v-card
-        tile
-        class="mainboard-panel__card"
-        light
-      >
+    <div class="mainboard-panel-elements">
+      <v-card tile class="mainboard-panel__card" light>
         <v-card-title
           :class="{
             'hidden': !visibleCategory
@@ -46,7 +40,8 @@
             icon
             small
             class="mainboard-panel__btn"
-            @click="updateTitleCategory">
+            @click="updateTitleCategory"
+          >
             <v-icon color="white">save</v-icon>
           </v-btn>
           <v-btn
@@ -55,7 +50,8 @@
             icon
             small
             class="mainboard-panel__btn"
-            @click="createNewCategory">
+            @click="createNewCategory"
+          >
             <v-icon color="white">add</v-icon>
           </v-btn>
           <v-btn
@@ -64,7 +60,8 @@
             icon
             small
             class="mainboard-panel__btn"
-            @click="toggleVisibityCategory">
+            @click="toggleVisibityCategory"
+          >
             <v-icon color="white">visibility_off</v-icon>
           </v-btn>
           <v-btn
@@ -73,7 +70,8 @@
             icon
             small
             class="mainboard-panel__btn"
-            @click="toggleVisibityCategory">
+            @click="toggleVisibityCategory"
+          >
             <v-icon color="white">visibility</v-icon>
           </v-btn>
           <v-btn
@@ -82,14 +80,13 @@
             icon
             small
             class="mainboard-panel__btn"
-            @click="removeCategory">
+            @click="removeCategory"
+          >
             <v-icon color="white">delete</v-icon>
           </v-btn>
         </v-card-title>
 
-        <v-card-text
-          ref="body"
-          class="mainboard-panel__body">
+        <v-card-text ref="body" class="mainboard-panel__body">
           <div
             v-for="(element, index) in elements"
             :key="element.id"
@@ -99,10 +96,7 @@
             class="mainboard-panel__element sortable-element"
             @contextmenu.prevent="showContextMenuElement(index, $event)"
           >
-            <img
-              :src="element.image"
-              :class="{'hidden-image': !parseInt(element.visible)}"
-              alt="">
+            <img :src="element.image" :class="{'hidden-image': !parseInt(element.visible)}" alt>
             <div class="sortable-element__caption">
               <span v-if="indexRenameElement !== index">{{ element.label }}</span>
               <input
@@ -115,9 +109,7 @@
               >
             </div>
             <div class="element-buttons">
-              <ul
-                v-show="visibleCategory"
-                class="element-buttons__list">
+              <ul v-show="visibleCategory" class="element-buttons__list">
                 <li>
                   <v-btn
                     v-show="parseInt(element.visible) && indexRenameElement !== index"
@@ -127,13 +119,9 @@
                     small
                     color="primary"
                     class="element-buttons__button"
-                    @click="showInputRenameTitleElement(index)">
-                    <v-icon
-                      dark
-                      class="element-buttons__icon"
-                    >
-                      create
-                    </v-icon>
+                    @click="showInputRenameTitleElement(index)"
+                  >
+                    <v-icon dark class="element-buttons__icon">create</v-icon>
                   </v-btn>
                 </li>
                 <li>
@@ -145,10 +133,9 @@
                     small
                     color="primary"
                     class="element-buttons__button"
-                    @click="updateTitleElement(index)">
-                    <v-icon
-                      dark
-                      class="element-buttons__icon">save</v-icon>
+                    @click="updateTitleElement(index)"
+                  >
+                    <v-icon dark class="element-buttons__icon">save</v-icon>
                   </v-btn>
                 </li>
                 <li v-show="!parseInt(element.visible)">
@@ -159,13 +146,9 @@
                     small
                     color="primary"
                     class="element-buttons__button"
-                    @click="toggleVisibityElement(index)">
-                    <v-icon
-                      dark
-                      class="element-buttons__icon"
-                    >
-                      visibility
-                    </v-icon>
+                    @click="toggleVisibityElement(index)"
+                  >
+                    <v-icon dark class="element-buttons__icon">visibility</v-icon>
                   </v-btn>
                 </li>
                 <li v-show="parseInt(element.visible)">
@@ -176,13 +159,9 @@
                     small
                     color="primary"
                     class="element-buttons__button"
-                    @click="toggleVisibityElement(index)">
-                    <v-icon
-                      dark
-                      class="element-buttons__icon"
-                    >
-                      visibility_off
-                    </v-icon>
+                    @click="toggleVisibityElement(index)"
+                  >
+                    <v-icon dark class="element-buttons__icon">visibility_off</v-icon>
                   </v-btn>
                 </li>
               </ul>
@@ -231,7 +210,7 @@ export default {
       helper: "clone",
       tolerance: "pointer",
       placeholder: false,
-      revert: true,
+
       start: function(event, ui) {
         const $body = $(this);
         const startIndexElement = $(this)

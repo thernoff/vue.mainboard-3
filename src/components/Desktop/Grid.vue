@@ -1,12 +1,11 @@
 <template>
-  <div
+  <div class="mainboard-workspace__grid" @click="setNotActive">
+    <!-- <div
     :style="{ backgroundImage: 'url('+ require('@/assets/wallpaper.jpg') +')' }"
     class="mainboard-workspace__grid"
     @click="setNotActive"
-  >
-    <div 
-      v-if="isModeGrid" 
-      class="mainboard-workspace__grid-container">
+    >-->
+    <div v-if="isModeGrid" class="mainboard-workspace__grid-container">
       <div
         :style="{backgroundSize: widthGridCell + 'px' + ' ' + heightGridRow +'px'}"
         class="mainboard-workspace__grid-gradient"
@@ -30,6 +29,12 @@
 
         </div>
       </div>-->
+    </div>
+    <div
+      class="mainboard-workspace__logo text-xs-center"
+      :style="{ backgroundImage: 'url('+ require('@/assets/logo-incom.png') +')' }"
+    >
+      <!-- <img src="@/assets/logo-incom.png"> -->
     </div>
   </div>
 </template>
@@ -109,6 +114,32 @@ export default {
   -o-background-size: cover; /* Opera 9.6+ */
   background-size: cover;
   background-repeat: no-repeat;
+
+  background-color: #577495;
+  /* IE9, iOS 3.2+ */
+  background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCAxIDEiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjxyYWRpYWxHcmFkaWVudCBpZD0idnNnZyIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiIGN4PSIwJSIgY3k9IjAlIiByPSIxNDEuNDIxMzU2MjM3MzA5NSUiPjxzdG9wIHN0b3AtY29sb3I9IiM3Yzk5YmUiIHN0b3Atb3BhY2l0eT0iMSIgb2Zmc2V0PSIwIi8+PHN0b3Agc3RvcC1jb2xvcj0iIzMxNGY2YiIgc3RvcC1vcGFjaXR5PSIxIiBvZmZzZXQ9IjEiLz48L3JhZGlhbEdyYWRpZW50PjxyZWN0IHg9Ii01MCIgeT0iLTUwIiB3aWR0aD0iMTAxIiBoZWlnaHQ9IjEwMSIgZmlsbD0idXJsKCN2c2dnKSIgLz48L3N2Zz4=);
+  /* Android 2.3- hack (needed for the actual radial gradient) */
+  background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCAxIDEiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjxyYWRpYWxHcmFkaWVudCBpZD0idnNnZyIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiIGN4PSIwJSIgY3k9IjAlIiByPSIxNDEuNDIxMzU2MjM3MzA5NSUiPjxzdG9wIHN0b3AtY29sb3I9IiM3Yzk5YmUiIHN0b3Atb3BhY2l0eT0iMSIgb2Zmc2V0PSIwIi8+PHN0b3Agc3RvcC1jb2xvcj0iIzMxNGY2YiIgc3RvcC1vcGFjaXR5PSIxIiBvZmZzZXQ9IjEiLz48L3JhZGlhbEdyYWRpZW50PjxyZWN0IHg9Ii01MCIgeT0iLTUwIiB3aWR0aD0iMTAxIiBoZWlnaHQ9IjEwMSIgZmlsbD0idXJsKCN2c2dnKSIgLz48L3N2Zz4=),
+    -webkit-gradient(radial, left top, 0, left top, 723, color-stop(0, rgb(124, 153, 190)), color-stop(1, rgb(49, 79, 107)));
+  /* Android 2.3 */
+  background-image: -webkit-radial-gradient(
+    left top,
+    ellipse farthest-corner,
+    rgb(124, 153, 190) 0%,
+    rgb(49, 79, 107) 100%
+  );
+  /* IE10+ */
+  background-image: radial-gradient(
+    ellipse farthest-corner at left top,
+    rgb(124, 153, 190) 0%,
+    rgb(49, 79, 107) 100%
+  );
+  background-image: -ms-radial-gradient(
+    left top,
+    ellipse farthest-corner,
+    rgb(124, 153, 190) 0%,
+    rgb(49, 79, 107) 100%
+  );
 }
 
 .mainboard-workspace__grid-container {
@@ -144,5 +175,22 @@ export default {
 
   /* background-position: center center; */
   /* border: 1px solid mediumvioletred; */
+}
+
+.mainboard-workspace__logo {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+
+.mainboard-workspace__logo img {
+  /* position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  margin: auto; */
 }
 </style>
