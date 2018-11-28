@@ -46,12 +46,8 @@
         link
       </i>
     </div>-->
-    <div 
-      v-if="options.image" 
-      class="mainboard-shortcut__img">
-      <img 
-        :src="options.image" 
-        :alt="options.label">
+    <div v-if="options.image" class="mainboard-shortcut__img">
+      <img :src="options.image" :alt="options.label">
     </div>
     <div
       v-else-if="options.object.type === 'folder'"
@@ -61,14 +57,17 @@
         <i class="material-icons icon-folder">folder</i>
       </span>
     </div>
-    <div 
-      v-else 
-      class="mainboard-shortcut__icon-firstletter">
+    <div v-else class="mainboard-shortcut__icon-firstletter">
       <span>{{ firstLetterLabel }}</span>
     </div>
 
     <div class="mainboard-shortcut__title">
-      <p v-if="!rename">{{ options.label }}</p>
+      <span v-if="!rename" class="shortcut-title">{{ options.label }}</span>
+      <!-- <span
+        v-if="!rename"
+        class="shortcut-title"
+        :class="{'shortcut-title--short': !options.active}"
+      >{{ options.label }}</span>-->
       <input
         v-show="rename"
         ref="renameinput"
@@ -161,9 +160,6 @@ export default {
         if ($elemOverDrag.closest(".mainboard-shortcut").not(this).length > 0) {
           var $shortcut = $elemOverDrag.closest(".mainboard-shortcut");
           if ($shortcut.data("type") === "folder") {
-            /* var id = $shortcut.data("id");
-            console.log("FOLDER id", id); */
-
             $shortcut.addClass("mainboard-shortcut--over-drag");
           }
         }
@@ -347,8 +343,24 @@ export default {
 .mainboard-shortcut:hover {
   background-color: rgba(255, 255, 255, 0.5);
   border: 1px solid #b1a0a0;
+  box-sizing: content-box;
   /* -webkit-box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
   box-shadow: 1px 2px 8px rgba(0, 0, 0, 0.2); */
+}
+
+.shortcut-title {
+  display: block;
+  padding: 0px 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mainboard-shortcut--active .shortcut-title,
+.mainboard-shortcut:hover .shortcut-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
 }
 
 .mainboard-shortcut--over-drag {
@@ -399,6 +411,7 @@ export default {
 }
 
 .mainboard-shortcut__title {
+  width: 100%;
   /*   color: #fff; */
   /* text-shadow: 1px 2px 5px #000; */
   text-align: center;

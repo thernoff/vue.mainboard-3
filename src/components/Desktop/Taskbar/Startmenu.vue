@@ -471,8 +471,8 @@ export default {
 
 <style scoped>
 .mainboard-startmenu {
-  /* width: 300px; */
-  overflow: hidden;
+  /* width: 80px; */
+  /* overflow: hidden; */
   /* position: absolute;
   left: 5px;
   bottom: 20px;
@@ -482,6 +482,7 @@ export default {
 .mainboard-starmenu__btn-start {
   width: 45px !important;
   min-width: 45px !important;
+  margin: 0 !important;
   padding: 0 !important;
 }
 
