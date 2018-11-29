@@ -88,6 +88,10 @@ export default {
     activeWorkspace: null,
     topPrevShortcut: CONST_STORE_WORKSPACE.TOP_PREV_SHORTCUT,
     leftPrevShortcut: CONST_STORE_WORKSPACE.LEFT_PREV_SHORTCUT,
+    widthShortcut: CONST_STORE_WORKSPACE.WIDTH_SHORTCUT,
+    heightShortcut: CONST_STORE_WORKSPACE.HEIGHT_SHORTCUT,
+    topPlaceholderShortcut: 0,
+    leftPlaceholderShortcut: 0,
     stepShift: CONST_STORE_WORKSPACE.STEP_SHIFT,
     workspaces: [
       {
@@ -98,8 +102,6 @@ export default {
         shortcuts: []
       }
     ],
-    widthShortcut: CONST_STORE_WORKSPACE.WIDTH_SHORTCUT,
-    heightShortcut: CONST_STORE_WORKSPACE.HEIGHT_SHORTCUT,
     folders: [],
     dashboard: null
   },
@@ -328,6 +330,24 @@ export default {
       });
       shortcut.top = (data.top / heightWorkspace) * 100; // переводим пиксели в проценты
       shortcut.left = (data.left / widthWorkspace) * 100; // переводим пиксели в проценты
+    },
+
+    // Данная мутация обновляет координаты расположения плэйсхолдер ярлыка на рабочем столе
+    // Значение координат приходят в пикселях, а сохраняются в процентах
+    updatePlaceholderShortcutCoords(state, { options, widthWorkspace, heightWorkspace }) {
+      // Находим координаты свободного места на рабочем столе
+      /* const data = findCoords(
+        filterShortcuts, // массив ярлыков, лежащих на рабочем столе
+        options.left, // значение координаты left, полученной при перетаскивании ярлыка
+        options.top, // значение координаты top, полученной при перетаскивании ярлыка
+        widthWorkspace, // ширина рабочей области
+        heightWorkspace // высота рабочей области
+      ); */
+
+      state.topPlaceholderShortcut = options.top; // переводим пиксели в проценты
+      state.leftPlaceholderShortcut = options.left; // переводим пиксели в проценты
+      /* state.topPlaceholderShortcut = (options.top / heightWorkspace) * 100; // переводим пиксели в проценты
+      state.leftPlaceholderShortcut = (options.left / widthWorkspace) * 100; // переводим пиксели в проценты */
     },
 
     // Данная мутация удаляет ярлык по переданному идентификатору
@@ -668,6 +688,34 @@ export default {
           dispatch("actionSaveSettingsDesktop");
         }, 1); */
       }
+    },
+
+    // Данный экшен изменяет координаты плэйсхолдера ярлыка
+    actionUpdatePlaceholderShortcutCoords({ state, commit, rootState }, options) {
+
+      const widthWorkspace = rootState.desktop.widthWorkspace;
+      const heightWorkspace = rootState.desktop.heightWorkspace;
+      const widthCell = rootState.desktop.widthCell;
+
+      options.left = recalcCoordLeftForGridMode(
+        options.left,
+        widthCell,
+        options.diffLeft
+      );
+
+      const heightCell = rootState.desktop.heightCell;
+
+      options.top = recalcCoordTopForGridMode(
+        options.top,
+        heightCell,
+        options.diffTop
+      );
+
+      commit("updatePlaceholderShortcutCoords", {
+        options,
+        widthWorkspace,
+        heightWorkspace
+      });
     },
 
     // Данный экшен создает новую папку и ярлык, ссылающийся на неё

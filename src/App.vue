@@ -5,7 +5,8 @@
 
     <!--Компонент рабочей области (используется для отображения остальных компонентов)-->
     <div ref="workspace" class="mainboard-workspace" @contextmenu.stop.prevent="showContextMenu">
-      <!-- <mainboard-demo-info-widget/> -->
+      <mainboard-demo-info-widget v-if="isDemo"/>
+      <!-- <mainboard-placeholder-shortcut/> -->
       <!--Компонент ярлыка для таких сущностей как folder и frame (отображаются только те ярлыки, которые не принадлежат ни одной папке)-->
       <mainboard-desktop-shortcut
         v-for="shortcut in shortcutsNotHaveFolder"
@@ -112,6 +113,7 @@ import DesktopShortcut from "@/components/Desktop/Icon/DesktopShortcut.vue";
 import DialogWindowCreateShortcut from "@/components/Desktop/Dialogs/DialogWindowCreateShortcut.vue";
 import DialogWindowCreateFolder from "@/components/Desktop/Dialogs/DialogWindowCreateFolder.vue";
 import DemoInfoWidget from "@/components/Desktop/Widgets/DemoInfoWidget.vue";
+import PlaceholderShortcut from "@/components/Desktop/Icon/PlaceholderShortcut.vue";
 
 import axios from "axios";
 
@@ -129,7 +131,8 @@ export default {
     mainboardDesktopShortcut: DesktopShortcut,
     mainboardDialogWindowCreateShortcut: DialogWindowCreateShortcut,
     mainboardDialogWindowCreateFolder: DialogWindowCreateFolder,
-    mainboardDemoInfoWidget: DemoInfoWidget
+    mainboardDemoInfoWidget: DemoInfoWidget,
+    mainboardPlaceholderShortcut: PlaceholderShortcut
   },
   data() {
     return {
@@ -178,6 +181,14 @@ export default {
 
     error() {
       return this.$store.getters.error;
+    },
+
+    isDemo() {
+      const position = window.location.href.search(/demo/);
+      if (position > 0) {
+        return true;
+      }
+      return false;
     }
   },
 

@@ -138,6 +138,10 @@ export default {
       helper: "clone",
       zIndex: 1000,
       distance: 5,
+      snap: true,
+      snapMode: "outer",
+      snapTolerance: 20,
+      //grid: [25, 25],
       drag: function(event, ui) {
         var helper = ui.helper;
         helper.hide();
@@ -163,6 +167,17 @@ export default {
             $shortcut.addClass("mainboard-shortcut--over-drag");
           }
         }
+
+        var options = {
+          top: ui.position.top,
+          left: ui.position.left,
+          diffTop: ui.position.top - ui.originalPosition.top,
+          diffLeft: ui.position.left - ui.originalPosition.left
+        };
+
+        self.$store
+          .dispatch("actionUpdatePlaceholderShortcutCoords", options)
+          .then(() => {});
 
         helper.show();
       },
