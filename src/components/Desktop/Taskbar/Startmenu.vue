@@ -333,11 +333,11 @@ export default {
             var $window = $elemOverDrag.closest(".mainboard-window");
             folderId = $window.data("object-id");
           }
-          object.top = ui.position.top < 0 ? 0 : ui.position.top;
-          object.left = ui.position.left < 0 ? 0 : ui.position.left;
+          const top = ui.position.top < 0 ? 0 : ui.position.top;
+          const left = ui.position.left < 0 ? 0 : ui.position.left;
           self.$store
             .dispatch("actionCreateNewShortcut", {
-              object,
+              object: Object.assign({}, object, { top, left }),
               folderId,
               error: self.$t("errors.shortcut_exist")
             })
@@ -420,7 +420,7 @@ export default {
       if (object) {
         this.$store
           .dispatch("actionCreateNewShortcut", {
-            object,
+            object: Object.assign({}, object),
             folderId: 0,
             error: this.$t("errors.shortcut_exist")
           })

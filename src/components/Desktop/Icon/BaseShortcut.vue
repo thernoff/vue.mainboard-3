@@ -138,17 +138,25 @@ export default {
       helper: "clone",
       zIndex: 1000,
       distance: 5,
-      snap: true,
-      snapMode: "outer",
-      snapTolerance: 20,
+      /* snap: true, */
+      /* snapMode: "outer", */
+      /* snapTolerance: 10, */
       //grid: [25, 25],
+      start(event, ui) {
+        $(".mainboard-placeholder-shortcut").show();
+      },
       drag: function(event, ui) {
+        var $shortcut = $(this);
         var helper = ui.helper;
         helper.hide();
         var elemOverDrag = document.elementFromPoint(
           event.clientX,
           event.clientY
         );
+        /* var elemOverDrag = document.elementFromPoint(
+          ui.position.left,
+          ui.position.top
+        ); */
         var $elemOverDrag = $(elemOverDrag);
         if ($elemOverDrag.closest(".mainboard-window").length > 0) {
           var $window = $elemOverDrag.closest(".mainboard-window");
@@ -162,13 +170,25 @@ export default {
         $shortcuts.removeClass("mainboard-shortcut--over-drag");
 
         if ($elemOverDrag.closest(".mainboard-shortcut").not(this).length > 0) {
-          var $shortcut = $elemOverDrag.closest(".mainboard-shortcut");
-          if ($shortcut.data("type") === "folder") {
-            $shortcut.addClass("mainboard-shortcut--over-drag");
+          var $shortcutOver = $elemOverDrag.closest(".mainboard-shortcut");
+          // Если элемент (являющийся ярлыком на объект типа frame, но не folder) перемещается над ярлыком указывающим на объект типа folder,
+          // то данный ярлык (над которым происходит перемещение) подсвечивается при этом плэйсхолдер движущийся за перемещаемым элементо скрывается
+          if (
+            $shortcutOver.data("type") === "folder" &&
+            $shortcut.data("type") !== "folder"
+          ) {
+            $shortcutOver.addClass("mainboard-shortcut--over-drag");
+            $(".mainboard-placeholder-shortcut").hide();
+          } else {
+            $(".mainboard-placeholder-shortcut").show();
           }
+        } else {
+          $(".mainboard-placeholder-shortcut").show();
         }
 
+        var elementId = $shortcut.data("id");
         var options = {
+          elementId,
           top: ui.position.top,
           left: ui.position.left,
           diffTop: ui.position.top - ui.originalPosition.top,
@@ -176,12 +196,13 @@ export default {
         };
 
         self.$store
-          .dispatch("actionUpdatePlaceholderShortcutCoords", options)
+          .dispatch("actionUpdatePlaceholderShortcut", options)
           .then(() => {});
 
         helper.show();
       },
       stop: function(event, ui) {
+        $(".mainboard-placeholder-shortcut").hide();
         var helper = ui.helper;
         helper.hide();
         var $shortcut = $(this);

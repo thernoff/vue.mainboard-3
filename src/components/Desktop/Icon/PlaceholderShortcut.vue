@@ -2,13 +2,13 @@
   <div
     ref="placeholder"
     :style="{
-      display: 'inline-block',
       width: widthShortcut + 'px',
       height: heightShortcut + 'px',
       top: top + 'px',
       left: left + 'px'
     }"
     class="mainboard-placeholder-shortcut"
+    :class="{'mainboard-placeholder-shortcut--over': over}"
   ></div>
 </template>
 
@@ -44,11 +44,15 @@ export default {
     },
 
     top() {
-      return this.$store.state.workspaces.topPlaceholderShortcut;
+      return this.$store.state.workspaces.placeholder.top;
     },
 
     left() {
-      return this.$store.state.workspaces.leftPlaceholderShortcut;
+      return this.$store.state.workspaces.placeholder.left;
+    },
+
+    over() {
+      return this.$store.state.workspaces.placeholder.over;
     }
   },
   methods: {}
@@ -61,16 +65,14 @@ export default {
   position: absolute;
   border-radius: 5px;
   overflow: hidden;
-  background-color: rgba(125, 255, 147, 0.5);
-  border: 1px solid #b1a0a0;
-  box-sizing: content-box;
+  background-color: rgba(125, 255, 147, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  box-sizing: border-box;
   z-index: 1;
 }
 
-.mainboard-shortcut--active,
-.mainboard-shortcut:hover {
-  background-color: rgba(255, 255, 255, 0.5);
-  border: 1px solid #b1a0a0;
-  box-sizing: content-box;
+.mainboard-placeholder-shortcut--over {
+  background-color: rgba(255, 125, 125, 0.3) !important;
+  border: 2px solid rgba(255, 255, 255, 0.3) !important;
 }
 </style>

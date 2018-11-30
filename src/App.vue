@@ -6,7 +6,7 @@
     <!--Компонент рабочей области (используется для отображения остальных компонентов)-->
     <div ref="workspace" class="mainboard-workspace" @contextmenu.stop.prevent="showContextMenu">
       <mainboard-demo-info-widget v-if="isDemo"/>
-      <!-- <mainboard-placeholder-shortcut/> -->
+      <mainboard-placeholder-shortcut/>
       <!--Компонент ярлыка для таких сущностей как folder и frame (отображаются только те ярлыки, которые не принадлежат ни одной папке)-->
       <mainboard-desktop-shortcut
         v-for="shortcut in shortcutsNotHaveFolder"

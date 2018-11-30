@@ -31,11 +31,8 @@
           </v-list-tile-title>
         </v-list-tile>
       </v-list>
-    </v-menu> -->
-    <v-dialog
-      v-model="visible"
-      width="800px"
-      persistent>
+    </v-menu>-->
+    <v-dialog v-model="visible" width="800px" persistent>
       <v-card light>
         <v-layout row>
           <v-flex xs12>
@@ -47,9 +44,7 @@
         <v-container>
           <v-layout row>
             <v-flex xs12>
-              <div
-                ref="categories"
-                class="container-categories">
+              <div ref="categories" class="container-categories">
                 <mainboard-panel-elements
                   v-for="(category, index) in localCategories"
                   :key="category.id"
@@ -72,18 +67,8 @@
           </v-layout>
           <v-layout align-center>
             <v-flex text-xs-center>
-              <v-btn
-                color="info"
-                @click="saveCategories"
-              >
-                {{ $t('save') }}
-              </v-btn>
-              <v-btn
-                color="error"
-                @click="cancel"
-              >
-                {{ $t('cancel') }}
-              </v-btn>
+              <v-btn color="info" @click="saveCategories">{{ $t('save') }}</v-btn>
+              <v-btn color="error" @click="cancel">{{ $t('cancel') }}</v-btn>
             </v-flex>
           </v-layout>
         </v-container>
@@ -124,7 +109,6 @@ export default {
   watch: {
     categories: {
       handler() {
-        //this.localCategories = Object.assign([], this.categories);
         this.localCategories = JSON.parse(JSON.stringify(this.categories));
       },
       deep: true

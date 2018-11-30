@@ -99,7 +99,7 @@ export default {
     updateWindow(state, options) {
       console.log("updateWindow options", options);
       let window = findWindowById(state, options.id);
-      window = Object.assign(window, options);
+      window = Object.assign({}, window, options);
     },
 
     // Данная мутация обновляет координаты left и top окна
@@ -234,7 +234,7 @@ export default {
       if (state.activeWindow) {
         state.maxZIndex += 1;
         const zIndex = state.activeWindow.zIndex;
-        state.windows.forEach(function(window) {
+        state.windows.forEach(function (window) {
           if (window.zIndex > zIndex) {
             window.zIndex -= 1;
           }
@@ -267,7 +267,7 @@ export default {
 
     // Данная мутация делает все окна не активными
     setNotActiveWindows(state) {
-      state.windows.forEach(function(window) {
+      state.windows.forEach(function (window) {
         window.active = false;
       });
       state.activeWindow = null;
@@ -389,7 +389,7 @@ export default {
           heightWorkspace
         }); */
 
-        setTimeout(function() {
+        setTimeout(function () {
           commit("updateWindowSize", options);
           commit("updateWindowCoords", {
             options,
@@ -462,7 +462,7 @@ export default {
         });
         commit("updateWindowSize", options); */
 
-        setTimeout(function() {
+        setTimeout(function () {
           commit("updateWindowCoords", {
             options,
             widthWorkspace,

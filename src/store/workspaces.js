@@ -43,9 +43,13 @@ function findCoords(shortcuts, left, top, widthWorkspace, heightWorkspace) {
   let shortcut = null;
   shortcut = shortcuts.find(shortcut => {
     return (
+      Math.abs(Math.round(left - (widthWorkspace * shortcut.left) / 100)) < 100
+      && Math.abs(Math.round(top - (heightWorkspace * shortcut.top) / 100)) < 100
+    );
+    /* return (
       Math.abs(left - Math.floor((widthWorkspace * shortcut.left) / 100)) <
       100 && Math.abs(top - (heightWorkspace * shortcut.top) / 100) < 100
-    );
+    ); */
   });
 
   if (shortcut) {
@@ -90,8 +94,11 @@ export default {
     leftPrevShortcut: CONST_STORE_WORKSPACE.LEFT_PREV_SHORTCUT,
     widthShortcut: CONST_STORE_WORKSPACE.WIDTH_SHORTCUT,
     heightShortcut: CONST_STORE_WORKSPACE.HEIGHT_SHORTCUT,
-    topPlaceholderShortcut: 0,
-    leftPlaceholderShortcut: 0,
+    placeholder: {
+      top: 0,
+      left: 0,
+      over: false
+    },
     stepShift: CONST_STORE_WORKSPACE.STEP_SHIFT,
     workspaces: [
       {
@@ -281,7 +288,7 @@ export default {
         return shortcut.id === id;
       });
 
-      shortcut = Object.assign(shortcut, options);
+      shortcut = Object.assign({}, shortcut, options);
     },
 
     // Данная мутация обновляет координаты расположения ярлыка на рабочем столе
@@ -332,20 +339,33 @@ export default {
       shortcut.left = (data.left / widthWorkspace) * 100; // переводим пиксели в проценты
     },
 
-    // Данная мутация обновляет координаты расположения плэйсхолдер ярлыка на рабочем столе
+    // Данная мутация обновляет свойства плэйсхолдера ярлыка на рабочем столе
     // Значение координат приходят в пикселях, а сохраняются в процентах
-    updatePlaceholderShortcutCoords(state, { options, widthWorkspace, heightWorkspace }) {
-      // Находим координаты свободного места на рабочем столе
-      /* const data = findCoords(
-        filterShortcuts, // массив ярлыков, лежащих на рабочем столе
-        options.left, // значение координаты left, полученной при перетаскивании ярлыка
-        options.top, // значение координаты top, полученной при перетаскивании ярлыка
-        widthWorkspace, // ширина рабочей области
-        heightWorkspace // высота рабочей области
-      ); */
+    updatePlaceholderShortcut(state, { options, widthWorkspace, heightWorkspace }) {
+      const filterShortcuts = state.activeWorkspace.shortcuts.filter(
+        shortcut => {
+          return shortcut.id !== options.elementId && !shortcut.folderId;
+        }
+      );
+      const shortcut = filterShortcuts.find(shortcut => {
+        return (
+          Math.abs(Math.round(options.left - (widthWorkspace * shortcut.left) / 100)) < 100
+          && Math.abs(Math.round(options.top - (heightWorkspace * shortcut.top) / 100)) < 100
+        );
+      });
+      if (shortcut) {
+        options.over = true;
+      } else {
+        options.over = false;
+      }
 
-      state.topPlaceholderShortcut = options.top; // переводим пиксели в проценты
-      state.leftPlaceholderShortcut = options.left; // переводим пиксели в проценты
+      if (shortcut && shortcut.object.type === "folder") {
+        state.placeholder.visible = false;
+      }
+
+      state.placeholder.top = options.top;
+      state.placeholder.left = options.left;
+      state.placeholder.over = options.over;
       /* state.topPlaceholderShortcut = (options.top / heightWorkspace) * 100; // переводим пиксели в проценты
       state.leftPlaceholderShortcut = (options.left / widthWorkspace) * 100; // переводим пиксели в проценты */
     },
@@ -685,13 +705,12 @@ export default {
             widthWorkspace,
             heightWorkspace
           });
-          dispatch("actionSaveSettingsDesktop");
         }, 1); */
       }
     },
 
     // Данный экшен изменяет координаты плэйсхолдера ярлыка
-    actionUpdatePlaceholderShortcutCoords({ state, commit, rootState }, options) {
+    actionUpdatePlaceholderShortcut({ state, commit, rootState }, options) {
 
       const widthWorkspace = rootState.desktop.widthWorkspace;
       const heightWorkspace = rootState.desktop.heightWorkspace;
@@ -711,7 +730,7 @@ export default {
         options.diffTop
       );
 
-      commit("updatePlaceholderShortcutCoords", {
+      commit("updatePlaceholderShortcut", {
         options,
         widthWorkspace,
         heightWorkspace
