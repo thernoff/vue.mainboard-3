@@ -4,7 +4,12 @@
     <mainboard-toolbar class="mainboard-toolbar"/>
 
     <!--Компонент рабочей области (используется для отображения остальных компонентов)-->
-    <div ref="workspace" class="mainboard-workspace" @contextmenu.stop.prevent="showContextMenu">
+    <div
+      ref="workspace"
+      class="mainboard-workspace"
+      :class="{'mainboard-workspace--nogrid': !isModeGrid}"
+      @contextmenu.stop.prevent="showContextMenu"
+    >
       <mainboard-demo-info-widget v-if="isDemo"/>
       <mainboard-placeholder-shortcut/>
       <!--Компонент ярлыка для таких сущностей как folder и frame (отображаются только те ярлыки, которые не принадлежат ни одной папке)-->
@@ -228,7 +233,7 @@ export default {
     this.$store.commit("setWidthWorkspace", this.$refs.workspace.clientWidth);
     this.$store.commit("setHeightWorkspace", this.$refs.workspace.clientHeight);
 
-    window.addEventListener("resize", function() {
+    window.addEventListener("resize", () => {
       self.$store.commit("setWidthWorkspace", self.$refs.workspace.clientWidth);
       self.$store.commit(
         "setHeightWorkspace",

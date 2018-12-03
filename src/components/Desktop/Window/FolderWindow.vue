@@ -5,12 +5,7 @@
     :data-object-id="options.object.id"
     class="mainboard-folder-window"
   >
-
-    <div
-      slot="body"
-      class="mainboard-folder-window__body"
-      @mousedown="setActiveWindow"
-    >
+    <div slot="body" class="mainboard-folder-window__body" @mousedown="setActiveWindow">
       <mainboard-folder-shortcut
         v-for="element in elements"
         :key="element.id"
@@ -62,7 +57,7 @@ export default {
         return shortcut.folderId === this.options.object.id;
       });
       // Сортируем элементы по имени
-      elements.sort(function(a, b) {
+      elements.sort((a, b) => {
         const a1 = a.label.toLowerCase();
         const b1 = b.label.toLowerCase();
         if (a1 < b1) return -1;

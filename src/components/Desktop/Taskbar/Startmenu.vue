@@ -244,7 +244,7 @@ export default {
       if (this.inputSearch) {
         let regexp = new RegExp(this.inputSearch, "i");
         for (let i = 0; i < this.categories.length; i++) {
-          this.categories[i].elements.forEach(function(element) {
+          this.categories[i].elements.forEach(element => {
             if (regexp.test(element.label)) {
               arrElements.push(element);
             }

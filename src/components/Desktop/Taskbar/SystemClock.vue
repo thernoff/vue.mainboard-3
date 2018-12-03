@@ -22,21 +22,21 @@ export default {
   },
   methods: {
     getTime() {
-      var now = new Date();
-      var hours = now.getHours() < 10 ? "0" + now.getHours() : now.getHours();
-      var minutes =
+      let now = new Date();
+      let hours = now.getHours() < 10 ? "0" + now.getHours() : now.getHours();
+      let minutes =
         now.getMinutes() < 10 ? "0" + now.getMinutes() : now.getMinutes();
-      /*var seconds =
+      /*let seconds =
         now.getSeconds() < 10 ? "0" + now.getSeconds() : now.getSeconds();*/
 
       return hours + ":" + minutes;
     },
 
     getDate() {
-      var now = new Date();
-      var year = now.getFullYear();
-      var month = now.getMonth() < 10 ? "0" + now.getMonth() : now.getMonth();
-      var day = now.getDate() < 10 ? "0" + now.getDate() : now.getDate();
+      let now = new Date();
+      let year = now.getFullYear();
+      let month = now.getMonth() < 10 ? "0" + now.getMonth() : now.getMonth();
+      let day = now.getDate() < 10 ? "0" + now.getDate() : now.getDate();
 
       return day + "." + month + "." + year;
     },
@@ -60,7 +60,5 @@ export default {
 
 .mainboard-system-clock__container {
   padding: 0px 10px;
-  /* border-right: 2px solid rgb(41, 60, 86, 0.6);
-  border-left: 2px solid rgb(41, 60, 86, 0.6); */
 }
 </style>

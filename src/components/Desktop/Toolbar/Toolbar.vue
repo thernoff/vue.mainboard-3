@@ -62,8 +62,8 @@
       </v-menu>
       <v-toolbar-items>
         <v-switch
-          :label="(isModeGrid) ? $t('toolbar.gridSwitcher.modeOn') : $t('toolbar.gridSwitcher.modeOff')"
-          v-model="isModeGrid"
+          :label="(modeGrid) ? $t('toolbar.gridSwitcher.modeOn') : $t('toolbar.gridSwitcher.modeOff')"
+          v-model="modeGrid"
           color="warning"
           @click.stop="toggleModeGrid"
         />
@@ -161,8 +161,10 @@ export default {
 
     toggleModeGrid() {
       this.$store.commit("toggleModeGrid");
-      if (this.isModeGrid) {
+      this.modeGrid = !this.modeGrid;
+      if (this.modeGrid) {
         $(".mainboard-window").draggable("option", "snap", false);
+        this.$store.dispatch("actionSnapShortcutsToGrid");
       } else {
         $(".mainboard-window").draggable("option", "snap", ".mainboard-window");
       }

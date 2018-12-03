@@ -1,9 +1,9 @@
-function getRandomId() {
-  var id = "";
-  var possible =
+const getRandomId = () => {
+  let id = "";
+  let possible =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-  for (var i = 0; i < 10; i++) {
+  for (let i = 0; i < 10; i++) {
     id += possible.charAt(Math.floor(Math.random() * possible.length));
   }
 
@@ -11,7 +11,7 @@ function getRandomId() {
   return id;
 }
 
-function recalcCoordLeftForGridMode(left, widthCell, diffLeft = 0) {
+const recalcCoordLeftForGridMode = (left, widthCell, diffLeft = 0) => {
   if (diffLeft) {
     return Math.floor(left / widthCell) * widthCell;
   } else {
@@ -19,7 +19,7 @@ function recalcCoordLeftForGridMode(left, widthCell, diffLeft = 0) {
   }
 }
 
-function recalcCoordTopForGridMode(top, heightCell, diffTop = 0) {
+const recalcCoordTopForGridMode = (top, heightCell, diffTop = 0) => {
   if (diffTop) {
     return Math.floor(top / heightCell) * heightCell;
   } else {
@@ -27,7 +27,7 @@ function recalcCoordTopForGridMode(top, heightCell, diffTop = 0) {
   }
 }
 
-function findWindowById(state, windowId) {
+const findWindowById = (state, windowId) => {
   const window = state.windows.find(window => {
     return window.id === windowId;
   });
@@ -234,7 +234,7 @@ export default {
       if (state.activeWindow) {
         state.maxZIndex += 1;
         const zIndex = state.activeWindow.zIndex;
-        state.windows.forEach(function (window) {
+        state.windows.forEach((window) => {
           if (window.zIndex > zIndex) {
             window.zIndex -= 1;
           }
@@ -267,7 +267,7 @@ export default {
 
     // Данная мутация делает все окна не активными
     setNotActiveWindows(state) {
-      state.windows.forEach(function (window) {
+      state.windows.forEach((window) => {
         window.active = false;
       });
       state.activeWindow = null;
@@ -389,7 +389,7 @@ export default {
           heightWorkspace
         }); */
 
-        setTimeout(function () {
+        setTimeout(() => {
           commit("updateWindowSize", options);
           commit("updateWindowCoords", {
             options,
@@ -462,7 +462,7 @@ export default {
         });
         commit("updateWindowSize", options); */
 
-        setTimeout(function () {
+        setTimeout(() => {
           commit("updateWindowCoords", {
             options,
             widthWorkspace,

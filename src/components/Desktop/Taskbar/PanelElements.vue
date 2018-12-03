@@ -206,12 +206,26 @@ export default {
     $(this.$refs.body).sortable({
       connectWith: ".mainboard-panel__body",
       distance: 5,
-      items: ".sortable-element",
+      /* items: ".sortable-element", */
       helper: "clone",
       tolerance: "pointer",
-      placeholder: false,
-
+      forcePlaceholderSize: true,
+      scroll: false,
       start: function(event, ui) {
+        console.log("ui", ui.placeholder);
+        var $placeholder = ui.placeholder;
+
+        $placeholder
+          .width(ui.item.width())
+          .height(ui.item.width())
+          .css({
+            display: "inline-block",
+            visibility: "visible",
+            border: "2px solid #466788",
+            borderRadius: "5px",
+            backgroundColor: "#69a6d6"
+          });
+
         const $body = $(this);
         const startIndexElement = $(this)
           .find(".sortable-element")
@@ -223,6 +237,15 @@ export default {
           startIndexElement,
           startIndexCategory
         });
+      },
+      sort: function(event, ui) {
+        //var $t = $(".ui-sortable-placeholder");
+        //console.log("ui-sortable-placeholder", $t);
+        //console.log("ui", ui);
+        /* $t.css({ width: "88px" });
+        $t.css({ height: "88px" });
+        $t.css({ display: "inline-block" }); */
+        //$t.hide();
       },
       receive: function(event, ui) {
         const $body = $(this);
@@ -375,11 +398,12 @@ export default {
   position: relative;
   display: inline-block;
   margin-right: 20px;
-  /* margin-top: 5px;
-  margin-right: 5px;
-  margin-bottom: 5px; */
   vertical-align: top;
   text-align: center;
+}
+
+.sortable-element {
+  cursor: move;
 }
 
 .element-label__input {
@@ -415,10 +439,6 @@ export default {
 .element-buttons__icon {
   font-size: 1.2em !important;
   display: inline-flex !important;
-}
-
-.sortable-element {
-  cursor: move;
 }
 
 .mainboard-panel__img {

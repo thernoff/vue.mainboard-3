@@ -1,6 +1,7 @@
 <template>
   <div
     ref="placeholder"
+    v-if="modeGrid"
     :style="{
       width: widthShortcut + 'px',
       height: heightShortcut + 'px',
@@ -19,6 +20,10 @@ export default {
     return {};
   },
   computed: {
+    modeGrid() {
+      return this.$store.state.desktop.modeGrid;
+    },
+
     widthWorkspace() {
       return this.$store.state.desktop.widthWorkspace;
     },

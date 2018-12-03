@@ -138,15 +138,17 @@ export default {
       helper: "clone",
       zIndex: 1000,
       distance: 5,
-      /* snap: true, */
-      /* snapMode: "outer", */
-      /* snapTolerance: 10, */
+      snap: true,
+      snapMode: "outer",
+      snapTolerance: 10,
       //grid: [25, 25],
       start(event, ui) {
         $(".mainboard-placeholder-shortcut").show();
+        $(this).hide();
       },
       drag: function(event, ui) {
         var $shortcut = $(this);
+
         var helper = ui.helper;
         helper.hide();
         var elemOverDrag = document.elementFromPoint(
@@ -206,7 +208,7 @@ export default {
         var helper = ui.helper;
         helper.hide();
         var $shortcut = $(this);
-
+        $shortcut.show();
         var $shortcuts = $(".mainboard-shortcut");
         $shortcuts.removeClass("mainboard-shortcut--over-drag");
 
@@ -400,8 +402,8 @@ export default {
 }
 
 .mainboard-shortcut--over-drag {
-  background-color: rgba(142, 178, 255, 0.603);
-  border: 1px solid rgba(90, 133, 226, 0.5);
+  background-color: rgba(142, 178, 255, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.3);
 }
 
 .mainboard-shortcut--noimage {

@@ -42,6 +42,10 @@ export default {
       state.modeGrid = !state.modeGrid;
     },
 
+    toggleModeGridOn(state) {
+      state.modeGrid = true;
+    },
+
     toggleShowLeftSidebar(state) {
       state.showLeftSidebar = !state.showLeftSidebar;
     }
