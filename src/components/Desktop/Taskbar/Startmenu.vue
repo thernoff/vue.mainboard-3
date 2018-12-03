@@ -160,6 +160,19 @@
                 </v-list-tile-content>
               </v-list-tile>
             </div>
+            <div
+              :title="$t('startmenu.customize')"
+              class="mainboard-startmenu__item"
+              @click="showStartmenuSettings"
+              @contextmenu.prevent="''"
+            >
+              <v-list-tile tag="a">
+                <i class="material-icons icon-folder">settings</i>
+                <v-list-tile-content>
+                  <v-list-tile-title>{{ $t('startmenu.customize') }}</v-list-tile-title>
+                </v-list-tile-content>
+              </v-list-tile>
+            </div>
           </v-list-group>
         </v-list>
         <v-divider/>
@@ -291,89 +304,7 @@ export default {
       });
     },
 
-    addDroppableToItemMenu() {
-      const self = this;
-
-      $(this.$refs.menuitem).draggable({
-        //$(".mainboard-startmenu__item").draggable({
-        appendTo: ".mainboard-workspace",
-        containment: ".mainboard-workspace",
-        helper: "clone",
-        distance: 5,
-        zIndex: 1000,
-        drag: function(event, ui) {
-          var helper = ui.helper;
-          helper.hide();
-          var elemOverDrag = document.elementFromPoint(
-            event.clientX,
-            event.clientY
-          );
-          var $elemOverDrag = $(elemOverDrag);
-          if ($elemOverDrag.closest(".mainboard-window").length > 0) {
-            var $window = $elemOverDrag.closest(".mainboard-window");
-            if (!$window.hasClass("window-active")) {
-              var id = $window.data("id");
-              self.$store.commit("setActiveWindow", id);
-            }
-          }
-          helper.show();
-        },
-        stop: function(event, ui) {
-          var $menuItem = $(this);
-          var elemOverDrag = document.elementFromPoint(
-            event.clientX,
-            event.clientY
-          );
-          var $elemOverDrag = $(elemOverDrag);
-          var elementId = $(this).data("id");
-          var object = self.$store.getters.itemStartmenuById(elementId);
-
-          var folderId = 0;
-          if ($elemOverDrag.closest(".mainboard-window").length > 0) {
-            var $window = $elemOverDrag.closest(".mainboard-window");
-            folderId = $window.data("object-id");
-          }
-          const top = ui.position.top < 0 ? 0 : ui.position.top;
-          const left = ui.position.left < 0 ? 0 : ui.position.left;
-          self.$store
-            .dispatch("actionCreateNewShortcut", {
-              object: Object.assign({}, object, { top, left }),
-              folderId,
-              error: self.$t("errors.shortcut_exist")
-            })
-            .then(response => {
-              self.$store.dispatch("actionSaveSettingsDesktop");
-              /* if (!folderId && response) {
-                var options = {
-                  id: response.id,
-                  top: ui.position.top < 0 ? 0 : ui.position.top,
-                  left: ui.position.left < 0 ? 0 : ui.position.left,
-                  diffTop: ui.position.top - ui.originalPosition.top,
-                  diffLeft: ui.position.left - ui.originalPosition.left
-                };
-
-                self.$store
-                  .dispatch("actionUpdateShortcutCoords", options)
-                  .then(() => {
-                    self.$store.dispatch("actionSaveSettingsDesktop");
-                  });
-              } else {
-                self.$store.dispatch("actionSaveSettingsDesktop");
-              } */
-            })
-            .catch(error => {
-              console.log("error", error);
-            });
-        }
-      });
-    },
-
     onClickBtnStart() {
-      //this.addDroppableToItemMenu();
-      //$(".mainboard-startmenu__categories").on("scroll", this.onScrollListCategories);
-      //listCategories
-      //console.log("onClickBtnStart", this.$refs.listCategories);
-
       this.inputSearch = "";
       this.$store.commit("setNotActiveWindows");
       this.$store.dispatch("actionSaveSettingsDesktop");
@@ -408,8 +339,10 @@ export default {
     },
 
     showStartmenuSettings() {
+      this.startMenu = false;
       this.visibleStartmenuSettings = true;
     },
+
     // Создаем ярлык из контекстного меню
     addShortcutToDesktop() {
       //const object = this.contextMenuItem.element;
@@ -464,6 +397,66 @@ export default {
             console.log("error", error);
           });
       }
+    },
+
+    addDroppableToItemMenu() {
+      const self = this;
+
+      $(this.$refs.menuitem).draggable({
+        //$(".mainboard-startmenu__item").draggable({
+        appendTo: ".mainboard-workspace",
+        containment: ".mainboard-workspace",
+        helper: "clone",
+        distance: 5,
+        zIndex: 1000,
+        drag: function(event, ui) {
+          var helper = ui.helper;
+          helper.hide();
+          var elemOverDrag = document.elementFromPoint(
+            event.clientX,
+            event.clientY
+          );
+          var $elemOverDrag = $(elemOverDrag);
+          if ($elemOverDrag.closest(".mainboard-window").length > 0) {
+            var $window = $elemOverDrag.closest(".mainboard-window");
+            if (!$window.hasClass("window-active")) {
+              var id = $window.data("id");
+              self.$store.commit("setActiveWindow", id);
+            }
+          }
+          helper.show();
+        },
+        stop: function(event, ui) {
+          var $menuItem = $(this);
+          var elemOverDrag = document.elementFromPoint(
+            event.clientX,
+            event.clientY
+          );
+          var $elemOverDrag = $(elemOverDrag);
+          var elementId = $(this).data("id");
+          var object = self.$store.getters.itemStartmenuById(elementId);
+
+          var folderId = 0;
+          if ($elemOverDrag.closest(".mainboard-window").length > 0) {
+            var $window = $elemOverDrag.closest(".mainboard-window");
+            folderId = $window.data("object-id");
+          }
+          const top = ui.position.top < 0 ? 0 : ui.position.top;
+          const left = ui.position.left < 0 ? 0 : ui.position.left;
+          self.$store
+            .dispatch("actionCreateNewShortcut", {
+              object: Object.assign({}, object, { top, left }),
+              folderId,
+              error: self.$t("errors.shortcut_exist")
+            })
+            .then(response => {
+              self.$store.dispatch("actionSaveSettingsDesktop");
+            })
+            .catch(error => {
+              console.log("error", error);
+            });
+        }
+      });
     }
   }
 };
