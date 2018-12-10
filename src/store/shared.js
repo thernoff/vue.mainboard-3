@@ -3,6 +3,7 @@ export default {
     languages: [],
     loading: false,
     error: null,
+    message: null,
     openMenu: false
   },
   mutations: {
@@ -18,8 +19,16 @@ export default {
       state.error = data;
     },
 
+    setMessage(state, data) {
+      state.message = data;
+    },
+
     clearError(state) {
       state.error = null;
+    },
+
+    clearMessage(state) {
+      state.message = null;
     },
 
     toggleOpenMenu(state, open = undefined) {
@@ -45,8 +54,16 @@ export default {
       commit("setError", data);
     },
 
+    actionSetMessge({ commit }, data) {
+      commit("setMessge", data);
+    },
+
     actionClearError({ commit }) {
       commit("clearError");
+    },
+
+    actionClearMessage({ commit }) {
+      commit("clearMessage");
     },
 
     actionToggleOpenMenu({ commit }, open) {
@@ -60,6 +77,10 @@ export default {
 
     error(state) {
       return state.error;
+    },
+
+    message(state) {
+      return state.message;
     },
 
     openMenu(state) {

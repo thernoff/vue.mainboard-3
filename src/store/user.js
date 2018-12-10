@@ -16,7 +16,7 @@ export default {
   mutations: {
     setUser(state, data) {
       //state.user = data;
-      state.user = Object.assign({}, data);
+      state.user = Object.assign({}, state.user, data);
     },
 
     saveUser(state, user) {
@@ -34,11 +34,18 @@ export default {
         data: user
       })
         .then(response => {
-          //console.log("response", response.data.user);
-          //commit("setUser", response.data.user);
+          console.log("response", response.data);
+
+          if (response.data.status) {
+            commit("setUser", response.data.user);
+            commit("setMessage", response.data.message);
+          } else {
+            commit("setError", response.data.message);
+          }
+
           if (process.env.NODE_ENV !== "development") {
-            commit("saveUser", user);
-            location.reload();
+            commit("setUser", user);
+            //location.reload();
           }
           return response;
         })

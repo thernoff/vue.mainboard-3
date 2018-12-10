@@ -1,21 +1,13 @@
 <template>
   <div class="mainboard-userform">
-    <v-layout
-      row
-      justify-center>
-      <v-btn
-        icon
-        @click="modal=true">
+    <v-layout row justify-center>
+      <v-btn icon @click="modal=true">
         <v-icon>settings</v-icon>
       </v-btn>
-      <v-dialog
-        v-model="modal"
-        width="400px"
-        persistent
-      >
+      <v-dialog v-model="modal" width="400px" persistent>
         <!-- <v-btn icon slot="activator">
         <v-icon>settings</v-icon>
-      </v-btn> -->
+        </v-btn>-->
         <v-card light>
           <v-layout row>
             <v-flex xs12>
@@ -27,12 +19,7 @@
           <v-container>
             <v-layout row>
               <v-flex xs12>
-                <v-form
-                  ref="form"
-                  v-model="valid"
-                  lazy-validation
-                  @submit.prevent="''"
-                >
+                <v-form ref="form" v-model="valid" @submit.prevent="''">
                   <v-text-field
                     :value="user.firstname"
                     :rules="nameRules"
@@ -87,19 +74,8 @@
                   />
                   <v-layout align-center>
                     <v-flex text-xs-center>
-                      <v-btn
-                        :disabled="!valid"
-                        color="info"
-                        @click="saveUser"
-                      >
-                        {{ $t('save') }}
-                      </v-btn>
-                      <v-btn
-                        color="error"
-                        @click="cancel"
-                      >
-                        {{ $t('cancel') }}
-                      </v-btn>
+                      <v-btn :disabled="!valid" color="info" @click="saveUser">{{ $t('save') }}</v-btn>
+                      <v-btn color="error" @click="cancel">{{ $t('cancel') }}</v-btn>
                     </v-flex>
                   </v-layout>
                 </v-form>
@@ -135,7 +111,10 @@ export default {
       ],
       emailRules: [
         v => !!v || this.$t("user.rules.email_required"),
-        v => /.+@.+/.test(v) || this.$t("user.rules.email_valid")
+        //v => /.+@.+\./.test(v) || this.$t("user.rules.email_valid")
+        v =>
+          /^[0-9a-z-\.]+\@[0-9a-z-]{2,}\.[a-z]{2,}$/i.test(v) ||
+          this.$t("user.rules.email_valid")
       ],
       passwordRules: [
         v =>
@@ -189,12 +168,15 @@ export default {
           this.idActiveInterface ||
           this.langInterface
         ) {
-          this.$store.dispatch("actionSaveUser", user);
-          this.clearData();
+          this.$store.dispatch("actionSaveUser", user).then(response => {
+            if (response) {
+              this.clearData();
+            }
+          });
         }
 
         if (process.env.NODE_ENV !== "development") {
-          location.reload();
+          //location.reload();
         }
       }
     },

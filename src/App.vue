@@ -95,6 +95,20 @@
       </v-list>
     </v-menu>
 
+    <!--Компонент для вывода сообщений-->
+    <template v-if="message">
+      <v-snackbar
+        :multi-line="true"
+        :timeout="3000"
+        :value="true"
+        color="green"
+        @input="closeMessage"
+      >
+        {{ message }}
+        <v-btn dark flat @click="closeMessage">{{ $t('close') }}</v-btn>
+      </v-snackbar>
+    </template>
+
     <!--Компонент для вывода ошибок-->
     <template v-if="error">
       <v-snackbar
@@ -194,6 +208,10 @@ export default {
 
     error() {
       return this.$store.getters.error;
+    },
+
+    message() {
+      return this.$store.getters.message;
     },
 
     isDemo() {
@@ -306,7 +324,11 @@ export default {
     },
 
     closeError() {
-      this.$store.dispatch("actionClearError");
+      this.$store.commit("clearError");
+    },
+
+    closeMessage() {
+      this.$store.commit("clearMessage");
     },
 
     showContextMenu(event) {

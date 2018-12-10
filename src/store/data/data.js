@@ -364,7 +364,7 @@ export const data = {
     gid: 5,
     idActiveInterface: 2,
     actions: [
-      "CHANGE_PASSWORD"
+      //"CHANGE_PASSWORD"
     ]
   },
   interfaces: [
