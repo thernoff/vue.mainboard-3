@@ -3,6 +3,7 @@
   "add": "Add",
   "agree": "Agree",
   "cancel": "Cancel",
+  "change": "Change",
   "close": "Close",
   "delete": "Delete",
   "display": "Display",
@@ -36,6 +37,11 @@
     "rules": {
       "title_required": "Folder name is required",
       "title_invalid": "Invalid folder name"
+    }
+  },
+  "forms": {
+    "change_password": {
+      "title": "Change your password"
     }
   },
   "page_refresh": "Refresh page",

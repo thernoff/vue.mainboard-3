@@ -170,13 +170,12 @@ export default {
         ) {
           this.$store.dispatch("actionSaveUser", user).then(response => {
             if (response) {
+              /* if (process.env.NODE_ENV !== "development") {
+                location.reload();
+              } */
               this.clearData();
             }
           });
-        }
-
-        if (process.env.NODE_ENV !== "development") {
-          //location.reload();
         }
       }
     },

@@ -4,7 +4,7 @@
       <v-layout row>
         <v-flex xs12>
           <v-card-title class="primary mainboard-changepassword-form__title">
-            <div class="headline">{{ $t('user.settings') }}</div>
+            <div class="headline">{{ $t('forms.change_password.title') }}</div>
           </v-card-title>
         </v-flex>
       </v-layout>
@@ -28,7 +28,7 @@
               />
               <v-layout align-center>
                 <v-flex text-xs-center>
-                  <v-btn :disabled="!valid" color="info" @click="saveUser">{{ $t('save') }}</v-btn>
+                  <v-btn :disabled="!valid" color="info" @click="saveUser">{{ $t('change') }}</v-btn>
                 </v-flex>
               </v-layout>
             </v-form>

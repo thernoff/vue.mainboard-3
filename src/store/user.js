@@ -37,8 +37,11 @@ export default {
           console.log("response", response.data);
 
           if (response.data.status) {
-            commit("setUser", response.data.user);
+            //commit("setUser", response.data.user);
             commit("setMessage", response.data.message);
+            setTimeout(() => {
+              location.reload();
+            }, 1000);
           } else {
             commit("setError", response.data.message);
           }
