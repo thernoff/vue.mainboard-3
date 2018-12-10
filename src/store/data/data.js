@@ -362,7 +362,10 @@ export const data = {
     email: "test2@test.com",
     phone: "555-33-44",
     gid: 5,
-    idActiveInterface: 2
+    idActiveInterface: 2,
+    actions: [
+      "CHANGE_PASSWORD"
+    ]
   },
   interfaces: [
     { id: 1, name: "Таблица" },

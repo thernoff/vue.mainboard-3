@@ -48,7 +48,7 @@
     <mainboard-taskbar class="mainboard-taskbar"/>
 
     <!--Компонент диалогового окна для отображения загрузочного экрана-->
-    <v-dialog v-model="dialog" class="mainboard-loading" fullscreen hide-overlay persistent>
+    <v-dialog v-model="dialogLoading" class="mainboard-loading" fullscreen hide-overlay persistent>
       <div class="mainboard-loading__container text-md-center">
         <v-layout align-center justify-center column fill-height>
           <div class="mainboard-loading__progress">
@@ -61,6 +61,11 @@
         </v-layout>
       </div>
     </v-dialog>
+
+    <v-dialog width="400px" persistent v-model="dialogChangePasswordForm">
+      <mainboard-change-password-form :user="user"/>
+    </v-dialog>
+
     <!--Компонент диалогового окна для создания пользовательского ярлыка-->
     <!-- <mainboard-dialog-window-create-shortcut
       :visible="visibleDialogWindowCreateShortcut"
@@ -119,6 +124,7 @@ import DialogWindowCreateShortcut from "@/components/Desktop/Dialogs/DialogWindo
 import DialogWindowCreateFolder from "@/components/Desktop/Dialogs/DialogWindowCreateFolder.vue";
 import DemoInfoWidget from "@/components/Desktop/Widgets/DemoInfoWidget.vue";
 import PlaceholderShortcut from "@/components/Desktop/Icon/PlaceholderShortcut.vue";
+import ChangePasswordForm from "@/components/Desktop/ModalWindows/ChangePasswordForm.vue";
 
 import axios from "axios";
 
@@ -137,7 +143,8 @@ export default {
     mainboardDialogWindowCreateShortcut: DialogWindowCreateShortcut,
     mainboardDialogWindowCreateFolder: DialogWindowCreateFolder,
     mainboardDemoInfoWidget: DemoInfoWidget,
-    mainboardPlaceholderShortcut: PlaceholderShortcut
+    mainboardPlaceholderShortcut: PlaceholderShortcut,
+    mainboardChangePasswordForm: ChangePasswordForm
   },
   data() {
     return {
@@ -149,7 +156,8 @@ export default {
         x: 0,
         y: 0
       },
-      dialog: true
+      dialogLoading: true,
+      dialogChangePasswordForm: false
     };
   },
 
@@ -194,10 +202,31 @@ export default {
         return true;
       }
       return false;
+    },
+
+    user() {
+      return this.$store.getters.user;
+    },
+
+    changePasswordForm() {
+      const actionChangePassword = this.$store.state.user.user.actions.find(
+        action => action === "CHANGE_PASSWORD"
+      );
+      console.log(
+        "changePasswordForm actionChangePassword",
+        actionChangePassword
+      );
+      return actionChangePassword ? true : false;
     }
   },
 
-  watch: {},
+  watch: {
+    changePasswordForm(newVal, oldVal) {
+      console.log("changePasswordForm this.user.actions", this.user.actions);
+      console.log("changePasswordForm newVal", newVal);
+      this.dialogChangePasswordForm = newVal;
+    }
+  },
 
   beforeCreate() {
     const dictonary = {};
@@ -221,7 +250,8 @@ export default {
     this.$store.dispatch("actionGetDashboard").then(() => {
       const self = this;
       setTimeout(() => {
-        self.dialog = false;
+        self.dialogLoading = false;
+        self.dialogChangePasswordForm = self.changePasswordForm;
       }, 800);
     });
   },

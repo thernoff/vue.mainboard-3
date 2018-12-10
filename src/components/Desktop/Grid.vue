@@ -57,10 +57,6 @@ export default {
     },
 
     widthGridCell() {
-      console.log(
-        "this.$store.state.desktop.countColumns",
-        this.$store.state.desktop.countColumns
-      );
       //return Math.ceil(10000000 / this.$store.getters.getCountColumns) / 100000;
       /* return (
         Math.ceil(10000000 / this.$store.state.desktop.countColumns) / 100000
@@ -69,10 +65,6 @@ export default {
     },
 
     heightGridRow() {
-      console.log(
-        "this.$store.state.desktop.countRows",
-        this.$store.state.desktop.countRows
-      );
       //return Math.ceil(100000000 / this.$store.getters.getCountRows) / 1000000;
       /* return (
         Math.ceil(100000000 / this.$store.state.desktop.countRows) / 1000000

@@ -9,16 +9,20 @@ export default {
       email: "",
       phone: "",
       gid: 7,
-      idActiveInterface: 2
+      idActiveInterface: 2,
+      actions: []
     }
   },
   mutations: {
     setUser(state, data) {
-      state.user = data;
+      //state.user = data;
+      state.user = Object.assign({}, data);
     },
 
     saveUser(state, user) {
-      state.user.email = user.email;
+      if (user.email) {
+        state.user.email = user.email;
+      }
     }
   },
   actions: {
@@ -30,12 +34,16 @@ export default {
         data: user
       })
         .then(response => {
-          console.log("response", response);
-          commit("saveUser", user);
+          //console.log("response", response.data.user);
+          //commit("setUser", response.data.user);
+          if (process.env.NODE_ENV !== "development") {
+            commit("saveUser", user);
+            location.reload();
+          }
+          return response;
         })
         .catch(error => {
           console.log("error", error);
-          commit("saveUser", user);
         });
     }
   },
