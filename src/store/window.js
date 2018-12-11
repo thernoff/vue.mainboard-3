@@ -99,7 +99,7 @@ export default {
     updateWindow(state, options) {
       console.log("updateWindow options", options);
       let window = findWindowById(state, options.id);
-      window = Object.assign({}, window, options);
+      window = Object.assign(window, options);
     },
 
     // Данная мутация обновляет координаты left и top окна

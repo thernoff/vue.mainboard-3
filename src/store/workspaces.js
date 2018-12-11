@@ -288,7 +288,7 @@ export default {
         return shortcut.id === id;
       });
 
-      shortcut = Object.assign({}, shortcut, options);
+      shortcut = Object.assign(shortcut, options);
     },
 
     // Данная мутация обновляет координаты расположения ярлыка на рабочем столе
