@@ -34,7 +34,7 @@
       ></v-toolbar-side-icon>-->
       <v-toolbar-title>
         <!-- <v-img src="@/assets/hawk.png"></v-img> -->
-        Incom
+        {{titleToolbar}}
         <!-- <img src="@/assets/hawk.png" alt=""> -->
       </v-toolbar-title>
       <v-spacer/>
@@ -109,6 +109,11 @@ export default {
 
     titleActiveWorkspace() {
       return this.$store.getters.getTitleActiveWorkspace;
+    },
+
+    titleToolbar() {
+      const title = document.title || "";
+      return title ? title : "Incom";
     }
   },
 

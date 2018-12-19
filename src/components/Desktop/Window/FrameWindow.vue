@@ -101,6 +101,7 @@ export default {
     },
 
     reloadWindow() {
+      this.pressBtnReload = true;
       this.$refs.baseMainboardFrame.$refs.baseFrame.src = this.options.apiLink;
     },
 

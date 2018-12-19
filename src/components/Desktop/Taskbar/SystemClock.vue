@@ -35,7 +35,7 @@ export default {
     getDate() {
       let now = new Date();
       let year = now.getFullYear();
-      let month = now.getMonth() < 10 ? "0" + now.getMonth() : now.getMonth();
+      let month = now.getMonth() < 10 ? "0" + now.getMonth() + 1: now.getMonth() + 1;
       let day = now.getDate() < 10 ? "0" + now.getDate() : now.getDate();
 
       return day + "." + month + "." + year;
