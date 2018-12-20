@@ -293,7 +293,6 @@ export default {
     },
 
     createNewWindow(element) {
-      console.log("createNewWindow from element", element);
       this.startMenu = false;
       this.$store.dispatch("actionCreateNewWindow", element).then(response => {
         if (response.minimize) {
@@ -311,8 +310,6 @@ export default {
     },
 
     onClickBtnSettingsUser() {
-      console.log(this.searchElements);
-      console.log("onClickBtnSettingsUser", this.user);
       //this.startMenu = false;
     },
 
@@ -349,7 +346,6 @@ export default {
       const object = this.$store.getters.itemStartmenuById(
         this.contextMenuItem.element.id
       );
-      console.log("addShortcutToDesktop object", object);
       if (object) {
         this.$store
           .dispatch("actionCreateNewShortcut", {

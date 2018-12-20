@@ -45,12 +45,10 @@ async function getMessagesAsync() {
   const messages = {};
   try {
     const response = await axios.get("/extusers/fpage/dictonary/");
-    console.log("response", response);
     messages[response.data.lang] = response.data.dictonary;
   } catch (error) {
     console.log("error", error);
   }
-  console.log("messages", messages);
   //.then(response => { return response.data.dictonary; });
   return messages;
 }

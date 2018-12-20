@@ -64,7 +64,6 @@ export default {
         if (a1 > b1) return 1;
         return 0;
       });
-      console.log("elements", this.$store.getters.shortcuts);
       return elements;
     }
   },

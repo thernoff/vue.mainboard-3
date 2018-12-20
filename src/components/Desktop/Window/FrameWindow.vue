@@ -1,19 +1,14 @@
 <template>
-  <base-window
-    :id="id"
-    :options="options"
-    class="mainboard-frame-window"
-  >
-    <div
-      slot="buttons"
-      class="mainboard-window__group-buttons">
+  <base-window :id="id" :options="options" class="mainboard-frame-window">
+    <div slot="buttons" class="mainboard-window__group-buttons">
       <v-btn
         v-if="showBtnBack"
         icon
         small
         class="mainboard-window__btn"
         title="Назад"
-        @click="back">
+        @click="back"
+      >
         <v-icon color="white">fas fa-arrow-left</v-icon>
       </v-btn>
       <v-btn
@@ -21,25 +16,20 @@
         icon
         small
         class="mainboard-window__btn"
-        @click.stop="reloadWindow">
+        @click.stop="reloadWindow"
+      >
         <v-icon color="white">refresh</v-icon>
       </v-btn>
     </div>
 
-    <div
-      slot="body"
-      class="mainboard-frame-window__body"
-    >
-      <div
-        v-if="!options.active"
-        class="mainboard-window__cover-window"
-        @click="setActiveWindow"
-      />
+    <div slot="body" class="mainboard-frame-window__body">
+      <div v-if="!options.active" class="mainboard-window__cover-window" @click="setActiveWindow"/>
       <base-mainboard-frame
         ref="baseMainboardFrame"
         :back-link="backLink"
         :api-link="options.apiLink"
-        @loadFrame="updateWindow($event)"/>
+        @loadFrame="updateWindow($event)"
+      />
     </div>
   </base-window>
 </template>
@@ -106,7 +96,6 @@ export default {
     },
 
     updateWindow(data) {
-      console.log("updateWindow data", data);
       this.updateHistory(data.currentLink);
       let options = Object.assign({}, data, { id: this.id });
       this.$store.dispatch("actionUpdateWindow", options).then(() => {
@@ -127,7 +116,6 @@ export default {
       this.pressBtnReload = false;
       this.pressBtnBack = false;
       this.backLink = "";
-      //console.log("Window.history", this.history);
     },
 
     back() {

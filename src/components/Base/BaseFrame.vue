@@ -1,12 +1,7 @@
 <template>
   <div class="mainboard-frame">
     <div class="mainboard-frame__cover"/>
-    <iframe
-      ref="baseFrame"
-      :src="src"
-      class="mainboard-frame__frame"
-      frameborder="0"
-      @load="load"/>
+    <iframe ref="baseFrame" :src="src" class="mainboard-frame__frame" frameborder="0" @load="load"/>
   </div>
 </template>
 
@@ -40,7 +35,6 @@ export default {
 
   methods: {
     load() {
-      console.log("First load frame");
       if (!this.firstLoad) {
         let apiLink = "";
         const currentLink = this.$refs.baseFrame.contentWindow.location.href;

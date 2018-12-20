@@ -16,15 +16,13 @@
           :key="category.id"
           class="mainboard-startmenu__category"
         >
-          <v-list-tile
-            slot="activator"
-          >
+          <v-list-tile slot="activator">
             <i class="material-icons icon-folder">folder</i>
             <v-list-tile-content>
               <v-list-tile-title>
                 <!-- <span
                 :class="[{'mainboard-startmenu__item--xs': $vuetify.breakpoint.xsOnly}]"
-              > -->
+                >-->
                 {{ category.label }}
               </v-list-tile-title>
             </v-list-tile-content>
@@ -40,19 +38,11 @@
             @tap="createNewWindow(element)"
             @touchstart="createNewWindow(element)"
           >
-            <v-list-tile
-              tag="a"
-            >
-              <img
-                :src="element.image"
-                :style="{width: '25px', marginRight: '5px'}"
-              >
+            <v-list-tile tag="a">
+              <img :src="element.image" :style="{width: '25px', marginRight: '5px'}">
               <v-list-tile-content>
-                <v-list-tile-title>
-                  {{ element.label }}
-                </v-list-tile-title>
+                <v-list-tile-title>{{ element.label }}</v-list-tile-title>
               </v-list-tile-content>
-
             </v-list-tile>
           </div>
         </v-list-group>
@@ -89,7 +79,6 @@ export default {
   },
   methods: {
     input() {
-      console.log("input");
       this.$emit("input", this.drawer);
     },
 

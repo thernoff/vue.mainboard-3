@@ -230,18 +230,12 @@ export default {
       const actionChangePassword = this.$store.state.user.user.actions.find(
         action => action === "CHANGE_PASSWORD"
       );
-      console.log(
-        "changePasswordForm actionChangePassword",
-        actionChangePassword
-      );
       return actionChangePassword ? true : false;
     }
   },
 
   watch: {
     changePasswordForm(newVal, oldVal) {
-      console.log("changePasswordForm this.user.actions", this.user.actions);
-      console.log("changePasswordForm newVal", newVal);
       this.dialogChangePasswordForm = newVal;
     }
   },
@@ -275,7 +269,7 @@ export default {
   },
 
   mounted() {
-    //console.log("process.env.NODE_ENV", process.env.NODE_ENV);
+    console.log("process.env.NODE_ENV", process.env.NODE_ENV);
     const self = this;
 
     this.$store.commit("setWidthWorkspace", this.$refs.workspace.clientWidth);
@@ -388,7 +382,6 @@ export default {
       const dictonary = {};
       try {
         const response = await axios.get("/extusers/fpage/dictonary/");
-        console.log("getDictonary response", response);
         dictonary[response.data.lang] = response.data.dictonary;
       } catch (error) {
         console.log("error", error);
@@ -399,13 +392,11 @@ export default {
 
     handlerShowDrawer() {
       this.visibleSideBar = true;
-      console.log("handlerShowDrawer this.visibleSideBar", this.visibleSideBar);
     },
 
     hideShowDrawer(visibleSideBar) {
       if (!visibleSideBar) {
         this.visibleSideBar = visibleSideBar;
-        console.log("hideShowDrawer visibleSideBar", visibleSideBar);
       }
     }
   }

@@ -34,8 +34,6 @@ export default {
         data: user
       })
         .then(response => {
-          console.log("response", response.data);
-
           if (response.data.status) {
             //commit("setUser", response.data.user);
             commit("setMessage", response.data.message);

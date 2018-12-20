@@ -13,9 +13,7 @@
     class="mainboard-window"
     @contextmenu.stop.prevent="''"
   >
-    <v-card 
-      tile 
-      class="mainboard-window__card">
+    <v-card tile class="mainboard-window__card">
       <v-card-title
         :class="{'mainboard-window__header--active': options.active}"
         :title="options.title"
@@ -45,12 +43,8 @@
             class="mainboard-window__btn"
             @click.stop="toggleFullscreenWindow"
           >
-            <v-icon 
-              v-if="!options.fullscreen" 
-              color="white">fullscreen</v-icon>
-            <v-icon 
-              v-if="options.fullscreen" 
-              color="white">fullscreen_exit</v-icon>
+            <v-icon v-if="!options.fullscreen" color="white">fullscreen</v-icon>
+            <v-icon v-if="options.fullscreen" color="white">fullscreen_exit</v-icon>
           </v-btn>
           <v-btn
             :title=" $t('window.close') "
@@ -63,10 +57,7 @@
           </v-btn>
         </div>
       </v-card-title>
-      <div 
-        ref="windowBody" 
-        class="mainboard-window__body" 
-        @mousedown="''">
+      <div ref="windowBody" class="mainboard-window__body" @mousedown="''">
         <slot name="body"/>
       </div>
       <v-divider/>
@@ -115,7 +106,6 @@ export default {
     var self = this;
     //var countRows = self.$store.getters.getCountRows;
     //var countColumns = self.$store.getters.getCountColumns;
-    //console.log("BaseWindow MOUNTED this.$refs.window", this.$refs.window);
     $(this.$refs.window)
       .draggable({
         handle: ".mainboard-window__header",

@@ -53,14 +53,20 @@ const findCoords = (shortcuts, left, top, widthWorkspace, heightWorkspace) => {
   });
 
   if (shortcut) {
-    console.log("shortcut найден", shortcut);
-    console.log("ищем дальше");
-    console.log("shortcut.left", (widthWorkspace * shortcut.left) / 100);
+    if (process.env.NODE_ENV == "development") {
+      console.log("shortcut найден", shortcut);
+      console.log("ищем дальше");
+      console.log("shortcut.left", (widthWorkspace * shortcut.left) / 100);
+    }
+
     if (
       Math.abs(widthWorkspace - (widthWorkspace * shortcut.left) / 100 - 100) >=
       100
     ) {
-      console.log("есть место справа");
+      if (process.env.NODE_ENV == "development") {
+        console.log("есть место справа");
+      }
+
       return findCoords(
         shortcuts,
         (widthWorkspace * shortcut.left) / 100 + 100,
@@ -69,7 +75,9 @@ const findCoords = (shortcuts, left, top, widthWorkspace, heightWorkspace) => {
         heightWorkspace
       );
     } else {
-      console.log("места справа нет, сдвигаемся вниз");
+      if (process.env.NODE_ENV == "development") {
+        console.log("места справа нет, сдвигаемся вниз");
+      }
       return findCoords(
         shortcuts,
         0,
@@ -79,7 +87,9 @@ const findCoords = (shortcuts, left, top, widthWorkspace, heightWorkspace) => {
       );
     }
   } else {
-    console.log("shortcut не найден: top, left", top, left);
+    if (process.env.NODE_ENV == "development") {
+      console.log("shortcut не найден: top, left", top, left);
+    }
     return { left, top };
   }
 }
@@ -200,8 +210,6 @@ export default {
       // значения top и left приходят в пикселях
       const top = object.top || state.topPrevShortcut;
       const left = object.left || state.leftPrevShortcut;
-
-      console.log("createNewShortcut from object", object);
       const newShortcut = {
         id: getRandomId(),
         label: object.title || object.label,
@@ -454,7 +462,6 @@ export default {
       axios
         .get("/extusers/fpage/desktop/")
         .then(response => {
-          //console.log("response", response.data);
 
           // Массив данных для отображения стартового меню
           const startMenuItems = response.data.dashboard;
@@ -529,7 +536,6 @@ export default {
           }
         })
           .then(response => {
-            console.log("response", response);
           })
           .catch(error => {
             console.log("error", error);
@@ -592,7 +598,6 @@ export default {
 
         const heightCell = rootState.desktop.heightCell;
         const top = (shortcut.top / 100) * heightWorkspace;
-        console.log("actionCreateNewShortcut top", top);
         options.top = recalcCoordTopForGridMode(top, heightCell, 0);
         commit("updateShortcutCoords", {
           options,

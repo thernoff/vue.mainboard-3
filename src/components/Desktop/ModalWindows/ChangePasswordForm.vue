@@ -63,9 +63,6 @@ export default {
     };
   },
   computed: {},
-  mounted() {
-    console.log("mounted", this.valid);
-  },
   methods: {
     saveUser() {
       if (this.$refs.form.validate()) {
@@ -81,7 +78,6 @@ export default {
           this.$store
             .dispatch("actionSaveUser", user)
             .then(response => {
-              console.log("saveUser", response);
               if (response) {
                 this.clearData();
               }

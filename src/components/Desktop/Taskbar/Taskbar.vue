@@ -105,18 +105,8 @@ export default {
         Math.floor(widthContainer / countWindows) - 10;
 
       if (widthBtnMinimizeWindows > 100) {
-        console.log("widthBtnMinimizeWindows 1", widthBtnMinimizeWindows);
-        console.log(
-          "widthBtnMinimizeWindows 1 return",
-          (100 * 100) / widthContainer
-        );
         return (100 * 100) / widthContainer;
       } else {
-        console.log("widthBtnMinimizeWindows 2", widthBtnMinimizeWindows);
-        console.log(
-          "widthBtnMinimizeWindows 2 return",
-          (100 * widthBtnMinimizeWindows) / widthContainer
-        );
         return (100 * widthBtnMinimizeWindows) / widthContainer;
       }
     },

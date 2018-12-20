@@ -55,7 +55,6 @@ export default {
 
     // Данная мутация создает новое окно
     createNewWindow(state, object) {
-      console.log("createNewWindow from object", object);
       const title = object.title || object.label || "";
       const top = state.topPrevWindow > 0 ? state.topPrevWindow : 1;
       const left = state.leftPrevWindow > 0 ? state.leftPrevWindow : 1;
@@ -97,7 +96,6 @@ export default {
 
     // Данная мутация обновляет свойства окна
     updateWindow(state, options) {
-      console.log("updateWindow options", options);
       let window = findWindowById(state, options.id);
       window = Object.assign(window, options);
     },
@@ -114,7 +112,6 @@ export default {
 
     // Данная мутация обновляет размеры окна
     updateWindowSize(state, options) {
-      console.log("updateWindowSize options", options);
       let window = findWindowById(state, options.id);
 
       if (window && !window.fullscreen) {

@@ -212,7 +212,6 @@ export default {
       forcePlaceholderSize: true,
       scroll: false,
       start: function(event, ui) {
-        console.log("ui", ui.placeholder);
         var $placeholder = ui.placeholder;
 
         $placeholder
@@ -240,8 +239,6 @@ export default {
       },
       sort: function(event, ui) {
         //var $t = $(".ui-sortable-placeholder");
-        //console.log("ui-sortable-placeholder", $t);
-        //console.log("ui", ui);
         /* $t.css({ width: "88px" });
         $t.css({ height: "88px" });
         $t.css({ display: "inline-block" }); */

@@ -144,7 +144,6 @@ export default {
   },
   methods: {
     showContextMenuElement(indexCategory, { indexElement, event }) {
-      console.log(indexCategory, indexElement, event);
       event.preventDefault();
       this.contextMenu.visible = false;
       this.contextMenu.x = event.clientX;

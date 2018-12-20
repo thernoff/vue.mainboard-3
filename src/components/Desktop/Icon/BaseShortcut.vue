@@ -243,7 +243,6 @@ export default {
           $shortcutOverDrag.length > 0 &&
           $shortcutOverDrag.data("type") === "folder"
         ) {
-          console.log("DROP ON FOLDER");
           var folderId = $shortcutOverDrag.data("object-id");
           if (elementId && folderId) {
             self.$store
@@ -300,8 +299,6 @@ export default {
           break;
         }
       }
-      /* console.log("createNewWindow this.shortcut", this.options.object);
-      console.log("createNewWindow from object", object); */
 
       if (object) {
         this.$store.dispatch("actionCreateNewWindow", object).then(response => {

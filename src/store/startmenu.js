@@ -19,8 +19,6 @@ export default {
     },
 
     actionSaveCategories({ commit }, categories) {
-      console.log("actionSaveCategories", categories);
-      //commit("setStartmenuItems", categories);
       axios({
         method: "post",
         headers: { "Content-Type": "application/form-data" },
@@ -28,7 +26,6 @@ export default {
         data: { categories: categories }
       })
         .then(response => {
-          console.log("response", response);
           if (response.data.status) {
             commit("setStartmenuItems", response.data.dashboard);
             commit("setMessage", response.data.message);

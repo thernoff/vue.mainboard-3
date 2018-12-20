@@ -31,7 +31,6 @@ export default {
 
     setCountRows(state, heightCell) {
       state.countRows = Math.floor(state.heightWorkspace / heightCell);
-      //console.log("state.countRows", state.countRows);
     },
 
     setCountColumns(state, widthCell) {
