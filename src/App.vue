@@ -6,8 +6,8 @@
     <!--Компонент рабочей области (используется для отображения остальных компонентов)-->
     <div
       ref="workspace"
-      class="mainboard-workspace"
       :class="{'mainboard-workspace--nogrid': !isModeGrid}"
+      class="mainboard-workspace"
       @contextmenu.stop.prevent="showContextMenu"
     >
       <mainboard-demo-info-widget v-if="isDemo"/>
@@ -62,7 +62,7 @@
       </div>
     </v-dialog>
 
-    <v-dialog width="400px" persistent v-model="dialogChangePasswordForm">
+    <v-dialog v-model="dialogChangePasswordForm" width="400px" persistent>
       <mainboard-change-password-form :user="user"/>
     </v-dialog>
 
@@ -269,7 +269,7 @@ export default {
   },
 
   mounted() {
-    console.log("process.env.NODE_ENV", process.env.NODE_ENV);
+    //console.log("process.env.NODE_ENV", process.env.NODE_ENV);
     const self = this;
 
     this.$store.commit("setWidthWorkspace", this.$refs.workspace.clientWidth);

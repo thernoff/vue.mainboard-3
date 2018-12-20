@@ -31,8 +31,8 @@
       </div>-->
     </div>
     <div
-      class="mainboard-workspace__logo text-xs-center"
       :style="{ backgroundImage: 'url('+ require('@/assets/logo-incom.png') +')' }"
+      class="mainboard-workspace__logo text-xs-center"
     ></div>
   </div>
 </template>

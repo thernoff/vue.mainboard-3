@@ -24,13 +24,13 @@
     </v-btn>-->
     <mainboard-startmenu :height-workspace="heightWorkspace"/>
 
-    <div class="mainboard-taskbar__minimize-windows" ref="container">
+    <div ref="container" class="mainboard-taskbar__minimize-windows">
       <v-btn
         v-for="window in windows"
         :key="window.id"
         :color="(!window.minimize) ? 'primary' : 'minimizeWindowTaskbar'"
-        class="mainboard-taskbar__btn-minimize-window"
         :style="{'minWidth': widthBtnMinimizeWindows + '%', 'width': widthBtnMinimizeWindows + '%'}"
+        class="mainboard-taskbar__btn-minimize-window"
         @click="toggleMinimizedWindow(window)"
         @contextmenu.prevent.stop="showContextMenuMinimizeButton(window.id, $event)"
       >

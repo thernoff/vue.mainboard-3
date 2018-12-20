@@ -9,7 +9,7 @@ const getRandomId = () => {
 
   id += Math.floor(Date.now() / 1000);
   return id;
-}
+};
 
 const recalcCoordLeftForGridMode = (left, widthCell, diffLeft = 0) => {
   if (diffLeft) {
@@ -17,7 +17,7 @@ const recalcCoordLeftForGridMode = (left, widthCell, diffLeft = 0) => {
   } else {
     return Math.round(left / widthCell) * widthCell;
   }
-}
+};
 
 const recalcCoordTopForGridMode = (top, heightCell, diffTop = 0) => {
   if (diffTop) {
@@ -25,7 +25,7 @@ const recalcCoordTopForGridMode = (top, heightCell, diffTop = 0) => {
   } else {
     return Math.round(top / heightCell) * heightCell;
   }
-}
+};
 
 const findWindowById = (state, windowId) => {
   const window = state.windows.find(window => {
@@ -33,7 +33,7 @@ const findWindowById = (state, windowId) => {
   });
 
   return window ? window : null;
-}
+};
 
 import { CONST_STORE_WINDOW } from "@/const.js";
 
@@ -231,7 +231,7 @@ export default {
       if (state.activeWindow) {
         state.maxZIndex += 1;
         const zIndex = state.activeWindow.zIndex;
-        state.windows.forEach((window) => {
+        state.windows.forEach(window => {
           if (window.zIndex > zIndex) {
             window.zIndex -= 1;
           }
@@ -264,7 +264,7 @@ export default {
 
     // Данная мутация делает все окна не активными
     setNotActiveWindows(state) {
-      state.windows.forEach((window) => {
+      state.windows.forEach(window => {
         window.active = false;
       });
       state.activeWindow = null;

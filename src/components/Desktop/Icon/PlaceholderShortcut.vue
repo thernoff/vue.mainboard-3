@@ -1,15 +1,15 @@
 <template>
   <div
-    ref="placeholder"
     v-if="modeGrid"
+    ref="placeholder"
     :style="{
       width: widthShortcut + 'px',
       height: heightShortcut + 'px',
       top: top + 'px',
       left: left + 'px'
     }"
-    class="mainboard-placeholder-shortcut"
     :class="{'mainboard-placeholder-shortcut--over': over}"
+    class="mainboard-placeholder-shortcut"
   ></div>
 </template>
 

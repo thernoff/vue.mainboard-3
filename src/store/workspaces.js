@@ -1,5 +1,5 @@
 import axios from "axios";
-import { data } from "@/store/data/data.js"
+import { data } from "@/store/data/data.js";
 
 const getRandomId = () => {
   let id = "";
@@ -12,7 +12,7 @@ const getRandomId = () => {
 
   id += Math.floor(Date.now() / 1000);
   return id;
-}
+};
 
 // Данная функция пересчитывает значение координаты left объекта в режиме сетки
 // left - текущее значение координаты left
@@ -24,7 +24,7 @@ const recalcCoordLeftForGridMode = (left, widthCell, diffLeft = 0) => {
   } else {
     return Math.round(left / widthCell) * widthCell;
   }
-}
+};
 
 // Данная функция пересчитывает значение координаты top объекта в режиме сетки
 // top - текущее значение координаты top
@@ -36,15 +36,16 @@ const recalcCoordTopForGridMode = (top, heightCell, diffTop = 0) => {
   } else {
     return Math.round(top / heightCell) * heightCell;
   }
-}
+};
 
 // Данная функция ищет рекурсивно координаты свободного места на рабочем столе для перемещаемого ярлыка
 const findCoords = (shortcuts, left, top, widthWorkspace, heightWorkspace) => {
   let shortcut = null;
   shortcut = shortcuts.find(shortcut => {
     return (
-      Math.abs(Math.round(left - (widthWorkspace * shortcut.left) / 100)) < 100
-      && Math.abs(Math.round(top - (heightWorkspace * shortcut.top) / 100)) < 100
+      Math.abs(Math.round(left - (widthWorkspace * shortcut.left) / 100)) <
+        100 &&
+      Math.abs(Math.round(top - (heightWorkspace * shortcut.top) / 100)) < 100
     );
     /* return (
       Math.abs(left - Math.floor((widthWorkspace * shortcut.left) / 100)) <
@@ -92,7 +93,7 @@ const findCoords = (shortcuts, left, top, widthWorkspace, heightWorkspace) => {
     }
     return { left, top };
   }
-}
+};
 
 import { CONST_STORE_WORKSPACE } from "@/const.js";
 
@@ -185,7 +186,7 @@ export default {
     /***** WINDOWS *****/
     // Данная мутация делает все окна свернутыми
     minimizeWindows(state) {
-      state.activeWorkspace.windows.forEach((window) => {
+      state.activeWorkspace.windows.forEach(window => {
         window.minimize = true;
       });
     },
@@ -336,7 +337,10 @@ export default {
 
     // Данная мутация обновляет свойства плэйсхолдера ярлыка на рабочем столе
     // Значение координат приходят в пикселях, а сохраняются в процентах
-    updatePlaceholderShortcut(state, { options, widthWorkspace, heightWorkspace }) {
+    updatePlaceholderShortcut(
+      state,
+      { options, widthWorkspace, heightWorkspace }
+    ) {
       const filterShortcuts = state.activeWorkspace.shortcuts.filter(
         shortcut => {
           return shortcut.id !== options.elementId && !shortcut.folderId;
@@ -344,8 +348,12 @@ export default {
       );
       const shortcut = filterShortcuts.find(shortcut => {
         return (
-          Math.abs(Math.round(options.left - (widthWorkspace * shortcut.left) / 100)) < 100
-          && Math.abs(Math.round(options.top - (heightWorkspace * shortcut.top) / 100)) < 100
+          Math.abs(
+            Math.round(options.left - (widthWorkspace * shortcut.left) / 100)
+          ) < 100 &&
+          Math.abs(
+            Math.round(options.top - (heightWorkspace * shortcut.top) / 100)
+          ) < 100
         );
       });
       if (shortcut) {
@@ -462,7 +470,6 @@ export default {
       axios
         .get("/extusers/fpage/desktop/")
         .then(response => {
-
           // Массив данных для отображения стартового меню
           const startMenuItems = response.data.dashboard;
           if (startMenuItems && startMenuItems.length > 0) {
@@ -535,13 +542,11 @@ export default {
             settings: { workspaces, folders }
           }
         })
-          .then(response => {
-          })
+          .then(response => {})
           .catch(error => {
             console.log("error", error);
           });
       }
-
     },
 
     // Данный экшен удаляет текущую рабочую область, делает активной первую из оставшихся рабочую область
@@ -706,13 +711,12 @@ export default {
 
     // Данный экшен привязывает координаты ярлыка к сетке (используется при переходе из "без сетки" в "режим сетки")
     actionSnapShortcutsToGrid({ state, commit, rootState }) {
-
       const widthWorkspace = rootState.desktop.widthWorkspace;
       const heightWorkspace = rootState.desktop.heightWorkspace;
       const widthCell = rootState.desktop.widthCell;
       const heightCell = rootState.desktop.heightCell;
 
-      state.activeWorkspace.shortcuts.forEach((shortcut) => {
+      state.activeWorkspace.shortcuts.forEach(shortcut => {
         let left = (shortcut.left / 100) * widthWorkspace;
         left = recalcCoordLeftForGridMode(left, widthCell, 0);
 
@@ -725,12 +729,11 @@ export default {
           widthWorkspace,
           heightWorkspace
         });
-      })
+      });
     },
 
     // Данный экшен изменяет координаты плэйсхолдера ярлыка
     actionUpdatePlaceholderShortcut({ state, commit, rootState }, options) {
-
       const widthWorkspace = rootState.desktop.widthWorkspace;
       const heightWorkspace = rootState.desktop.heightWorkspace;
       const widthCell = rootState.desktop.widthCell;
@@ -772,7 +775,7 @@ export default {
       if (rootState.desktop.modeGrid) {
         const shortcut =
           state.activeWorkspace.shortcuts[
-          state.activeWorkspace.shortcuts.length - 1
+            state.activeWorkspace.shortcuts.length - 1
           ];
         let options = { id: shortcut.id };
 

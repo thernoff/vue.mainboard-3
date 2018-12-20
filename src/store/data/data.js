@@ -30,8 +30,7 @@ export const data = {
           label: "\u042f\u0449\u0438\u043a\u0438",
           image:
             "http://system.elxis.test/components/com_speedcams/images/vandal-proof.png",
-          link:
-            "http://system.elxis.test/inner.php/speedcams/vandalboxes/",
+          link: "http://system.elxis.test/inner.php/speedcams/vandalboxes/",
           visible: "1",
           ordering: "1",
           type: "frame",
@@ -48,8 +47,7 @@ export const data = {
             "\u0416\u0443\u0440\u043d\u0430\u043b \u0440\u0430\u0431\u043e\u0442",
           image:
             "http://system.elxis.test/components/com_speedcams/images/diary.png",
-          link:
-            "http://system.elxis.test/inner.php/speedcams/joblog/",
+          link: "http://system.elxis.test/inner.php/speedcams/joblog/",
           visible: "1",
           ordering: "2",
           type: "frame",
@@ -64,8 +62,7 @@ export const data = {
       server_id: "0",
       user_id: "6",
       access: null,
-      label:
-        "\u041a\u0430\u0442\u0435\u0433\u043e\u0440\u0438\u0438",
+      label: "\u041a\u0430\u0442\u0435\u0433\u043e\u0440\u0438\u0438",
       image: null,
       link: null,
       visible: "1",
@@ -77,12 +74,10 @@ export const data = {
           server_id: "1",
           user_id: "6",
           access: "incident",
-          label:
-            "\u0418\u043d\u0446\u0438\u0434\u0435\u043d\u0442\u044b",
+          label: "\u0418\u043d\u0446\u0438\u0434\u0435\u043d\u0442\u044b",
           image:
             "http://system.elxis.test/components/com_speedcams/images/incident.png",
-          link:
-            "http://system.elxis.test/inner.php/speedcams/incidents/",
+          link: "http://system.elxis.test/inner.php/speedcams/incidents/",
           visible: "1",
           ordering: "1",
           type: "frame",
@@ -99,8 +94,7 @@ export const data = {
             "\u041c\u043e\u043d\u0438\u0442\u043e\u0440\u0438\u043d\u0433 \u0441\u0442\u0430\u0446\u0438\u043e\u043d\u0430\u0440\u043e\u0432",
           image:
             "http://system.elxis.test/components/com_speedcams/images/stationary.png",
-          link:
-            "http://system.elxis.test/inner.php/speedcams/stationary/",
+          link: "http://system.elxis.test/inner.php/speedcams/stationary/",
           visible: "1",
           ordering: "2",
           type: "frame",
@@ -147,8 +141,7 @@ export const data = {
             "\u0421\u0435\u0440\u0432\u0438\u0441 \u0410\u0432\u0442\u043e-\u0418\u043d\u0444\u043e",
           image:
             "http://system.elxis.test/components/com_speedcams/images/carinfo.png",
-          link:
-            "http://system.elxis.test/inner.php/speedcams/carinfo/",
+          link: "http://system.elxis.test/inner.php/speedcams/carinfo/",
           visible: "1",
           ordering: "2",
           type: "frame",
@@ -165,8 +158,7 @@ export const data = {
             "\u0422\u0435\u0445\u043d\u0438\u0447\u0435\u0441\u043a\u0438\u0439 \u043c\u043e\u043d\u0438\u0442\u043e\u0440\u0438\u043d\u0433",
           image:
             "http://system.elxis.test/components/com_speedcams/images/monitoring.png",
-          link:
-            "http://system.elxis.test/inner.php/speedcams/monitoring/",
+          link: "http://system.elxis.test/inner.php/speedcams/monitoring/",
           visible: "1",
           ordering: "3",
           type: "frame",
@@ -179,12 +171,10 @@ export const data = {
           server_id: "1",
           user_id: "6",
           access: "guards:module",
-          label:
-            "\u041e\u0445\u0440\u0430\u043d\u043d\u0438\u043a\u0438",
+          label: "\u041e\u0445\u0440\u0430\u043d\u043d\u0438\u043a\u0438",
           image:
             "http://system.elxis.test/components/com_speedcams/images/guard.png",
-          link:
-            "http://system.elxis.test/inner.php/speedcams/guards.html",
+          link: "http://system.elxis.test/inner.php/speedcams/guards.html",
           visible: "1",
           ordering: "4",
           type: "frame",
@@ -197,12 +187,10 @@ export const data = {
           server_id: "1",
           user_id: "6",
           access: "parkright",
-          label:
-            "\u041f\u0430\u0440\u043a\u0440\u0430\u0439\u0442\u044b",
+          label: "\u041f\u0430\u0440\u043a\u0440\u0430\u0439\u0442\u044b",
           image:
             "http://system.elxis.test/components/com_speedcams/images/parkright.png",
-          link:
-            "http://system.elxis.test/inner.php/speedcams/parkrights/",
+          link: "http://system.elxis.test/inner.php/speedcams/parkrights/",
           visible: "1",
           ordering: "5",
           type: "frame",
@@ -233,12 +221,10 @@ export const data = {
           server_id: "1",
           user_id: "6",
           access: "statistics:view",
-          label:
-            "\u0421\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u043a\u0430",
+          label: "\u0421\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u043a\u0430",
           image:
             "http://system.elxis.test/components/com_speedcams/images/statistics.png",
-          link:
-            "http://system.elxis.test/inner.php/speedcams/statistics.html",
+          link: "http://system.elxis.test/inner.php/speedcams/statistics.html",
           visible: "1",
           ordering: "7",
           type: "frame",
@@ -251,12 +237,10 @@ export const data = {
           server_id: "1",
           user_id: "6",
           access: "employees:module",
-          label:
-            "\u0421\u043e\u0442\u0440\u0443\u0434\u043d\u0438\u043a\u0438",
+          label: "\u0421\u043e\u0442\u0440\u0443\u0434\u043d\u0438\u043a\u0438",
           image:
             "http://system.elxis.test/components/com_speedcams/images/employees.png",
-          link:
-            "http://system.elxis.test/inner.php/speedcams/employees.html",
+          link: "http://system.elxis.test/inner.php/speedcams/employees.html",
           visible: "1",
           ordering: "8",
           type: "frame",
@@ -269,12 +253,10 @@ export const data = {
           server_id: "1",
           user_id: "6",
           access: "cameras",
-          label:
-            "\u0413\u0435\u043e\u043b\u043e\u043a\u0430\u0446\u0438\u044f",
+          label: "\u0413\u0435\u043e\u043b\u043e\u043a\u0430\u0446\u0438\u044f",
           image:
             "http://system.elxis.test/components/com_speedcams/images/geolocation.png",
-          link:
-            "http://system.elxis.test/inner.php/speedcams/cameras/",
+          link: "http://system.elxis.test/inner.php/speedcams/cameras/",
           visible: "1",
           ordering: "9",
           type: "frame",
@@ -290,8 +272,7 @@ export const data = {
           label: "\u041e\u0442\u0447\u0435\u0442\u044b",
           image:
             "http://system.elxis.test/components/com_speedcams/images/report.png",
-          link:
-            "http://system.elxis.test/inner.php/speedcams/reports/",
+          link: "http://system.elxis.test/inner.php/speedcams/reports/",
           visible: "1",
           ordering: "10",
           type: "frame",
@@ -308,8 +289,7 @@ export const data = {
             "\u041c\u043e\u043d\u0438\u0442\u043e\u0440\u0438\u043d\u0433 \u043f\u0435\u0440\u0435\u0434\u0432\u0438\u0436\u043d\u044b\u0445 \u043a\u043e\u043c\u043f\u043b\u0435\u043a\u0441\u043e\u0432",
           image:
             "http://system.elxis.test/components/com_speedcams/images/mobile.png",
-          link:
-            "http://system.elxis.test/inner.php/speedcams/moncomplex/",
+          link: "http://system.elxis.test/inner.php/speedcams/moncomplex/",
           visible: "1",
           ordering: "11",
           type: "frame",
@@ -367,8 +347,5 @@ export const data = {
       //"CHANGE_PASSWORD"
     ]
   },
-  interfaces: [
-    { id: 1, name: "Таблица" },
-    { id: 2, name: "Десктоп" }
-  ]
-}
+  interfaces: [{ id: 1, name: "Таблица" }, { id: 2, name: "Десктоп" }]
+};
