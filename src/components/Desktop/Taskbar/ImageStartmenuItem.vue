@@ -1,17 +1,7 @@
 <template>
   <div class="startmenu-item__img">
-    <img
-      v-if="!loadImageError"
-      :src="src"
-      :style="{width: '25px', height: 'auto', marginRight: '5px'}"
-      @error="loadError"
-    >
-    <img
-      v-if="loadImageError"
-      src="@/assets/no-image.png"
-      :style="{width: '25px', height: 'auto', marginRight: '5px'}"
-      class="mainboard-startmenu__item--no-image"
-    >
+    <img v-if="!loadImageError" :src="src" @error="loadError">
+    <img v-if="loadImageError" src="@/assets/no-image.png">
   </div>
 </template>
 <script>
@@ -34,3 +24,10 @@ export default {
   }
 };
 </script>
+<style scoped>
+.startmenu-item__img img {
+  width: 25px;
+  height: auto;
+  margin-right: 5px;
+}
+</style>

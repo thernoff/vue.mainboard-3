@@ -241,8 +241,7 @@ export default {
         y: 0
       },
       inputSearch: "",
-      visibleDialogWindow: false,
-      loadImageError: false
+      visibleDialogWindow: false
     };
   },
   computed: {
@@ -290,10 +289,6 @@ export default {
   },
 
   methods: {
-    loadError() {
-      this.loadImageError = true;
-    },
-
     onScrollListCategories() {
       this.contextMenuItem.visible = false;
     },
