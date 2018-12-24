@@ -111,7 +111,7 @@
                 @contextmenu.prevent="showContextMenuItem(element, $event)"
               >
                 <v-list-tile tag="a">
-                  <img :src="element.image" :style="{width: '25px', marginRight: '5px'}">
+                  <mainboard-image-startmenu-item :src="element.image"/>
                   <v-list-tile-content>
                     <v-list-tile-title>{{ element.label }}</v-list-tile-title>
                   </v-list-tile-content>
@@ -131,7 +131,7 @@
               @contextmenu.prevent="showContextMenuItem(element, $event)"
             >
               <v-list-tile tag="a">
-                <img :src="element.image" :style="{width: '25px', marginRight: '5px'}">
+                <mainboard-image-startmenu-item :src="element.image"/>
                 <v-list-tile-content>
                   <v-list-tile-title>{{ element.label }}</v-list-tile-title>
                 </v-list-tile-content>
@@ -209,12 +209,13 @@ import { axiosInstance } from "@/axios-instance.js";
 import UserForm from "@/components/Desktop/Taskbar/UserForm.vue";
 import StartmenuSettings from "@/components/Desktop/Taskbar/StartmenuSettings.vue";
 import DialogWindow from "@/components/Desktop/ModalWindows/DialogWindow.vue";
-
+import ImageStartmenuItem from "@/components/Desktop/Taskbar/ImageStartmenuItem.vue";
 export default {
   components: {
     mainboardUserForm: UserForm,
     mainboardStartmenuSettings: StartmenuSettings,
-    mainboardDialogWindow: DialogWindow
+    mainboardDialogWindow: DialogWindow,
+    mainboardImageStartmenuItem: ImageStartmenuItem
   },
   props: {
     heightWorkspace: {
@@ -240,7 +241,8 @@ export default {
         y: 0
       },
       inputSearch: "",
-      visibleDialogWindow: false
+      visibleDialogWindow: false,
+      loadImageError: false
     };
   },
   computed: {
@@ -288,6 +290,10 @@ export default {
   },
 
   methods: {
+    loadError() {
+      this.loadImageError = true;
+    },
+
     onScrollListCategories() {
       this.contextMenuItem.visible = false;
     },
@@ -369,7 +375,7 @@ export default {
         headers: { "Content-Type": "application/form-data" },
         url: "/inner.php/extusers/fpage/logout/"
       })
-        .then(() => {
+        .then(response => {
           window.location.href = "/";
         })
         .catch(error => {

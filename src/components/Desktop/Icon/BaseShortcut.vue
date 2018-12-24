@@ -47,7 +47,8 @@
       </i>
     </div>-->
     <div v-if="options.image" class="mainboard-shortcut__img">
-      <img :src="options.image" :alt="options.label">
+      <img v-if="!loadImageError" :src="options.image" :alt="options.label" @error="loadError">
+      <img v-if="loadImageError" src="@/assets/no-image.png" class="mainboard-shortcut--no-image">
     </div>
     <div
       v-else-if="options.object.type === 'folder'"
@@ -100,7 +101,8 @@ export default {
         y: 0,
         indexShortcut: null
       },
-      rename: false
+      rename: false,
+      loadImageError: false
     };
   },
   computed: {
@@ -352,6 +354,10 @@ export default {
       this.$store.dispatch("actionDeleteShortcut", this.id).then(() => {
         this.$store.dispatch("actionSaveSettingsDesktop");
       });
+    },
+
+    loadError() {
+      this.loadImageError = true;
     }
   }
 };
@@ -424,6 +430,12 @@ export default {
 
 .mainboard-shortcut__img img {
   width: 50px;
+  height: auto;
+}
+
+.mainboard-shortcut--no-image {
+  width: 50px;
+  height: auto;
 }
 
 .mainboard-shortcut__icon-firstletter {
