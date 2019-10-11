@@ -17,6 +17,7 @@
         small
         class="mainboard-window__btn"
         @click.stop="reloadWindow"
+        @dblclick.stop=""
       >
         <v-icon color="white">refresh</v-icon>
       </v-btn>

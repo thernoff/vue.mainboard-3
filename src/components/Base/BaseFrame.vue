@@ -1,7 +1,7 @@
 <template>
   <div class="mainboard-frame">
     <div class="mainboard-frame__cover"/>
-    <iframe ref="baseFrame" :src="src" class="mainboard-frame__frame" frameborder="0" @load="load"/>
+    <iframe ref="baseFrame" :src="src" class="mainboard-frame__frame" frameborder="0" @load="load" allowfullscreen="1"/>
   </div>
 </template>
 

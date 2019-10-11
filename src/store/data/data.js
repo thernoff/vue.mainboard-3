@@ -29,7 +29,7 @@ export const data = {
           access: "vandalboxes",
           label: "\u042f\u0449\u0438\u043a\u0438",
           image:
-            "http://system.elxis.test/components/com_speedcams/images/vandal-proof1.png",
+            "http://system.elxis.test/components/com_speedcams/images/vandal-proof.png",
           link: "http://system.elxis.test/inner.php/speedcams/vandalboxes/",
           visible: "1",
           ordering: "1",

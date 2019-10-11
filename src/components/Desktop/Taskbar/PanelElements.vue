@@ -96,7 +96,12 @@
             class="mainboard-panel__element sortable-element"
             @contextmenu.prevent="showContextMenuElement(index, $event)"
           >
-            <img :src="element.image" :class="{'hidden-image': !parseInt(element.visible)}" alt>
+            <img
+              class="mainboard-panel__img"
+              :src="element.image"
+              :class="{'hidden-image': !parseInt(element.visible)}"
+              :alt="element.label"
+            >
             <div class="sortable-element__caption">
               <span v-if="indexRenameElement !== index">{{ element.label }}</span>
               <input
